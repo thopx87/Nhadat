@@ -1,0 +1,138 @@
+﻿@using Application2016.Helpers;
+@{
+    string oldUrl = Request.Url.ToString();
+    string prevPage = "1";
+    string nextPage = "1";
+    if(ViewBag.Page!=null)
+    {
+        prevPage = (ViewBag.Page - 1).ToString();
+        nextPage = (ViewBag.Page + 1).ToString();
+    } 
+}
+@if (ViewBag.MaxPage > 1)
+{
+    
+    <ul class="pagination pull-right no-margin">
+        @if (ViewBag.page > 1)
+        {
+        <!-- First page -->
+        <li class="">
+		    <a href='@oldUrl.SetUrlParameter("Page", "1")' 
+               class="btn btn-default">
+                First
+            </a>
+	    </li>
+        <!-- Preview page -->
+        
+        <li class="prev">
+          
+		    <a href="@oldUrl.SetUrlParameter("Page", prevPage)" 
+               class="btn btn-default">
+                &laquo; Prev
+            </a>
+	    </li>    
+        }
+
+        <!-- Loop page -->
+        @{
+            int numPageShow = ViewBag.PageShow;
+            int pageStart = 1;
+            int pagePreview = ViewBag.PagePreview;
+            int currPage = ViewBag.Page;
+            int maxPage = ViewBag.MaxPage;
+            string activeClass ="";
+            if (maxPage < numPageShow)
+            {
+                numPageShow = maxPage;
+                
+                for (int i = 1; i <= numPageShow; i++)
+                {
+                    if (i == currPage) 
+                    {
+                        activeClass = "active";
+                    }
+                    else
+                    {
+                        activeClass = "";
+                    }
+                    <li class="@activeClass">
+		                <a href="@oldUrl.SetUrlParameter("Page", i.ToString())" >
+                           @i
+                        </a>
+	                </li>
+                }
+            }
+            else
+            {
+                // Tính trang bắt đầu hiển thị.
+                
+                if(currPage - 1 > pagePreview)
+                {
+                    if (maxPage - currPage >= pagePreview)
+                    {
+                        pageStart = currPage - pagePreview;
+                    }
+                    else
+                    {
+                        pageStart = maxPage - numPageShow+1;                        
+                    }
+                }
+                for (int j = pageStart; j < numPageShow + pageStart; j++)
+                {
+                    if (j == currPage)
+                    {
+                        activeClass = "active";
+                    }
+                    else
+                    {
+                        activeClass = "";
+                    }
+                    <li class="@activeClass">
+		                <a href="@oldUrl.SetUrlParameter("Page", j.ToString())" >
+                           @j
+                        </a>
+	                </li>
+                }
+            }
+        }
+
+        <!-- Next page -->
+        @if (ViewBag.page < ViewBag.MaxPage)
+        {    
+        <li class="next">
+		    <a href="@oldUrl.SetUrlParameter("Page", nextPage)" 
+               class="btn btn-default">
+                Next &raquo;
+            </a>
+	    </li>        
+        
+        <!-- End page -->
+	    <li>
+		    <a href="@oldUrl.SetUrlParameter("Page", maxPage.ToString())" 
+               class="btn btn-default">
+                End
+            </a>
+	    </li>
+        }
+    </ul>
+}
+<script type="text/javascript">
+    $(".page").click(function () {
+        var page = $(this).attr('page-index');
+        var url = window.location.href;
+        url = replaceUrlParam(url, "page", page);
+        window.location.href = url;
+    });
+
+    function replaceUrlParam(url, paramName, paramValue) {
+        if (paramValue == null) {
+            paramValue = '';
+        }
+        var pattern = new RegExp('\\b(' + paramName + '=).*?(&|$)');
+        if (url.search(pattern) >= 0) {
+            return url.replace(pattern, '$1' + paramValue + '$2');
+        }
+        url = url.replace(/\?$/, '');
+        return url + (url.indexOf('?') > 0 ? '&' : '?') + paramName + '=' + paramValue;
+    }
+</script>

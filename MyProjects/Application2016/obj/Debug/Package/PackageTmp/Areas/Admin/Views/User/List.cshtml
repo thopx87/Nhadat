@@ -1,0 +1,380 @@
+﻿@model Application2016.Areas.Admin.Models.ListUserModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "User";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li class="active red bigger-120">Danh sách người dùng</li>
+                </ul>
+                <div class="nav-search">
+                    @using (Html.BeginForm("List", "User", FormMethod.Get))
+                    {                    
+                        <span class="input-icon">
+                            @Html.DropDownListFor(m => m.Condition.RegionId, new SelectList(Model.ListAllRegion, "Id", "Text", Model.Condition.RegionId), new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                            @Html.DropDownListFor(m => m.Condition.RoleId, new SelectList(Model.ListRole, "Id", "Text", Model.Condition.RoleId), new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                            @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "nav-search-input", @placeholder = "Search ..." })
+                            <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                        @Html.HiddenFor(m => m.Condition.Page, new { id = "PageIndex" })
+                    }
+                </div>
+                <!-- /.nav-search -->
+            </div>
+            @using (Html.BeginForm("List", "User", FormMethod.Post))
+            {   
+                <div class="page-content">
+                    <div class="page-header">
+                        <input class="btnDefine btn btn-primary" value="Cập nhật" type="submit" />
+                        <a href="javascript:void(0);" id="btnDeleteUsers" class="btnDefine btn btn-default">
+                            <i class="fa fa-trash-o red m-xxs"></i>Xóa
+                        </a> 
+                        <a href="#" id="btnSendEmail"
+                            class="btnDefine btn btn-default">Gửi email
+                        </a>
+                    </div>
+                    <div class="row">
+                        <div id="modal-table" class="modal fade" tabindex="-1">
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <table id="simple-table" class="table  table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="center">
+                                                    <label class="pos-rel">
+                                                        <input type="checkbox" class="ace" id="checkAll" />
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </th>
+                                                <th class="detail-col">
+                                                    Chi tiết
+                                                </th>
+                                                <th>
+                                                    Username
+                                                </th>
+                                                <th style="max-width: 120px">
+                                                    Email
+                                                </th>
+                                                <th style="max-width: 80px">
+                                                    Trạng thái hoạt động
+                                                </th>
+                                                <th>
+                                                    Vùng hoạt động
+                                                </th>
+                                                <th>
+                                                    Quyền hạn
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.lstUser.Count; i++)
+                                            {
+                                                var user = Model.lstUser[i];
+
+                                                // Danh sách quyền
+                                                string strRole = "";
+
+                                                foreach (var userRole in user.UserRoles)
+                                                {
+                                                    strRole += @userRole.Text + ", ";
+                                                }
+                                                if (strRole != "")
+                                                {
+                                                    strRole = strRole.Substring(0, strRole.Length - 2);
+                                                }
+                                                else
+                                                {
+                                                    strRole = AdminConfigs.MESSAGE_DEFAULT_ROLE;
+                                                }
+
+                                                // Thông tin ảnh đại diện
+                                                var avatarFile = user.Avatar;
+                                                if (avatarFile != "")
+                                                {
+                                                    avatarFile = AdminConfigs.IMAGE_PATH + user.UserName + AdminConfigs.ALTDIRECTORYSEPARATORCHAR + avatarFile;
+                                                }
+                                                else
+                                                {
+                                                    avatarFile = "~/Assets/Admin/images/avatars/profile-pic.jpg";
+                                                }
+                                                <tr>
+                                                    <td class="center">
+                                                        <label class="pos-rel">
+                                                            <input type="checkbox" class="ace check select-user" name="selectedUser" id="@string.Format("selectedUser{0}", i)" value="@user.Id" />
+                                                            <span class="lbl"></span>
+                                                            @Html.HiddenFor(m => m.lstUser[i].Id)
+                                                        </label>
+                                                    </td>
+                                                    <td class="center">
+                                                        <div class="action-buttons">
+                                                            <a href="#" class="green bigger-140 show-details-btn" title="Show Details"><i class="ace-icon fa fa-angle-double-down">
+                                                            </i><span class="sr-only">Details</span> </a>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <a href="@Url.Action("PersonalView", "User", new { area = "Admin", @id = @Model.lstUser[i].Id })">@Model.lstUser[i].UserName</a>
+                                                        @Html.HiddenFor(m => m.lstUser[i].UserName)
+                                                    </td>
+                                                    <td>
+                                                        <label>
+                                                            @Model.lstUser[i].Email</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>
+                                                            <input type="checkbox" name="lstUser[@(i)].Status" value="true" id="lstUser_@(i)__Status" checked="@Model.lstUser[i].Status" class="ace ace-switch ace-switch-3" onchange = "UpdateForRow(@i)" } />
+                                                            <span class="lbl"></span>
+                                                            <input name="lstUser[@(i)].Status" type="hidden" value="false" />
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        @*@strRegions*@
+                                                    </td>
+                                                    <td style="width: 20%">
+                                                        @strRole
+                                                    </td>
+                                                </tr>                                                                                                                                                                                                                                                                                       <tr
+                                                    class="detail-row">
+                                                    <td colspan="7">
+                                                        <div class="table-detail">
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-2">
+                                                                    <div class="text-center">
+                                                                        <img height="150" class="thumbnail inline no-margin-bottom" alt="Chưa có avatar" src="@Url.Content(@avatarFile)" />
+                                                                        <br />
+                                                                        <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                                                                            <div class="inline position-relative">
+                                                                                <a class="user-title-label" href="#"><i class="ace-icon fa fa-circle light-green"></i>
+                                                                                    &nbsp; <span class="white">@user.LastName</span> </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-4">
+                                                                    <div class="space visible-xs">
+                                                                    </div>
+                                                                    <div class="profile-user-info profile-user-info-striped">
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Tên hiển thị
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <span>@user.DisplayName</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Full name
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <span>@user.FirstName @user.LastName</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Địa chỉ
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <i class="fa fa-map-marker light-orange bigger-110"></i><span>@user.Address</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Ngày sinh
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <span>@user.DateOfBirth</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Ngày đăng ký
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <span>@user.DateCreate</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Online lần cuối
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <span>@user.DateLogin</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Điện thoại
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                <span>@user.Phone</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="profile-info-row">
+                                                                            <div class="profile-info-name">
+                                                                                Vùng hoạt động
+                                                                            </div>
+                                                                            <div class="profile-info-value">
+                                                                                @*<span>@strRegions</span>*@
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-2">
+                                                                    <div class="space visible-xs">
+                                                                    </div>
+                                                                    <h4 class="header blue lighter less-margin">
+                                                                        Phân quyền</h4>
+                                                                    <div style="height: 200px; display: block; overflow: auto;">
+                                                                        @Html.CheckBoxListFor(m => m.lstUser[i].NewRoles,
+                                                                        m => m.lstUser[i].ListRole,
+                                                                        r => r.Id,
+                                                                        r => r.Text,
+                                                                        m => m.lstUser[i].UserRoles,
+                                                                        Position.Vertical,
+                                                                        m => new { onchange = "UpdateForRow(" + i + ")" }
+                                                                        )
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-2">
+                                                                    <div class="space visible-xs">
+                                                                    </div>
+                                                                    <h4 class="header blue lighter less-margin">
+                                                                        Phân vùng gửi</h4>
+                                                                    <div style="height: 200px; display: block; overflow: auto;">
+                                                                        @Html.CheckBoxListFor(m => m.lstUser[i].ListUserInRegionSend.regionIds,
+                                                                        m => m.ListAllRegion,
+                                                                        r => r.Id,
+                                                                        r => r.Text,
+                                                                        m => m.lstUser[i].ListUserInRegionSend.ListItem,
+                                                                        Position.Vertical,
+                                                                        m => new { onchange = "UpdateForRow(" + i + ")" }
+                                                                        )
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-2">
+                                                                    <div class="space visible-xs">
+                                                                    </div>
+                                                                    <h4 class="header blue lighter less-margin">
+                                                                        Phân vùng nhận</h4>
+                                                                    <div style="height: 200px; display: block; overflow: auto;">
+                                                                        @Html.CheckBoxListFor(m => m.lstUser[i].ListUserInRegionReceive.regionIds,
+                                                                        m => m.ListAllRegion,
+                                                                        r => r.Id,
+                                                                        r => r.Text,
+                                                                        m => m.lstUser[i].ListUserInRegionReceive.ListItem,
+                                                                        Position.Vertical,
+                                                                        m => new { onchange = "UpdateForRow(" + i + ")" }
+                                                                        )
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                    @Html.Partial("_PagingPartial")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal fade in" id="email_model">
+            <div id="email-content">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('.show-details-btn').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').next().toggleClass('open');
+            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+        });
+
+        $("#checkAll").click(function () {
+            $(".check").prop('checked', $(this).prop('checked'));
+        });
+        function UpdateForRow(id) {
+            $("#selectedUser" + id).attr("checked", true);
+        }
+
+        $('#btnDeleteUsers').click(function () {
+            var numberUserChecked = $('input.select-user:checked').length;
+            if (numberUserChecked > 0) {
+                var arrUser = [];
+                $('input.select-user:checked').each(function () {
+                    arrUser.push($(this).val());
+                });
+                if (confirm('@Html.Raw(AdminConfigs.CONFIRM_DELETE_USERS)')) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteMultiple", "User", new { area = "Admin" })',
+                        data: JSON.stringify({ usersDelete: arrUser }),
+                        contentType: 'application/json; charset=utf-8',
+                        type: 'POST',
+                        dataType: 'json',
+                        async: false
+                    })
+                    .success(function (result) {
+                        if (result > 0) {
+                            alert('@Html.Raw(AdminConfigs.MESSAGE_DELETE_SUCCESS)');
+                        } else {
+                            alert('@Html.Raw(AdminConfigs.MESSAGE_DELETE_ERROR)');
+                        }
+                        window.location.reload(false);
+                    })
+                    .error(function (xhr, status) {
+                        alert(status);
+                    });
+                }
+            } else {
+                alert('@Html.Raw(AdminConfigs.MESSAGE_NOT_CHOICE)');
+            }
+
+        });
+</script>
+    <script type="text/javascript">
+        $('#btnSendEmail').click(function () {
+            var numberUserChecked = $('input.select-user:checked').length;
+            if (numberUserChecked > 0) {
+                var arrUser = [];
+                $('input.select-user:checked').each(function () {
+                    arrUser.push($(this).val());
+                });
+
+                var url = '@Url.Action("SendEmail", "User", new { area = "Admin" })';
+                $.ajax({
+                    url: url,
+                    data: JSON.stringify({ usersId: arrUser }),
+                    type: 'POST',
+                    cache: false,
+                    contentType: 'application/json; charset=utf-8',
+                    async: false
+                })
+                .success(function (data) {
+                    $('#email-content').html(data);
+                    $('#email_model').modal('show');
+                })
+                .error(function (xhr, status) {
+                    alert(status);
+                });
+            } else {
+                alert('@Html.Raw(AdminConfigs.MESSAGE_NOT_CHOICE)');
+            }
+
+        });
+
+    </script>
+}

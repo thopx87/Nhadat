@@ -1,0 +1,175 @@
+﻿@model Application2016.Areas.Admin.Models.RegisterModel
+@using CaptchaMvc.HtmlHelpers;
+@using CaptchaMvc;
+
+<script type="text/javascript">
+    $(function () {
+        $('.fetched-date input').datepicker({
+            dateFormat: 'dd-mm-yy',
+            minDate: '+5d',
+            changeMonth: true,
+            changeYear: true,
+            altFormat: "yy-mm-dd",
+            autoclose: true
+        });
+    });
+</script>
+
+<div class="modal-dialog">
+	<div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="orange center lighter bigger"><i class="ace-icon fa fa-users blue"></i>ĐĂNG KÝ MÔI GIỚI</h4>
+            <p>Bạn đang đăng ký thành môi giới. Bạn muốn đăng ký thành viên thường hãy <a href="#" id="btnRegistryMember">Click vào đây</a></p>
+        </div>
+        @using (Ajax.BeginForm("RegisterMember", "Template1", FormMethod.Post,
+                            new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "POST",
+                                UpdateTargetId = "list-of-people"
+                            }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <fieldset>
+				            <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+						            @*@Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email", @required = "true", @oninvalid = "this.setCustomValidity('Xin vui lòng nhập địa chỉ Email')" })*@
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email"})
+                                    @Html.ValidationMessageFor(m => m.Email)
+                                    <i class="ace-icon add-on fa fa-envelope red"></i>
+					            </span>
+				            </label>
+
+				            <label class="block clearfix">
+					            <span class="block input-icon input-icon-right">
+						            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Tên đăng nhập"})
+                                    @Html.ValidationMessageFor(m => m.UserName)
+						            <i class="ace-icon fa fa-user red"></i>
+					            </span>
+				            </label>
+
+				            <label class="clearfix" style="display:flex;">
+					            <span class="block input-icon input-icon-right">
+						            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder = "Mật khẩu", @type="password" })
+                                    <i class="ace-icon fa fa-lock red"></i>
+                                    @Html.ValidationMessageFor(m => m.Password)
+					            </span>
+                                <span class="col-sm-1"></span>
+                                <span class="block input-icon input-icon-right">
+						            @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Xác nhận Mật khẩu", @type="password" })
+                                    <i class="ace-icon fa fa-retweet red"></i>
+                                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+					            </span>
+				            </label>
+
+                            <label class="block clearfix">
+					            <span class="block input-icon input-icon-right">
+						            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "Số điện thoại" })
+                                    @Html.ValidationMessageFor(m => m.PhoneNumber)
+						            <i class="ace-icon fa fa-phone red"></i>
+					            </span>
+				            </label>
+
+                            <label class="clearfix" style="display: flex;">
+					            <span class="block input-icon input-icon-right">
+						            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "Họ & tên đệm" })
+                                </span>
+                                <span class="col-sm-1"></span>
+                                <span class="block input-icon input-icon-right">
+                                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder = "Tên" })
+					            </span>
+				            </label>
+
+                            <label class="clearfix" style="display: flex;">
+					            <span class="block input-icon input-icon-right fetched-date">
+						            @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control", @placeholder = "Ngày sinh (dd/mm/yyyyy)", @data_date_format="dd/mm/yyyy" })
+                                    <i class="ace-icon fa fa-calendar bigger-110"></i>
+                                </span>
+                                <span class="col-sm-1"></span>
+                                <span class="block">
+                                    <label>
+                                        @Html.RadioButtonFor(m => m.Gender, "1", new { @class = "ace input-lg", id = "Male", @checked = "checked" }) 
+                                        <span class="lbl bigger-120"> Nam</span>
+                                    </label>
+                                    <label>
+                                        @Html.RadioButtonFor(m => m.Gender, "2", new { @class = "ace input-lg", id = "Female" })
+                                        <span class="lbl bigger-120"> Nữ</span>
+                                    </label>
+                                </span>
+				            </label>
+
+                            <label class="block clearfix">
+					            <span class="block">
+						            @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text", Model.CityId), "Chọn tỉnh/ thành phố", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#ward_Parent','#PlaceId')") })
+                                    @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text", Model.DistrictId), "Quận/huyện", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#ward_Parent','#PlaceId')") })
+                                    @Html.DropDownListFor(m => m.WardId, new SelectList(Model.ListWard, "Id", "Text", Model.WardId), "Xã/phường", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#ward_Parent','#PlaceId')") })
+                                </span>
+				            </label>
+
+                            <label class="block clearfix">
+                                <label class="left">Captcha </label>
+                                @Html.MathCaptcha()                        
+                            </label>
+                            <p class="field-validation-error">  @ViewBag.ErrMessage </p>  
+				            @*<label class="block">
+                            
+					            <input type="checkbox" class="ace" onchange="document.getElementById('btnRegister').disabled = !this.checked;" />
+					            <span class="lbl">
+						            Tôi chấp nhận 
+						            <a href="#">Điều khoản quy định</a> của website.
+					            </span>
+				            </label>*@
+
+				            <div class="clearfix">
+					            <button type="button" id="btnRegister" class="width-100 btn btn-sm btn-success">
+						            <span class="orange bigger-150">Đăng ký</span>
+						            <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+					            </button>
+				            </div>
+
+                            <label class="block">
+					            <strong class="blue">Chú ý:</strong>Thông tin: Tên đăng nhập, Email, Số điện thoại không thể thay đổi sau khi đăng ký. Chỉ Có Admin mới thay đổi được. Để thay đổi vui lòng liên hệ tổng đài 0973292194 hoặc land4p.com@gmail.com
+				            </label>
+			            </fieldset>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $('#btnRegister').click(function () {
+        var self = $(this);
+        $.ajax({
+            url: '@Url.Action("RegisterMember","Template1")',
+            type: 'POST',
+            data: self.closest('form').serialize(),
+            success: function (data) {
+                var message = '@Html.Raw(Model.Message)';
+                if ('@Model.Result' == '1') {
+                    alert(message);
+                    $('#register_model').modal('hide');
+                    location.reload(false)
+                } else {
+                    $('#register_model').html(data);
+                    if ('@Model.Result' == '0') {
+                        alert(message);
+                        return;
+                    }
+                }
+            }
+        });
+    });
+
+    $('#btnRegistryMember').click(function () {
+        var url = '@Url.Action("RegisterMember","Template1")';
+        $.get(url, function (data) {
+            $('#register-container').html(data);
+            $('#register_model').modal('show');
+        });
+    });
+</script>

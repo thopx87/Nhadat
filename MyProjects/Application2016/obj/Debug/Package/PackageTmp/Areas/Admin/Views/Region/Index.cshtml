@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+            <ul class="breadcrumb">
+				<li class="active red bigger-120">Danh sách vùng</li>
+			</ul>
+            <div class="nav-search" id="nav-search">
+            
+            @using (Html.BeginForm("Index", "Region", null, FormMethod.Get, new { id = "frmSearch", @class="form-search" }))
+            {
+                <span class="input-icon">
+				        <input type="text" name="text" placeholder="Tìm vùng ..." value="@ViewBag.text" class="nav-search-input" id="searchRegion" autocomplete="off" />
+				        <i class="ace-icon fa fa-search nav-search-icon"></i>
+			        </span>
+            }
+	        </div>
+        </div>
+        <div class="page-content">
+            <div class="page-header">
+                <a href ="@Url.Action("UpdateRegion", "Region", new { id = 0, cityId = 0, districtId=0 })" class="btnDefine btn btn-primary"><i class="fa fa-plus"></i>&nbsp;Thêm vùng</a>
+                <a href="@Request.Url" id="btnRefresh" class="btnDefine btn"><i class="fa fa-refresh"></i>&nbsp;Refresh</a>
+                <a href="" id="btnExportCSV" class="btnDefine btn btn-primary"><i class="fa fa-file-excel-o"></i>&nbsp;Xuất ra CSV</a>
+                <a href="" id="btnExport" class="btnDefine btn btn-primary"><i class="fa fa-file-excel-o"></i>&nbsp;Xuất ra Excel</a>
+			</div>
+            <div class="row">
+                <div class="col-xs-12">        
+                    <div class="row">
+			            <div class="col-xs-12">
+                            @{
+                                if (ViewBag.Message != "" && ViewBag.Message != null)
+                                {
+                                    <div class="@ViewBag.AlertClass">
+                                        <i class="ace-icon fa fa-hand-o-right"></i>
+                                        @ViewBag.Message
+                                        <button class="close" data-dismiss="alert">	<i class="ace-icon fa fa-times"></i></button>
+                                    </div>
+                                }
+                                ViewBag.Message = "";
+                            }
+
+                            <div>
+                                @{
+                                    if (ViewBag.ActionForm != null)
+                                    {
+                                        @Html.Partial((string)ViewBag.ActionForm)
+                                        ViewBag.ActionForm = "";
+                                    }    
+                                }
+                            </div>
+                
+				            @Html.Partial("ListRegion")
+			            </div><!-- /.span -->
+		            </div><!-- /.row -->
+                </div>
+            </div>
+        </div>
+	</div><!-- /.col -->
+</div><!-- /.row -->
+
+<script type="text/javascript">
+    $("#searchRegion").on('change', function () {
+        var url = 'Region/Search';
+        $.get(url, { text: $("#searchRegion").val() }, function (data) {
+            
+        });
+    });
+    
+    $("#btnExport").click(function () {
+        $.ajax({
+            url: '@Url.Action("ExportToExcel", "Region", new {area="Admin"})',
+            type: 'GET',
+            success: function () {
+                window.location = '@Url.Action("ExportToExcel", "Region", new {area="Admin"})';
+            },
+            error: function () {
+                alert("Có lỗi khi xuất file!");
+            }
+        });   //end ajax
+    });
+
+    $("#btnExportCSV").click(function () {
+        $.ajax({
+            url: '@Url.Action("ExportToCSV", "Region", new {area="Admin"})',
+            type: 'GET',
+            success: function () {
+                window.location = '@Url.Action("ExportToCSV", "Region", new {area="Admin"})';
+            },
+            error: function () {
+                alert("Có lỗi khi xuất file!");
+            }
+        });   //end ajax
+    });
+</script>
+    
+}

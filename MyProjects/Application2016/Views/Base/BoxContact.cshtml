@@ -1,0 +1,20 @@
+﻿@using Application2016.Areas.Admin.Models
+@{
+    List<SettingCommonModel> websiteInfo = ViewBag.WebsiteInfo as List<SettingCommonModel>;
+}
+@if (websiteInfo.Count > 0)
+{
+<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+    <div class="footer-logo">
+        <a href="index.html" title="Logo">
+            <img src="images/logo.png" alt="logo"></a></div>
+    <address>
+        <i class="add-icon">&nbsp;</i>@websiteInfo[3].Value<br>
+            &nbsp;
+    </address>
+    <div class="phone-footer"><i class="phone-icon">&nbsp;</i> @websiteInfo[1].Value  </div>
+    <div class="email-footer">
+        <i class="email-icon">&nbsp;</i> <a href="mailto:support@nhadat.com">@websiteInfo[0].Value</a>
+    </div>
+</div>
+}

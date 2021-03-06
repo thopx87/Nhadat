@@ -1,0 +1,88 @@
+﻿@model Application2016.Areas.Admin.Models.ListCategoryModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">                
+                <ul class="breadcrumb">
+				    <li class="active red bigger-120">Danh sách thư mục</li>
+			    </ul>
+                <div class="nav-search" id="nav-search">
+                    <span class="input-icon">
+                        @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "nav-search-input", @placeholder = "Search ..."})
+                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                    </span>
+                    @Html.HiddenFor(m => m.Condition.Page)
+                </div>
+            </div>
+            <div class="page-content">
+                 <div class="page-header">
+                    <a href="@Url.Action("Update", "Category", new { @Id = 0 })" class="btnDefine btn btn-primary">Thêm mới</a>
+			    </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        
+                                    </th>
+                                    <th class="center">
+                                        Tên
+                                    </th>
+                                    <th class="center">
+                                        Mã
+                                    </th>
+                                    <th class="center">
+                                        Thư mục cha
+                                    </th>
+                                    <th class="center">
+                                        Dạng thư mục
+                                    </th>
+                                    <th class="center">
+                                        Trạng thái hiển thị
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @for (int i = 0; i < Model.ListCategory.Count; i++)
+                            {
+                                var m = Model.ListCategory[i];
+                                <tr>
+                                    <td class="center">
+                                        <a href="#" class="green bigger-140 show-details-btn" title="Xem chi tiết"><i class="ace-icon fa fa-angle-double-down">
+                                        </i></a>
+                                    </td>
+                                    <td class="">
+                                        <a href="@Url.Action("Update", "Category", new { @Id = @m.Id })">@m.Text</a>
+                                    </td>
+                                    <td>
+                                        <label>@m.Code</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.ParentText</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.TypeText</label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@m.Display" onclick="return false;" />
+                                            <span class="lbl bigger-120"> </span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        @Html.Partial("_PagingPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

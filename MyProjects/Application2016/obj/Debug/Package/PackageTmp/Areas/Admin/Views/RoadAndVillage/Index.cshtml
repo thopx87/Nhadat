@@ -1,0 +1,146 @@
+﻿@using Application2016.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+<div class="row">
+    <div class="col-xs-12">        
+        <div class="row">
+			<div class="col-xs-12">
+                <h4 class="pink">
+                    <a href ="@Url.Action("Update", "RoadAndVillage", new { id = 0 })" class="btn btn-primary">Thêm đường/làng</a>
+                        
+                    <a href="@Request.Url" id="btnRefresh" class="btn btn-primary">Refresh</a>
+                </h4>
+
+                @{
+                if(ViewBag.Message !="" && ViewBag.Message !=null){
+                        <div class="@ViewBag.AlertClass">
+                            <i class="ace-icon fa fa-hand-o-right"></i>
+                            @ViewBag.Message
+                            <button class="close" data-dismiss="alert">	<i class="ace-icon fa fa-times"></i></button>
+                        </div>
+                    }
+                    ViewBag.Message = "";
+                }
+
+                <div>
+                    @{
+                        if (ViewBag.ActionForm != null)
+                        {
+                            @Html.Partial((string)ViewBag.ActionForm)
+                            ViewBag.ActionForm = null;
+                        }    
+                    }
+                </div>
+                <table id="simple-table" class="table  table-bordered table-hover">
+	                <thead>
+		                <tr>
+			                <th class="center">
+				                <label class="pos-rel">
+					                <input type="checkbox" class="ace" id="checkAll" />
+					                <span class="lbl"></span>
+				                </label>
+			                </th>
+			                <th class="detail-col">Details</th>
+			                <th>Tên đường/ làng</th>
+			                <th>Tên Xã/ phường</th>
+			                <th>Tên vùng</th>
+			                <th>Xử lý</th>
+		                </tr>
+	                </thead>
+                    <tbody>
+                    @if(ViewBag.ListRoadAndVillage.Count == 0){
+                        <tr>
+                            <td colspan="6" style="text-align:center; vertical-align:middle; color: Red;">@AdminConfigs.MESSAGE_NOT_DATA</td>
+                        </tr>   
+                    }
+                    @foreach(var elem in  ViewBag.ListRoadAndVillage as IList<Entities.Road_Village>)
+                    {
+                    <tr>
+	                    <td class="center">
+		                    <label class="pos-rel">
+                                 <input type="checkbox" class="ace check" name="selectedelem" id="@string.Format("selectedelem{0}", elem.Id)" value="@elem.Id" />
+			                    <span class="lbl"></span>
+		                    </label>
+	                    </td>
+	                    <td class="center">
+		                    <div class="action-buttons">
+			                    <a href="#" class="green bigger-140 show-details-btn" title="Show Details">
+				                    <i class="ace-icon fa fa-angle-double-down"></i>
+				                    <span class="sr-only">Details</span>
+			                    </a>
+		                    </div>
+	                    </td>
+	                    <td>
+                            <label> @elem.Text</label>
+	                    </td>
+	                    <td>
+                        
+                        <label> 
+                            @elem.Ward.Text
+                        </label>
+                        </td>
+	                    <td >
+                            <label>
+                            @elem.Region.Text
+                            </label>
+                           
+                        </td>
+
+	                    <td class="center">
+		                    <div class="hidden-sm hidden-xs btn-group">
+			                    <button class="btn btn-xs btn-success">
+				                    <i class="ace-icon fa fa-check bigger-120"></i>
+			                    </button>
+                                <a href="@Url.Action("Update", "RoadAndVillage", new { id = @elem.Id})" class="modal-link btn btn-xs btn-info">
+                                <i class="ace-icon fa fa-pencil bigger-120"></i>
+                                </a>
+                                <a href="@Url.Action("Delete", "RoadAndVillage", new { id = @elem.Id })" class="btn btn-xs btn-danger" onclick="return confirm('@string.Format(@Application2016.Helpers.AdminConfigs.CONFIRM_DELETE, @elem.Text)')"><i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+
+			                    <button class="btn btn-xs btn-warning">
+				                    <i class="ace-icon fa fa-flag bigger-120"></i>
+			                    </button>
+		                    </div>
+	                    </td>
+                    </tr>
+        
+                    <tr class="detail-row">
+                        <td style="border:0;"></td>
+                        <td style="border:0;"></td>
+                        <td style="border:0;"></td>
+                        <td style="border:0;"></td>
+                        <td style="border:0;"></td>
+                    </tr>
+                    }
+                </tbody>
+
+                </table>
+
+                @Html.Partial("_PagingPartial")
+
+                <script type="text/javascript">
+                    $('.show-details-btn').on('click', function (e) {
+                        e.preventDefault();
+                        $(this).closest('tr').next().toggleClass('open');
+                        $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+                    });
+
+                    $("#checkAll").click(function () {
+                        $(".check").prop('checked', $(this).prop('checked'));
+                    });
+
+                    function UpdateForRow(id) {
+                        $("#selectedRegion" + id).attr("checked", true);
+
+
+                    }
+                </script>
+			</div><!-- /.span -->
+		</div><!-- /.row -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
+
+    
+}

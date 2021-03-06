@@ -1,0 +1,124 @@
+﻿@using Application2016.Helpers
+@model Application2016.Areas.Admin.Models.WardModel
+@{
+    Layout = null;
+}
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="widget-box">
+			<div class="widget-header">
+				<h4 class="widget-title">Thông tin 1 phường / xã</h4>
+
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="ace-icon fa fa-chevron-up"></i>
+					</a>
+
+					<a href="#" data-action="close">
+						<i class="ace-icon fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="widget-body">
+                <div class="widget-main">
+                @using (Html.BeginForm("UpdateWard", "Place", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <fieldset>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group">
+								<label class="col-sm-4" for="form-field-8">@AdminConfigs.TEXT_NAME_CITY</label>
+                                <!-- ListPlaceJson() function in Index.html file -->
+                                @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text", Model.CityId), @AdminConfigs.TEXT_CHOOSE_CITY, new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#Parent')") })
+							</div>
+                            <div class="form-group" id="divDistrict">
+								<label class="col-sm-4" for="form-field-8">@AdminConfigs.TEXT_NAME_DISTRICT</label>
+                                @Html.DropDownListFor(m => m.Parent, new SelectList(Model.ListDistrict, "Id", "Text", Model.Parent), @AdminConfigs.TEXT_CHOOSE_DISTRICT)
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4" for="form-field-9">@AdminConfigs.TEXT_NAME_WARD</label>
+                                @Html.TextBoxFor(m => m.Text, new { @class = "", @placeholder = @AdminConfigs.TEXT_NAME_WARD })
+                                @Html.ValidationMessageFor(m => m.Text)
+							</div>
+                            <div class="form-group">
+                                <label class="col-sm-4" for="">Số môi giới tối đa</label>
+                                @{
+                                    var listAgency = new List<int>();
+                                    for (int i = 1; i <= AdminConfigs.MAX_AGENCY; i++)
+                                    {
+                                        listAgency.Add(i);
+                                    }
+                                    @Html.DropDownListFor(m => m.MaxAgency, new SelectList(listAgency));
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4" for="">Số môi giới online</label>
+                                @{
+                                    @Html.DropDownListFor(m => m.MaxAgencyFree, new SelectList(listAgency));
+                                }
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group">
+                                @Html.RadioButtonFor(m => m.wardType, (short)BusinessLayer.Enums.Place.Phuong, new { @checked = "true" }) Phường
+                                @Html.RadioButtonFor(m => m.wardType, (short)BusinessLayer.Enums.Place.Xa) Xã
+                                @Html.RadioButtonFor(m => m.wardType, (short)BusinessLayer.Enums.Place.Thi_Tran) Thị trấn
+                            </div>
+                            <div class="form-group">
+								<label for="form-field-11">Địa chỉ</label>
+								@Html.TextAreaFor(m => m.Address, new { @class = "autosize-transition form-control" })
+							</div>
+                            @*<div class="form-group">
+                                <div style="float:left; padding-right:10px;">
+                                    <label>Kinh độ</label>
+                                    @Html.TextBoxFor(m => m.Longitude, new { @class = "form-control"})
+                                    @Html.ValidationMessageFor(m => m.Longitude)
+                                </div>
+                                <div style="float:left">
+                                    <label>Vĩ độ</label>
+                                    @Html.TextBoxFor(m => m.Latitude, new { @class = "form-control"})
+                                    @Html.ValidationMessageFor(m => m.Latitude)
+                                </div>
+                                <div id="dvMap"  style="width: 600px; height: 400px; float:left; padding-top:10px;">                               
+                                </div>
+                            </div>*@
+                        </div>                                
+                    </fieldset>
+                    <!-- hiden field -->
+                    @Html.HiddenFor(m=>m.RegionId)
+                    
+                    <div class="">
+                    <input type="submit" class="btn btn-sm btn-success" value="@ViewBag.SubmitValue" />
+                    </div>
+                }
+				</div>
+			</div>
+                    
+		</div>
+	</div><!-- /.span -->
+</div><!-- /.row -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MaxAgency").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: Ctrl+C
+            (e.keyCode == 67 && e.ctrlKey === true) ||
+            // Allow: Ctrl+X
+            (e.keyCode == 88 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>

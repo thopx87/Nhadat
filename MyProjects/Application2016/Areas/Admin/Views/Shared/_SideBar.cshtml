@@ -1,0 +1,125 @@
+﻿@using Application2016.Helpers
+<div id="sidebar" class="sidebar      h-sidebar                navbar-collapse collapse          ace-save-state">
+    <ul class="nav nav-list">
+        @if (CookieHelper.Get(AdminConfigs.COOKIES_ADMIN) == "1")
+        {
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Role" ? "active open" : "")"><a href="@Url.Action("Index", "Role")"><i class="menu-icon fa fa-users">
+            </i>Phân quyền </a></li>
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "User" ? "active open" : "")"><a href="@Url.Action("List", "User")?page=1"><i class="menu-icon fa fa-user">
+            </i>Người dùng </a></li>
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Place" ? "active open" : "")"><a href="@Url.Action("Index", "Place")"><i class="menu-icon fa fa-globe">
+            </i>Địa lý </a></li>
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Region" ? "active open" : "")"><a href="@Url.Action("Index2", "Region")"><i class="menu-icon fa fa-map-marker">
+            </i>Vùng </a></li>
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Cost" ? "active open" : "")"><a href="@Url.Action("Index", "Cost")"><i class="menu-icon fa fa-money">
+            </i>Tính phí </a></li>
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Category" ? "active open" : "")"><a href="@Url.Action("Index", "Category")"><i class="menu-icon fa fa-folder">
+            </i>Thư mục </a></li>
+            <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Article" ? "active open" : "")"><a href="@Url.Action("Index", "Article")"><i class="menu-icon fa fa-pencil-square-o">
+            </i>Bài viết </a></li>        
+        }
+        @if (CookieHelper.Get(AdminConfigs.COOKIES_AGENCY) == "1")
+        {
+            <li class="hover @(ViewBag.ActionMenu == "ProductManager" ? "active open" : "")">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="menu-icon fa fa-bullhorn"></i>
+                <span class="menu-text">Môi giới </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="hover">
+                        <a href="@Url.Action("ProductReceiveSelling", "Product")"><i class="menu-icon fa fa-caret-right">
+                        </i>Sản phẩm nhận bán </a><b class="arrow"></b></li>
+                </ul>
+            </li>
+        }
+        
+        <li class="hover  @(ViewBag.ActionMenu == "ProductManager" ? "active open" : "")">
+			<a href="#" class="dropdown-toggle">
+				<i class="menu-icon fa fa-home"></i>
+				<span class="menu-text"> Quản lý nhà </span>
+				<b class="@(ViewBag.ActionMenu.ToString() == "ProductManager" ? "arrow fa fa-angle-down" : "arrow fa fa-angle-up")"></b>
+			</a>
+			<b class="arrow"></b>
+			<ul class="submenu">
+				<li class="hover @(ViewBag.ActionSubMenu.ToString() == "Product" ? "active" : "")">
+					<a href="@Url.Action("Index","Product")?type=&page=0">
+						<i class="menu-icon fa fa-caret-right"></i>
+                        <i class="fa fa-list"></i>
+						Danh sách nhà
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Sale" ? "active" : "")">
+					<a href="@Url.Action("UpdateSaleProduct", "Product")?Id=0">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Đăng bán nhà
+					</a>
+					<b class="arrow"></b>
+				</li>
+                <li class="hover @(ViewBag.ActionSubMenu.ToString() == "Lease" ? "active" : "")">
+					<a href="@Url.Action("UpdateLeaseProduct", "Product")?Id=0">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Đăng cho thuê
+					</a>
+					<b class="arrow"></b>
+				</li>
+            </ul>
+        </li>
+        <li class="hover @(ViewBag.ActionMenu == "ProductManager" ? "active open" : "")">
+			<a href="#" class="dropdown-toggle">
+				<i class="menu-icon fa fa-product-hunt"></i>
+				<span class="menu-text"> Phân loại</span>
+				<b class="@(ViewBag.ActionMenu.ToString() == "ProductManager" ? "arrow fa fa-angle-down" : "arrow fa fa-angle-up")"></b>
+			</a>
+			<b class="arrow"></b>
+            <ul class="submenu">
+                <li class="hover @(ViewBag.ActionSubMenu.ToString() == "ProductFollow" ? "active" : "")">
+					<a href="@Url.Action("ProductFollow", "Product")">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Nhà theo dõi
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+				<li class="hover @(ViewBag.ActionSubMenu.ToString() == "ProductSale" ? "active" : "")">
+					<a href="@Url.Action("ProductSale", "Product")">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Nhà đăng bán & Thuê
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="hover">
+					<a href="#">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Nhà đặt giá mua
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="hover">
+					<a href="#">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Nhà đăng mua
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                @if (CookieHelper.Get(AdminConfigs.COOKIES_ADMIN) == "1")
+                {
+                    <li class="@(ViewBag.ActionSubMenu.ToString() == "ProductWasSelling" ? "active" : "")">
+					<a href="@Url.Action("ProductWasSelling", "Product")">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Sản phẩm đã bán
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                }
+			</ul>
+		</li>
+    </ul>
+    <!-- /.nav-list -->
+</div>

@@ -1,0 +1,44 @@
+﻿@using Application2016.Helpers;
+@using Application2016.Enums;
+@{
+    var ListProduct = ViewBag.ListProduct as IList<Entities.Product>;
+}
+<style type="text/css">
+    li .product-vertical
+    {
+        height: 120px;
+        width: 100%;
+    }
+</style>
+<div class="list-wrpaaer" style="height:480px; background-color: #ecf1f4;">
+    <ul id="marquee-vertical">
+     @foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+     {
+         string image = "no avatar";
+         if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+         {
+             image = Url.Content(item.Avatar_Url + item.Avatar);
+         }
+         else
+         {
+             image = Url.Content("~/Assets/Images/home-default.png");
+         }
+         <li class="product-vertical">
+            <div style="border: solid 1px #fff;">
+                <a href="../@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id, item.Text_Alias)">
+                   <img class="media-object" height="100" src="@image" data-src="holder.js/72x72" alt="@item.Text" />
+                </a>
+                <p>
+                    @item.Text
+                </p>
+            </div>
+         </li>
+     }
+    </ul>
+</div>
+
+
+<script src="@Url.Content("~/Assets/js/jquery.marquee.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $('#marquee-vertical').marquee();  
+</script>

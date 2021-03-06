@@ -1,0 +1,19 @@
+﻿<link href="@Url.Content("/Assets/Admin/css/fileinput.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Assets/Admin/js/fileinput.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Admin/js/fileinput-vi.js")" type="text/javascript"></script>
+    
+<div class="container kv-main">            
+    <input id="imgs" name="imageFiles[]" type="file" multiple="true" />
+</div>
+
+<script type="text/javascript">
+    $('#imgs').fileinput({
+        language: 'vi',
+        uploadUrl: '@Url.Action("UpdateImage","Product")',
+        allowedFileExtensions : ['jpg', 'png','gif'],
+        overwriteInitial: false,
+        maxFileSize: 1000,
+        maxFileCount: 10,
+        uploadAsync: false,
+    });
+</script>

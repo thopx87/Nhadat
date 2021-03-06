@@ -1,0 +1,291 @@
+﻿@using Application2016.Helpers;
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8">
+<!--[if IE]>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Website nhà đất 10 tỷ</title>
+
+<!-- Favicons Icon -->
+@*<link rel="icon" href="http://demo.magikthemes.com/skin/frontend/base/default/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="http://demo.magikthemes.com/skin/frontend/base/default/favicon.ico" type="image/x-icon" />*@
+
+<!-- Mobile Specific -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<!--<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/animate.css")" type="text/css">-->
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/bootstrap.min.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/slider.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/owl.carousel.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/owl.theme.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/font-awesome.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/style.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/flexslider.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("~/Assets/Site/css/fancybox.css")" type="text/css"/>
+
+
+<!-- Google Fonts -->
+@*<link href='https://fonts.googleapis.com/css?family=Bitter:400,700,400italic' rel='stylesheet' type='text/css'>*@
+
+<style type="text/css">
+btnDefine {
+    display: inline-block;
+    padding: 3px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+</style>
+
+<!-- JavaScript --> 
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/jquery.min.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/bootstrap.min.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/parallax.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/common.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/slider.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/owl.carousel.min.js")"></script>
+
+@if (TempData[AdminConfigs.TEMP_MESSAGE] != null)
+{
+    <div class="modal face" id="message-admin" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Thông báo
+                </div>
+                <div class="modal-body">
+                    @TempData[AdminConfigs.TEMP_MESSAGE]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnOK" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        // var urlRedirect = @TempData[AdminConfigs.TEMP_REDIRECT];
+        jQuery('#message-admin').modal("show");
+        if (urlRedirect != "") {
+            window.location = urlRedirect;
+        }
+    });
+</script>
+    
+    TempData[AdminConfigs.TEMP_MESSAGE] = null;
+    TempData[AdminConfigs.TEMP_REDIRECT] = null;
+}
+
+</head>
+
+<body class="cms-index-index">
+<div class="page"> 
+  <!-- Header -->
+  <header class="header-container">
+    @Html.Partial("_Header")
+   </header>
+  <!-- end header --> 
+  <!-- Navbar -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner"> 
+        <!-- mobile-menu -->
+        @Html.Partial("_MobileMenuPartial")
+
+        
+        @Html.Partial("_MenuTopPartial")
+
+        <!-- Search-col -->
+       @* @Html.Action("BoxSearch", "Base")*@
+        <!-- End Search-col --> 
+      </div>
+    </div>
+  </nav>
+  <!-- end nav --> 
+  
+
+  <!-- Offer Banner  -->
+  
+  @*@Html.Action("BoxBanner", "Base")*@
+  
+  
+  <!-- Offer Banner  --> 
+  
+  <!-- main container -->
+  
+  
+  @RenderSection("MainContent", required: true)
+
+    
+
+  <!-- End main container --> 
+  
+  @*@Html.Action("BoxLastestArticle", "Base")
+  
+  @Html.Action("BoxFeature", "Base")
+  
+   @Html.Action("BoxBlandLogo", "Base")*@
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-middle">
+      <div class="container">
+        <div class="row">
+          
+          @Html.Action("BoxContact", "Base", new { Area = "" })
+
+          @Html.Action("BoxGuide", "Base", new { Area = "" })
+
+          @*<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <h4>Style Advisor</h4>
+            <ul class="links">
+              <li class="first"><a href="#" title="Your Account">Your Account</a></li>
+              <li><a href="#" title="Information">Information</a></li>
+              <li><a href="#" title="Addresses">Addresses</a></li>
+              <li><a href="#" title="Addresses">Discount</a></li>
+              <li><a href="#" title="Orders History">Orders History</a></li>
+              <li class="last"><a href="#" title=" Additional Information">Additional Information</a></li>
+            </ul>
+          </div>*@
+          
+          
+          @Html.Action("BoxInformation", "Base", new { Area = "" })
+          
+          @Html.Action("BoxSocialNetwork", "Base", new { Area = "" })
+        </div>
+      </div>
+    </div>
+    @Html.Partial("_FooterBottom")
+  </footer>
+  <!-- End Footer --> 
+  
+</div>
+@Html.Action("BoxHelpSlider", "Base", new { Area = "" })
+
+
+<script type="text/javascript">
+    //<![CDATA[
+    jQuery(function () {
+        jQuery(".slideshow").cycle({
+            fx: 'scrollHorz', easing: 'easeInOutCubic', timeout: 10000, speedOut: 800, speedIn: 800, sync: 1, pause: 1, fit: 0, pager: '#home-slides-pager',
+            prev: '#home-slides-prev',
+            next: '#home-slides-next'
+        });
+    });
+    jQuery('.show_hide').on("click", function () {
+        jQuery("#hideShow").show();
+        jQuery("#hideShow1").hide();
+    });
+    jQuery('.show_hide1').on("click", function () {
+        jQuery("#hideShow1").show();
+        jQuery("#hideShow").hide();
+    });
+    jQuery('#hideDiv').on("click", function () {
+        jQuery("#hideShow").hide();
+    });
+    jQuery('#hideDiv1').on("click", function () {
+        jQuery("#hideShow1").hide();
+    });
+    //]]>
+
+//    $(function () {
+//        $(document).on('click', ".btn-order", function (e) {
+//            var btnID = e.target.id;
+//            var productId = btnID.replace("btnOrder_", "");
+//            var txtID = btnID.replace("btn", "txt");
+//            var value = document.getElementById(txtID).value;
+//            //DoChangeCost(productId, value);
+//            alert(234);
+//            e.preventDefault();
+//            return false;
+//        });
+//    });
+
+    function updateFollow(btn) {
+        var productId = btn.replace('btnFollow_', '');
+        jQuery.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            url: '@Url.Action("UpdateProductFollow", "Product")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({ productId: productId }),
+            success: function (data) {
+                // your code from above
+                alert(data.Text);
+                if (data.Value > 0) {
+                    window.location.reload(true);
+                } else if (data.Value) {
+
+                }
+            },
+            error: function (xhr, textStatus, error) {
+                console.log(xhr.statusText);
+                console.log(textStatus);
+                console.log(error);
+            }
+        });
+    }
+
+    function updateURLParameter(url, param, paramVal) {
+        var TheAnchor = null;
+        var newAdditionalURL = "";
+        var tempArray = url.split("?");
+        var baseURL = tempArray[0];
+        var additionalURL = tempArray[1];
+        var temp = "";
+
+        if (additionalURL) {
+            var tmpAnchor = additionalURL.split("#");
+            var TheParams = tmpAnchor[0];
+            TheAnchor = tmpAnchor[1];
+            if (TheAnchor)
+                additionalURL = TheParams;
+
+            tempArray = additionalURL.split("&");
+
+            for (var i = 0; i < tempArray.length; i++) {
+                if (tempArray[i].split('=')[0] != param) {
+                    newAdditionalURL += temp + tempArray[i];
+                    temp = "&";
+                }
+            }
+        }
+        else {
+            var tmpAnchor = baseURL.split("#");
+            var TheParams = tmpAnchor[0];
+            TheAnchor = tmpAnchor[1];
+
+            if (TheParams)
+                baseURL = TheParams;
+        }
+
+        if (TheAnchor)
+            paramVal += "#" + TheAnchor;
+        var rows_txt = temp + "" + param + "=" + paramVal;
+        return baseURL + "?" + newAdditionalURL + rows_txt;
+    }
+</script>
+  @RenderSection("ScriptContent", required: false)
+</body>
+</html>

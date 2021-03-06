@@ -1,0 +1,4 @@
+
+Log Entry : 9:19:37 PM Tuesday, July 10, 2018
+Lỗi đăng ký: A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., Xin hãy nhập tên đăng nhập!, Xin hãy nhập Email!, Xin hãy nhập số điện thoại, A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., A value is required., Xin hãy nhập tên đăng nhập!, Xin hãy nhập Email!, Xin hãy nhập số điện thoại
+---------------------------------------------

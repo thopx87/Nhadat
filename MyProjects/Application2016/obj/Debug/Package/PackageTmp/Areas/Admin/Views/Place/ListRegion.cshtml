@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "ListRegion";
+}
+<div class="col-xs-12 col-sm-4">
+	<div class="space visible-xs"></div>
+	<h4 class="header blue lighter less-margin">Danh sách các vùng trong huyện</h4>
+
+    <div style="width: 350px; height:200px;overflow-y: scroll;">
+         @foreach (var region in ViewBag.ListRegion as IList<Entities.Region>)
+        {
+            <div class="space-6"></div>
+			<div class="clearfix">
+                <label  class="pull-left">@region.Text</label>
+                <a href="@Url.Action("UpdateRegion", "Place", new { id = region.Id, cityId = ViewBag.CityId, districtId = @region.DistrictId })" class="pull-right"><i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+            </div>
+            <div class="clearfix">
+            <fieldset>
+					<textarea class="width-100" resize="none" placeholder="Type something…">@string.Join(",",region.ListWard.Select(x=>x.Text))</textarea>
+				</fieldset>
+            </div>
+             
+        }
+    </div>
+								
+</div>

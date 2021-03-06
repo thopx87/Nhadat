@@ -1,0 +1,68 @@
+﻿@using Application2016.Helpers
+<div class="toplinks">
+    <div class="links">
+        <div class="wishlist">
+        @if (CookieHelper.Get(AdminConfigs.COOKIES_USER_ID) != null)
+        {
+            <a title="My Wishlist" href="@Url.Action("RegistryAgency", "User", new { Area = "Admin"})?id=@CookieHelper.Get(AdminConfigs.COOKIES_USER_ID)"><span>Đăng ký làm môi giới</span></a>
+        }
+        else
+        {
+            <a title="My Wishlist" href="@Url.Action("Register", "User", new { Area = "Admin", Type = 1 })"><span>Đăng ký làm môi giới</span></a>
+        }   
+        </div>
+        <div class="wishlist">
+            <a title="My Wishlist" href="@Url.Action("Register", "User", new { Area = "Admin" })"><span>Đăng ký làm thành viên</span></a>
+        </div>
+        <div class="wishlist">
+            <a href="#" title="Demo"><span>Email</span></a>
+        </div>
+        <div class="wishlist">
+            <a href="#" title="Demo"><span>Thông báo</span></a>
+        </div>
+        <div class="wishlist">
+            <a href="@Url.Action("UpdateSaleProduct", "Product", new { area = "Admin", id = 0 })" title="Demo"><span>Đăng tin nhà đất </span></a>
+        </div>
+        @if (CookieHelper.Get(AdminConfigs.COOKIES_USER_ID) != null)
+        {
+        <div class="myaccount">
+            <a title="My Account" href="@Url.Action("PersonalInfo", "User", new { Area = "Admin" })"><span>@CookieHelper.Get(AdminConfigs.COOKIES_USERNAME)</span></a>
+        </div>
+        <div class="logout">
+            <a href="#" id="logout" data-href="@Url.Action("DoLogout", "Base", new { Area = "Admin" })" data-toggle="modal"  data-target="#confirm-logout"><span>Log out</span></a>
+        </div>
+        }
+        else
+        {
+        <div class="login">
+            <a href="javascript:void()" id="btnLogin"><span>Log In</span></a>
+        </div>
+        }
+    </div>
+</div>
+<div class="modal fade" id="confirm-logout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Logout
+            </div>
+            <div class="modal-body">
+                @AdminConfigs.CONFIRM_LOGOUT
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">OK</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery('#confirm-logout').on('show.bs.modal', function (e) {
+        jQuery(this).find('.btn-ok').attr('href', jQuery(e.relatedTarget).data('href'));
+    });
+
+    jQuery('#btnLogin').click(function () {
+        var currentUrl = window.location.href;
+        window.location.replace('@Url.Action("Login", "User", new { Area = "Admin" })?returnUrl='+currentUrl);
+    });
+</script>

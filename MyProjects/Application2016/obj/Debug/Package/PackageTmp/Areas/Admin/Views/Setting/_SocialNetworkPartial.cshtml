@@ -1,0 +1,41 @@
+﻿@model Application2016.Areas.Admin.Models.SettingCommonModel
+<div class="col-sm-4">
+	<div class="widget-box collapsed">
+		<div class="widget-header">
+			<h4 class="widget-title">Cập nhật thông tin mạng xã hội</h4>
+
+			<div class="widget-toolbar">
+				<a href="#" data-action="collapse">
+					<i class="ace-icon fa fa-chevron-down"></i>
+				</a>
+
+				@*<a href="#" data-action="close">
+					<i class="ace-icon fa fa-times"></i>
+				</a>*@
+			</div>
+		</div>            
+        @using (Html.BeginForm("UpdateSettingTable", "Setting", FormMethod.Post, new { id = Model.Id != null ? Model.Id : 0}))
+        {
+            @Html.Hidden("settingName", Application2016.Helpers.AdminConfigs.SETTING_SOCIAL_NETWORK)
+            <div class="widget-body" style="display: none;">
+				<div class="widget-main">
+                    @foreach (var setting in Model.list)
+                    {
+                        <div class="form-group">
+                                <label class="col-sm-3">@setting.Display </label>
+                                <div class="input-group col-sm-9">
+                                @Html.HiddenFor(m => setting.Title, new { @name="settingTitle" })
+							    @Html.TextBoxFor(m => setting.Value, new { @name = "settingValue", @style="width: 100%;" })
+						    </div>
+					    </div>
+                        <div class="space-10"></div>
+                    }
+					
+                    <label>
+                        <button class="btn btn-info" type="submit" value="Update">Update</button>
+                    </label>
+				</div>
+			</div>                
+        }			
+	</div>
+</div>

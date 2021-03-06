@@ -1,0 +1,37 @@
+﻿
+<div class="header-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-xs-6">
+                <!-- Header Language -->
+                @* @Html.Partial("_HeaderLanguage")*@
+                <!-- End Header Language -->
+                <!-- Header Currency -->
+                 @*@Html.Partial("_HeaderCurrency")*@
+                <!-- End Header Currency -->
+                <!-- Header Logo -->
+                <a title="Magento Commerce" href="@Url.Action("Index","Home")">
+                    <img alt="Magento Commerce" src="@Url.Content("~/Assets/Images/logo.png")" /></a>
+                     <div class="welcome-msg hidden-xs">
+                    Chào mừng đến với website ..
+                </div>
+            </div>
+            
+            <div class="col-lg-8 col-md-8 col-xs-12">
+                <!-- Header Top Links -->
+                @Html.Partial("_HeaderTopLink")
+                <!-- End Header Top Links -->
+                <div class="top-cart-contain">
+                @*@Html.Partial("_HeaderMiniCart")*@
+                <div id="ajaxconfig_info" style="display: none">
+                    <a href="#/"></a>
+                    <input value="" type="hidden">
+                    <input id="enable_module" value="1" type="hidden">
+                    <input class="effect_to_cart" value="1" type="hidden">
+                    <input class="title_shopping_cart" value="Go to shopping cart" type="hidden">
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

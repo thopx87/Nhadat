@@ -1,0 +1,101 @@
+﻿<script type="text/javascript">
+    try { ace.settings.loadState('main-container') } catch (e) { }
+			</script>
+            
+<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+	<script type="text/javascript">
+		try { ace.settings.loadState('sidebar') } catch (e) { }
+	</script>
+
+	<ul class="nav nav-list">        
+        @*<li class="@(ViewBag.ActionMenu.ToString() == "ProductManager" ? "active open" : "")">*@
+        <li class="active open">
+			<a href="#" class="dropdown-toggle">
+				<i class="menu-icon fa fa-home"></i>
+				<span class="menu-text"> Quản lý nhà </span>
+				<b class="@(ViewBag.ActionMenu.ToString() == "ProductManager" ? "arrow fa fa-angle-down" : "arrow fa fa-angle-up")"></b>
+			</a>
+			<b class="arrow"></b>
+			<ul class="submenu">
+				<li class="@(ViewBag.ActionSubMenu.ToString() == "Product" ? "active" : "")">
+					<a href="@Url.Action("Index","Product")?type=&page=0">
+						<i class="menu-icon fa fa-caret-right"></i>
+                        <i class="fa fa-list"></i>
+						Danh sách nhà
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="@(ViewBag.ActionSubMenu.ToString() == "Sale" ? "active" : "")">
+					<a href="@Url.Action("UpdateSaleProduct", "Product")?Id=0">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Đăng bán nhà
+					</a>
+					<b class="arrow"></b>
+				</li>
+                <li class="@(ViewBag.ActionSubMenu.ToString() == "Lease" ? "active" : "")">
+					<a href="@Url.Action("UpdateLeaseProduct", "Product")?Id=0">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Đăng cho thuê
+					</a>
+					<b class="arrow"></b>
+				</li>
+            </ul>
+        </li>
+        <li class="active open">
+			<a href="#" class="dropdown-toggle">
+				<i class="menu-icon fa fa-home"></i>
+				<span class="menu-text"> Phân loại sản phẩm </span>
+				<b class="@(ViewBag.ActionMenu.ToString() == "ProductManager" ? "arrow fa fa-angle-down" : "arrow fa fa-angle-up")"></b>
+			</a>
+			<b class="arrow"></b>
+            <ul class="submenu">
+                <li class="@(ViewBag.ActionSubMenu.ToString() == "ProductFollow" ? "active" : "")">
+					<a href="@Url.Action("ProductFollow", "Product")">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Sản phẩm theo dõi
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+				<li class="@(ViewBag.ActionSubMenu.ToString() == "ProductSale" ? "active" : "")">
+					<a href="@Url.Action("ProductSale", "Product")">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Sản phẩm đăng bán & Thuê
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="">
+					<a href="jqgrid.html">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Sản phẩm đặt giá mua
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="">
+					<a href="jqgrid.html">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Sản phẩm đăng mua
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+                <li class="@(ViewBag.ActionSubMenu.ToString() == "ProductWasSelling" ? "active" : "")">
+					<a href="@Url.Action("ProductWasSelling", "Product")">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Sản phẩm đã bán
+					</a>
+
+					<b class="arrow"></b>
+				</li>
+			</ul>
+		</li>
+        
+	</ul><!-- /.nav-list -->
+
+	<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+		<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+	</div>
+</div>

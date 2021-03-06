@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "DBQuery";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="page-content">
+            <div class="row">
+                @using (Html.BeginForm("DBQuery", "Setting", FormMethod.Post))
+                {    
+                    <textarea id="Query" name="Query" rows="20" cols="100"></textarea>
+                    <br />
+                    <button type="submit">
+                        Run</button>
+                }
+            </div>
+            <div class="row">
+                <a href="#" id="iUpdateAliasProduct">Cập nhật Alias cho product.</a>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $("#iUpdateAliasProduct").click(function () {
+        $.ajax({
+            url: '@Url.Action("UpdateAlias", "Setting")',
+            contentType: 'application/html; charset=utf-8',
+            type: 'POST',
+            dataType: 'html'
+        })
+        .success(function (result) {
+            alert(result);
+            window.location.reload(true);
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+    });
+    
+</script>
+}

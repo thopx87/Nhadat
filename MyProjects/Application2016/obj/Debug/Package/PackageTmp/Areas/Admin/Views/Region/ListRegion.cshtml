@@ -1,0 +1,154 @@
+﻿@using Application2016.Helpers
+<table id="simple-table" class="table  table-bordered table-hover">
+	<thead>
+		<tr>
+			@*<th class="center">
+				<label class="pos-rel">
+					<input type="checkbox" class="ace" id="checkAll" />
+					<span class="lbl"></span>
+				</label>
+			</th>*@
+			<th class="detail-col">Details</th>
+			<th>Tên vùng</th>
+			<th>Danh sách xã/ phường</th>
+            <th>Vùng lân cận</th>
+            <th>Số lượng môi giới</th>
+			<th>Danh sách môi giới</th>
+			<th>Chức năng</th>
+		</tr>
+	</thead>
+    <tbody>
+    @if (ViewBag.ListRegion.Count == 0)
+    {
+        <tr>
+            <td colspan="8" style="text-align:center; vertical-align:middle; color: Red;">@AdminConfigs.MESSAGE_NOT_DATA</td>
+        </tr>   
+    }
+    @foreach(var region in  ViewBag.ListRegion as IList<Entities.Region>)
+    {
+    <tr>
+	    @*<td class="center">
+		    <label class="pos-rel">
+                 <input type="checkbox" class="ace check" name="selectedRegion" id="@string.Format("selectedRegion{0}", region.Id)" value="@region.Id" />
+			    <span class="lbl"></span>
+		    </label>
+	    </td>*@
+	    <td class="center">
+		    <div class="action-buttons">
+			    <a href="#" class="green bigger-140 show-details-btn" title="Show Details">
+				    <i class="ace-icon fa fa-angle-double-down"></i>
+				    <span class="sr-only">Details</span>
+			    </a>
+		    </div>
+	    </td>
+	    <td>
+            <label> @region.Text</label>
+	    </td>
+	    <td>
+        @{
+        var wards = region.ListWard;
+        var strWardFull = "";
+        var strWardSub = "";
+        foreach (var ward in wards)
+        {
+            strWardFull += ward.Text + "; ";
+        }
+        if (strWardFull.Length > 80)
+        {
+            strWardSub = strWardFull.Substring(0, 80) + "...";
+        }
+        else
+        {
+            strWardSub = strWardFull;
+        }
+            }
+        <label data-toggle="tooltip" title="@strWardFull"> @strWardSub</label>
+        <a href="@Url.Action("UpdateRegion", "Region", new { id = @region.Id, cityId = @region.CityId, districtId = @region.DistrictId })" class="modal-link btn btn-xs btn-info">
+                <i class="ace-icon fa fa-pencil bigger-120"></i>
+                </a>
+        
+        </td>
+        <td>@region.Neighbor.Text</td>
+        <td>@region.MaxAgency</td>
+	    <td >
+        @{
+        var users = region.ListUser;
+        var strUserFull = "";
+        var strUserSub = "";
+        foreach (var user in users)
+        {
+            strUserFull += user.UserName + "; ";
+        }
+        if (strUserFull.Length > 80)
+        {
+            strUserSub = strUserFull.Substring(0, 80) + "...";
+        }
+        else
+        {
+            strUserSub = strUserFull;
+        }
+        }
+            <label data-toggle="tooltip" title="@strUserFull">@strUserSub</label>
+            <a href="@Url.Action("UpdateUser", "Region", new { id = @region.Id})" class="modal-link btn btn-xs btn-info">
+                <i class="ace-icon fa fa-pencil bigger-120"></i>
+                </a>
+        </td>
+
+	    <td>
+		    <div class="hidden-sm hidden-xs btn-group">
+			    @*<button class="btn btn-xs btn-success">
+				    <i class="ace-icon fa fa-check bigger-120"></i>
+			    </button>*@
+                                    
+                <a href="@Url.Action("UpdateRegion", "Region", new { id = @region.Id, cityId = @region.CityId, districtId = @region.DistrictId })" class="modal-link btn btn-xs btn-info">
+                <i class="ace-icon fa fa-pencil bigger-120"></i>
+                </a>
+
+                <a href="@Url.Action("DeleteRegion", "Region", new { id = region.Id })" onclick="return confirm('@string.Format(AdminConfigs.CONFIRM_DELETE, @region.Text)');" class="btn btn-xs btn-danger"><i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+				
+			    @*<button class="btn btn-xs btn-warning">
+				    <i class="ace-icon fa fa-flag bigger-120"></i>
+			    </button>*@
+		    </div>
+	    </td>
+    </tr>
+        
+    <tr class="detail-row">
+        <td style="border:0;"></td>
+        <td style="border:0;"></td>
+        <td>@strWardFull</td>
+        <td style="border:0;"></td>
+        <td style="border:0;"></td>
+        <td>@strUserFull</td>
+        <td style="border:0;"></td>
+    </tr>
+    }
+</tbody>
+
+</table>
+
+@Html.Partial("_PagingPartial")
+
+<script type="text/javascript">
+    $('.show-details-btn').on('click', function (e) {
+        e.preventDefault();
+        $(this).closest('tr').next().toggleClass('open');
+        $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+    });
+
+    $("#checkAll").click(function () {
+        $(".check").prop('checked', $(this).prop('checked'));
+    });
+
+    function UpdateForRow(id) {
+        $("#selectedRegion" + id).attr("checked", true);
+
+
+    }
+
+    // Hiển thị tooltip
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

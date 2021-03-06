@@ -1,0 +1,118 @@
+﻿@using Application2016.Helpers;
+@using Application2016.Enums;
+<style>
+    .product-text-list
+    {
+        border: 1px solid #ffaa33;
+        padding: 3px;
+    }
+</style>
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">
+                <i class="ace-icon fa fa-home"></i>@ViewBag.BoxTitle
+            </h5>
+            <div class="widget-toolbar widget-toolbar-light no-border">
+            </div>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+            @if (ViewBag.ListProduct !=null)
+            {
+                int loginUser = int.Parse(CookieHelper.Get(AdminConfigs.COOKIES_USER_ID));
+                var isAdmin = CookieHelper.Get(AdminConfigs.COOKIES_ADMIN);
+                Entities.Role role = ViewBag.MaxRole as Entities.Role;
+                if (role == null)
+                {
+                    role = new Entities.Role();
+                }
+                foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+                {
+                    string image = "no avatar";
+                    if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+                    {
+                        image = item.Avatar_Url + item.Avatar;
+                    }
+		        <div class="media search-media">
+			        <div class="media-left">
+                        <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id, item.Text_Alias)" title="@item.Text"> 
+                            <img src="@Url.Content(@image)" class="media-object" width="150px" alt="@item.Text" />
+                        </a>
+			        </div>
+
+			        <div class="media-body">
+				        <div>
+					        <h4 class="media-heading">
+						        <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id, item.Text_Alias)" class="blue" title="@item.Text" >  @item.Text </a>
+					        </h4>
+				        </div>
+                        <p> 
+                            <span class="product-text-list" style="min-width: 250px;"><strong>Địa chỉ: </strong>@item.DistrictText</span>
+                            <span class="product-text-list" style="min-width: 250px;"><strong>Người đăng:</strong> @item.UserName
+                                @if (role.CanCheckOwnerArticle)
+                                {
+                                    @(item.RoleText != "" ? "(" + item.RoleText + ")" : "")
+                                }
+                            </span>
+                            <span class="product-text-list" style="min-width: 250px;">
+                                <strong>Vùng nhờ bán:</strong>
+                                @item.ListRegionSelling
+                            </span>
+                        </p>
+				        <p>
+                            @item.Description
+                        </p>
+
+				        <div class="search-actions text-center" style="min-width:180px;">
+					        <span class="text-info"></span>
+
+					        <span class="blue bolder bigger-150">@item.StandardCost.MoneyFormat()</span>
+                            @if (isAdmin != "0")
+                            {
+                                <br />
+					            @Html.ActionLink("Chỉnh sửa", item.Transaction_Type == (short)TransactionType.BAN_NHA ? "UpdateSaleProduct" : "UpdateLeaseProduct", "Product", new { @area = "Admin", id = item.Id }, new { @class = "" })
+                            }
+                            
+                            @*@if(isAdmin !="0" && item.State != 1)
+                            {
+                                <br />
+                                <a href="javascript:void(0);" class="btn btn-round" style="float:left; margin-right: 10px;" onclick="UpdateWasSelling(@item.Id)">
+                                                Đã bán</a>
+                            }*@
+				        </div>
+			        </div>
+		        </div>
+                }
+            }
+            else
+            {
+                <div>No Product</div>
+            }
+            </div>
+        </div>
+	</div>
+</div>
+<div class="space-12"></div>
+
+<script type="text/javascript">
+function UpdateWasSelling(id) {
+            jQuery.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateWasSelling", "Product", new {area = "Admin"})',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    productId: id
+                }),
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                }
+            });
+        }
+</script>

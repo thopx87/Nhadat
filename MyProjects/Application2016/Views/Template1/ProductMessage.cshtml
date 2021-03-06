@@ -1,0 +1,145 @@
+﻿@model Application2016.Models.ProductListMessage
+@using Application2016.Helpers;
+@{
+    ViewBag.Title = "ProductMessage";
+    Layout = "~/Views/Shared/_LayoutTemplate1.cshtml";
+}
+@section MainContent{
+    <div class="col-xs-12 col-sm-2">
+        
+    </div>
+    <div class="col-xs-12 col-sm-10">
+        <div class="tab-content no-border no-padding">
+            <div id="inbox" class="tab-pane in active">
+                <div class="message-container">
+                    <div id="id-message-list-navbar" class="message-navbar clearfix">
+                        <div class="message-bar">
+                            <div class="message-infobar" id="id-message-infobar">
+                            @{
+                                int countNew = Model.ListMessage.Where(x => x.Read_Flag == false).Count();
+                                }
+                                <span class="blue bigger-150">Danh sách thông báo</span> <span class="red bigger-110">@(countNew>0?"("+countNew.ToString()+")":"")</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="messagebar-item-left">
+                                <label class="inline middle">
+                                    <input type="checkbox" id="id-toggle-all" class="ace" />
+                                    <span class="lbl"></span>
+                                </label>
+                                &nbsp;
+                                <div class="inline position-relative">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="ace-icon fa fa-caret-down bigger-125 middle">
+                                    </i></a>
+                                    <ul class="dropdown-menu dropdown-lighter dropdown-100">
+                                        <li><a id="id-select-message-all" href="#">All</a> </li>
+                                        <li><a id="id-select-message-none" href="#">None</a> </li>
+                                        <li class="divider"></li>
+                                        <li><a id="id-select-message-unread" href="#">Unread</a> </li>
+                                        <li><a id="id-select-message-read" href="#">Read</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="messagebar-item-right">
+                                <div class="inline position-relative">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Sort &nbsp; <i class="ace-icon fa fa-caret-down bigger-125">
+                                    </i></a>
+                                    <ul class="dropdown-menu dropdown-lighter dropdown-menu-right dropdown-100">
+                                        <li><a href="#"><i class="ace-icon fa fa-check green"></i>Date </a></li>
+                                        <li><a href="#"><i class="ace-icon fa fa-check invisible"></i>From </a></li>
+                                        <li><a href="#"><i class="ace-icon fa fa-check invisible"></i>Subject </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="nav-search minimized">
+                                <form class="form-search">
+                                <span class="input-icon">
+                                    <input type="text" autocomplete="off" class="input-small nav-search-input" placeholder="Search inbox ..." />
+                                    <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-list-container">
+                        <div class="message-list" id="message-list">
+                            @foreach(Entities.ProductMessage message in Model.ListMessage)
+                            {
+                                object tempAvatar = message.Avatar;
+                                var avatar = "";
+                                if (tempAvatar != null && tempAvatar.ToString() != "")
+                                {
+                                    avatar = AdminConfigs.IMAGE_PATH + message.UserName + AdminConfigs.ALTDIRECTORYSEPARATORCHAR + tempAvatar.ToString();
+                                    avatar = Url.Content(avatar);
+                                }
+
+                                
+                                var messageClass = "message-item";
+                                if(!message.Read_Flag){
+                                    messageClass = "message-item message-unread";   
+                                }
+                                
+                                <div class="@messageClass" data-id="@message.Id">
+                                    <label class="inline">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                    @*<i class="message-star ace-icon fa fa-star orange2"></i><span class="sender" title="">*@
+                                    <img src="@avatar" class="msg-photo" width="40px" alt="@message.UserName" />
+                                    <span class="sender" title="@message.UserName">
+                                    @message.UserName</span>
+                                    <span class="summary"><span
+                                            class="text">@Html.Raw(message.Content) </span></span>
+                                    <span class="time" style="width: 150px;">@message.CreateDate.ToDateTime()</span> 
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @*<div class="message-footer clearfix">
+                        <div class="pull-left">
+                            151 messages total
+                        </div>
+                        <div class="pull-right">
+                            <div class="inline middle">
+                                page 1 of 16
+                            </div>
+                            &nbsp; &nbsp;
+                            <ul class="pagination middle">
+                                <li class="disabled"><span><i class="ace-icon fa fa-step-backward middle"></i></span>
+                                </li>
+                                <li class="disabled"><span><i class="ace-icon fa fa-caret-left bigger-140 middle"></i>
+                                </span></li>
+                                <li><span>
+                                    <input value="1" maxlength="3" type="text" />
+                                </span></li>
+                                <li><a href="#"><i class="ace-icon fa fa-caret-right bigger-140 middle"></i></a>
+                                </li>
+                                <li><a href="#"><i class="ace-icon fa fa-step-forward middle"></i></a></li>
+                            </ul>
+                        </div>
+                    </div> *@                   
+                </div>
+            </div>
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".message-item").click(function () {
+            var id = $(this).attr('data-id');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ChangeToReadedMessage","Template1")?Id=' + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        });
+    });
+</script>
+}

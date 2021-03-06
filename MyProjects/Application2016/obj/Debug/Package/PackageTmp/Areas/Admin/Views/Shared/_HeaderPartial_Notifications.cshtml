@@ -1,0 +1,41 @@
+﻿@using Application2016.Helpers;
+@{
+    Layout = null;
+    List<Entities.Product_WantSell> lstProductWantSell =  ViewBag.ListProductWantSell;
+    int count = lstProductWantSell.Count;
+}
+<li class="purple dropdown-modal">
+	<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+		<i class="ace-icon fa fa-bell icon-animated-bell"></i>
+		<span class="badge badge-important">@count</span>
+	</a>
+
+	<ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+		<li class="dropdown-header">
+			<i class="ace-icon fa fa-exclamation-triangle"></i>
+			@count Nhà muốn bán cho bạn
+		</li>
+
+		<li class="dropdown-content">
+			<ul class="dropdown-menu dropdown-navbar navbar-pink">
+                @for (int i = 1; i <= count; i++)
+                {
+                    <li>
+					    <a id="btnDetailProductWantSell" target="_blank" href="@Url.Action("Preview", "Product", new {area="", Id=@lstProductWantSell[i-1].ProductId })">
+						    <div class="clearfix">
+							    <span class="pull-left">
+								    <i class="btn btn-xs no-hover btn-pink">@i</i>
+								    @lstProductWantSell[i - 1].Text.SubString()
+							    </span>
+							    <span class="pull-right">@lstProductWantSell[i - 1].UpdateTime.ToShortDateString()</span>
+						    </div>
+					    </a>
+				    </li>
+                }
+			</ul>
+		</li>
+	</ul>
+</li>
+<script type="text/javascript">
+    
+</script>

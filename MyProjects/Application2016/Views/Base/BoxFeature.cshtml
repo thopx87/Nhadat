@@ -1,0 +1,89 @@
+﻿@model Application2016.Models.ProductConditions
+@using Application2016.Helpers;
+<div class="our-features-box">
+    <div class="container">
+        <ul class="products-grid">
+        @foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+        {
+            string image = "no avatar";
+            if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+            {
+                image = item.Avatar_Url + item.Avatar;
+            }
+            else
+            {
+                image = Url.Content("~/Assets/Images/home-default.png");
+            }
+
+            <li class="item col-md-2">
+                <div class="col-item">
+                    <!-- Check sản phẩm giảm giá -->
+                    @if (item.UpdateCost > 0)
+                    {
+                    <div class="sale-label sale-top-right">
+                        &#8595Sale
+                    </div>
+                    }
+                    <!-- Check sản phẩm mới -->
+                    @if (item.UpdateTime > DateTime.Today.AddDays(-2))
+                    {
+                        <div class="new-label">
+                        New
+                        </div>
+                    }
+                    <div class="item-inner">                    
+                        <div class="item-img">
+                            <div class="item-img-info">
+                                <a href="@Url.Action("Detail", "Product")/@item.Id" title="@item.Text" class="product-image">
+                                    <img src="@Url.Content(@image)" alt="@item.Text" />
+                                </a>
+                                <div class="item-box-hover">
+                                    <div class="box-inner">
+                                        <div class="product-detail-bnt">
+                                            <a href="@Url.Action("Detail", "Product")/@item.Id" class="button detail-bnt"><span>Chi
+                                                tiết</span></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-info">
+                            <div class="info-inner">
+                                <div class="item-title">
+                                    <a href="@Url.Action("Detail", "Product")/@item.Id" title="Sample Product">@item.Text
+                                    </a>
+                                </div>
+                                <div class="item-content">
+                                    @*<div class="rating">
+                                        <div class="ratings">
+                                            <div class="rating-box">
+                                                <div class="rating" style="width: 60%">
+                                                </div>
+                                            </div>
+                                            <p class="rating-links">
+                                                <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a>
+                                            </p>
+                                        </div>
+                                    </div>*@
+                                    <div class="item-price">
+                                        <div class="price-box">
+                                            <span class="regular-price"><span class="price">
+                                                @(item.UpdateCost > 0 ? item.UpdateCost.Value.MoneyFormat() : item.StandardCost.MoneyFormat())
+                                            </span> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <span class="add-to-links">
+                                    <a href="@Url.Action("Detail", "Product", new { Id = @item.Id })" class="button btn-cart">Đặt mua</a>
+                                    <a href="#" id="btnFollow_@item.Id" class="button btn-cart btnFollow" onclick="updateFollow(this.id)">Theo dõi</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+    </div>
+</div>

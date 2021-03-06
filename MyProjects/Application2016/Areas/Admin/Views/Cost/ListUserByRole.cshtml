@@ -1,0 +1,14 @@
+﻿
+@{
+    var ListUser = ViewData["ListUser"] as List<Entities.Item>;
+    for (int i = 0; i < ListUser.Count; i++)
+    {
+        var u = ListUser[i];
+        <div class="checkbox">
+            <label>
+            <input type="checkbox" name="ListUser" value="@u.Id" checked="@u.Checked" id="ListUser_@u.Id" /><label for="ListRegion_@u.Id">@u.Text</label>
+                <span class="lbl"> ThoPX</span>
+            </label>
+        </div>
+    }
+}

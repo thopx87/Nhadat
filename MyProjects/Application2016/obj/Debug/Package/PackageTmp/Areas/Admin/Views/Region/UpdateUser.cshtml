@@ -1,0 +1,118 @@
+﻿@model Application2016.Areas.Admin.Models.RegionUserModel
+@{
+    ViewBag.Title = "update user";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            @using (Html.BeginForm("UpdateUser", "Region", FormMethod.Post, new { @id = "frmRegion" }))
+            {
+                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                    <input type="submit" class="btnDefine btn btn-success" value="Lưu" />
+                    <a href="@Url.Action("Index2","Region")" class="btnDefine btn btn-success">Danh sách vùng</a>
+                </div>
+                <div class="page-content">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title">
+                                        Cập nhật danh sách môi giới cho vùng <strong style="color: Red">@Model.Text</strong></h4>
+                                    <div class="widget-toolbar">
+                                        
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <fieldset>
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="form-field-8">
+                                                        Đối tượng</label>
+                                                    <!-- GetCity_Ward() function in Index.html file -->
+                                                    @Html.DropDownListFor(m => m.RoleId, new SelectList(Model.ListRole, "Id", "Text", Model.RoleId), new { onchange = string.Format("javascript:ListUserByRole(this.value,'#Users')") })
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="form-field-8">
+                                                        Số lượng môi giới tối đa:
+                                                    </label>
+                                                    @Model.MaxAgency
+                                                    @Html.HiddenFor(m => m.MaxAgency)
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-8">
+                                                <div class="box1 col-md-4" style="width: 300px; margin: 10px;">
+                                                    <span class="info-container">
+                                                        <label>
+                                                            Danh sách môi giới của vùng
+                                                        </label>
+                                                        <span class="show-info"></span></span>
+                                                    @Html.ListBoxFor(m => m.UserOfRegionIds, new MultiSelectList(Model.ListUserOfRegion, "Id", "Text", Model.UserOfRegionIds), new { onchange = string.Format("javascript:move('UserOfRegionIds','Users',false)"), style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                                    @Html.ValidationMessageFor(m => m.UserOfRegionIds)
+                                                </div>
+                                                <div class="box2 col-md-4" style="width: 300px; margin: 10px;">
+                                                    <span class="info-container">
+                                                        <label>
+                                                            Danh sách môi giới
+                                                        </label>
+                                                        <span class="show-info"></span></span>
+                                                    @Html.ListBoxFor(m => m.Users, new MultiSelectList(Model.ListUsers, "Id", "Text", Model.Users), new { onchange = string.Format("javascript:move('Users','UserOfRegionIds', true)"), style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+<script type="text/javascript">
+    function ListUserByRole(roleId, toControlId1) {
+        var isAgency = false;
+        if (roleId == null || roleId == "") { roleId = -1; isAgency = true }
+        
+        $.ajax({ 
+            url: '@Url.Action("ListUserByRole", "Base")',
+            data: JSON.stringify({ roleId: roleId, regionId: 0, isAgency: isAgency, getItem: true }), 
+            contentType: 'application/json; charset=UTF-8',
+            type: 'POST', 
+            dataType: 'json' }) 
+        .success(function (result) { 
+        // Thêm vào Control 1 
+            $(toControlId1).empty(); 
+            for (var i = 0; i < result.length; i++) { 
+            $(toControlId1).append("<option value=" + result[i].Id + ">" + result[i].Text + "</option>"); 
+            } 
+        }) 
+        .error(function(xhr, status) {         
+            $(toControlId1).empty(); alert(status); 
+        }) 
+    };
+    $(document).ready(function () {
+        $("#frmRegion").submit(function (e) {
+            $("#UserOfRegionIds option").prop("selected", "selected");
+        });
+    });
+    // Hàm xử lý chuyển giữa 2 danh sách. 
+    function move(from, to,limit) {
+        if (limit == true) { 
+        var limitValue = $('#MaxAgency').val(); 
+        var currToSize = $('#' + to + ' option').size(); 
+            if (limitValue <= currToSize) { 
+                alert("Đã đủ số lượng môi giới."); 
+                return false; 
+            }
+        }
+        var source, target; 
+        var elem = document.createElement('option');
+        source = document.getElementById(from);
+        target = document.getElementById(to); 
+        elem.value = source.options[source.selectedIndex].value; elem.innerHTML = source.options[source.selectedIndex].text;
+        target.appendChild(elem); source.removeChild(source.options[source.selectedIndex]);
+    } 
+</script>
+}

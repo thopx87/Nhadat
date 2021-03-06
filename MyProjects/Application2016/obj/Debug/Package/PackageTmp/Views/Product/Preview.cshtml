@@ -1,0 +1,125 @@
+﻿@model Application2016.Models.ProductModel
+@using Application2016.Helpers;
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string avatarProduct = "no avatar";
+    if (Model.Avatar != null && Model.Avatar != "" && Model.Avatar_Url != null)
+    {
+        avatarProduct = Model.Avatar_Url + Model.Avatar;
+    }
+    else
+    {
+        avatarProduct = Url.Content("~/Assets/Images/home-default.png");    
+    }
+}
+@section MainContent{
+    @*@Html.Action("BoxBreadCrumb", "Base")*@
+    <section class="main-container col1-layout">
+    <div class="main container">
+      <div class="col-main">
+        <div class="row">
+          <div class="product-view">
+            <div class="product-essential">
+                <div class="product-name">
+                    <h1>@Model.Text</h1>
+                </div>
+                <div class="product-img-box col-sm-4 col-xs-12">
+                  @*<div class="new-label new-top-left"> New </div>*@
+                  <div class="product-image">
+                    <div class="large-image"> <a href="@Url.Content(@avatarProduct)" class="cloud-zoom" id="zoom1" rel="useWrapper: false, adjustY:0, adjustX:20"> <img alt="product-image" src="@Url.Content(@avatarProduct)"> </a> </div>
+                    <div class="flexslider flexslider-thumb">
+                      <ul class="previews-list slides">
+                        @if (Model.ListImage.Count > 0)
+                        {
+                            foreach (Entities.ProductImage img in Model.ListImage)
+                            {
+                                var imgFull = @Url.Content(img.ImageUrl + img.Text);
+                                <li><a href="@imgFull" class='cloud-zoom-gallery' rel="useZoom: 'zoom1', smallImage: '@imgFull' "><img src="@imgFull" alt="@img.Text"/></a></li>        
+                                
+                            }
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- end: more-images -->
+                  <div class="clear"></div>
+                </div>
+                <div class="product-shop col-sm-5 col-xs-12">                    
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                              <th scope="row">Kiểu nhà</th>
+                              <td>@Model.ProductTypeText</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Địa chỉ</th>
+                              <td>@Model.Address</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Số nhà</th>
+                              <td>@Model.HouseNumber</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Giá bán</th>
+                              <td>
+                                @if (@Model.NewCost > 0)
+                                {
+                                    <p class="old-price"> <span class="price"> @Model.StandardCost.MoneyFormat() </span> </p>
+                                    string strCost = Model.NewCost.ConvertMoneyToString();
+                                    <br />
+                                    <p class="special-price"> <span class="price-label">Special Price</span>  <span class="price"> @Model.NewCost.MoneyFormat() </span>  <br />(@strCost) </p>
+                                }
+                                else
+                                {
+                                    string strCost = Model.StandardCost.ConvertMoneyToString();
+                                    <p class="special-price"> <span class="price-label">Special Price</span>  <span class="price"> @Model.StandardCost.MoneyFormat() </span>  <br />(@strCost) </p>
+                                }
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Diện tích</th>
+                              <td>@Math.Floor(@Model.Area) (m <sup>2</sup>)</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Người đăng</th>
+                              <td>@Model.Username</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Ngày đăng</th>
+                              <td>@Model.UpdateTime</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="toggle-content">
+                        <div class="toggle toggle-white">
+                            <h4 class="trigger"><a href="#">Mô tả</a></h4>
+                            <div style="display: none;" class="toggle_container tabcontent">
+                            <div class="std">
+                                <p>@Model.Description</p>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="toggle toggle-white">
+                            <h4 class="trigger"><a href="#">Địa chỉ chi tiết</a></h4>
+                            <div style="display: none;" class="toggle_container ">
+                            <p> @Model.Address</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+}
+@section ScriptContent{
+<script type="text/javascript" src="@Url.Content("~/Assets/Site/js/prototype.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Site/js/toggle.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Site/js/pro-img-slider.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Site/js/jquery.flexslider.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Site/js/cloud-zoom.js")"></script>
+}

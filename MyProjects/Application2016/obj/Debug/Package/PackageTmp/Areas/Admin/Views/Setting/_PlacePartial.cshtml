@@ -1,0 +1,37 @@
+﻿<div class="col-sm-4">
+	<div class="widget-box collapsed">
+		<div class="widget-header">
+			<h4 class="widget-title">Cập nhật danh sách tỉnh, huyện, xã</h4>
+
+			<div class="widget-toolbar">
+				<a href="#" data-action="collapse">
+					<i class="ace-icon fa fa-chevron-down"></i>
+				</a>
+
+				@*<a href="#" data-action="close">
+					<i class="ace-icon fa fa-times"></i>
+				</a>*@
+			</div>
+		</div>
+        @using (Html.BeginForm("UpdatePlace", "Setting", FormMethod.Post, new { id = 1, enctype = "multipart/form-data" }))
+        {
+            <div class="widget-body" style="display: none;">
+				<div class="widget-main">
+					<div class="form-group">
+						<div class="col-xs-12">
+							<input type="file" id="id-input-file-2" name="file" />
+						</div>
+					</div>
+                    @*<div class="form-group">
+						<div class="col-xs-12">
+							<input multiple="" type="file" id="id-input-file-3" />
+						</div>
+					</div>*@
+                    <label>
+                        <button class="btn btn-info" type="submit" value="Update" disabled ="disabled">Update</button>
+                    </label>
+				</div>
+			</div>                
+        }			
+	</div>
+</div>

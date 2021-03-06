@@ -1,0 +1,101 @@
+﻿@using Application2016.Helpers;
+@using Application2016.Enums;
+@{
+    var ListProduct = ViewBag.ListProduct as IList<Entities.Product>;
+}
+<style type="text/css">
+    .product-title
+    {
+        display: block;
+        height: 45px;
+        @*overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;*@
+    }
+</style>
+<div class="row">
+    <!-- muốn cho di chuyển được khung thì thêm class widget-container-col  ui-sortable-->
+    <div class="col-xs-12 col-sm-12 " id="widget-container-col-1" style="min-height: 210px;">
+        <!-- ui-sortable-handle -->
+        <div class="widget-box " id="widget-box-1" style="opacity: 1;">
+            <div class="widget-header">
+                <h4 class="widget-title">
+                    <i class="ace-icon fa fa-home"></i>@ViewBag.BoxTitle</h4>
+                @Html.Partial("_PagingPartial")
+                <div class="widget-toolbar">
+                    &Sigma;<b class="red"><strong>@ListProduct.Count</strong></b>                    
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="row">
+                    @foreach (var item in ListProduct)
+                    {
+                        string image = Url.Content("~/Assets/Images/home-default.png");
+                        if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+                        {
+                            var fullImageUrl = item.Avatar_Url + item.Avatar;
+                            if (File.Exists(Server.MapPath(fullImageUrl)))
+                            {
+                                image = Url.Content(fullImageUrl);
+                            }
+                        }
+                        var shortText = item.Text.Length > 40 ? item.Text.Substring(0, 37) + "..." : item.Text.PadRight(40);
+                        //shortText = shortText.Length <= 22 ? shortText + "\\n" : shortText;
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                        <div class="thumbnail search-thumbnail">
+                            @if (item.UpdateTime > DateTime.Now.AddDays(-3))
+                            {
+                            <span class="search-promotion label label-success arrowed-in arrowed-in-right">New</span>
+                            }
+                            <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id,item.Text_Alias)" class="blue" title="@item.Text">
+                                <img class="media-object" src="@image" alt="@item.Text" height="240px"/> 
+                            </a>
+                            
+                            <div class="caption">
+                                <div class="clearfix">
+                                    <span class="pull-right label label-grey info-label">@item.DistrictText</span>
+                                    @*<div class="pull-left bigger-110">
+                                        <i class="ace-icon fa fa-star orange2"></i><i class="ace-icon fa fa-star orange2">
+                                        </i><i class="ace-icon fa fa-star orange2"></i><i class="ace-icon fa fa-star-half-o orange2">
+                                        </i><i class="ace-icon fa fa-star light-grey"></i>
+                                    </div>*@
+                                </div>
+                                <h4 class="search-title">
+                                    <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id, item.Text_Alias)" class="blue product-title" title="@item.Text">@Html.Raw(@shortText)</a>
+                                    <br />
+                                    <span class="text-danger">
+                                        @(item.UpdateCost > 0 ? item.UpdateCost.Value.MoneyFormat() : item.StandardCost.MoneyFormat())
+                                    </span> 
+                                </h4>
+                                <div class="actions">
+                                    <span class="add-to-links">
+                                        <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id, item.Text_Alias)" class="btn btn-danger btn-round">Đặt mua</a>
+                                        @if (item.IsFollow)
+                                        {
+                                            <a href="javascript:void(0);" class="btn btn-default btn-round" >Theo dõi</a>
+                                        }
+                                        else
+                                        {                                            
+                                        <a href="javascript:void(0);" id="btnFollow_@item.Id" class="btn btn-danger btn-round" onclick="updateFollow(this.id)">Theo dõi</a>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                    @if (ListProduct.Count == 0)
+                    {
+                        <div class="alert alert-info">
+							<i class="ace-icon fa fa-hand-o-right"></i>
+							@AdminConfigs.MESSAGE_NOT_FOUND
+						</div>
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

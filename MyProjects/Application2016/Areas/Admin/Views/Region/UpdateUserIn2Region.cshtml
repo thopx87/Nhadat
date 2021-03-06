@@ -1,0 +1,116 @@
+﻿@model Application2016.Areas.Admin.Models.RegionUserModel
+@{
+    ViewBag.Title = "Update";
+}
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="widget-box">
+			<div class="widget-header">
+				<h4 class="widget-title">Chuyển đổi người dùng giữa các vùng (Vùng 1 --> Vùng 2 hoặc Vùng 2 --> Vùng 1)</h4>
+
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="ace-icon fa fa-chevron-up"></i>
+					</a>
+
+					<a href="#" data-action="close">
+						<i class="ace-icon fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="widget-body">
+                <div class="widget-main">
+                @using (Html.BeginForm("UserUpdate", "Region", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post, new { id = "frmRegion" }))
+                {
+	                <fieldset>
+		                <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+				                <label for="form-field-8">Vùng 1</label> <br />
+                                @Html.DropDownList("Region1", new SelectList(ViewBag.ListRegion, "Id", "Text"), "Chọn vùng", new { onchange = string.Format("javascript:ListUserByRegion(this.value,'#UserOfRegionIds')") })
+			                </div>
+                            <div class="form-group">
+				                <label for="form-field-8">Vùng 2</label> <br />
+                                @Html.DropDownList("Region2", new SelectList(ViewBag.ListRegion, "Id", "Text"), "Chọn vùng", new { onchange = string.Format("javascript:ListUserByRegion(this.value,'#Users')") })
+			                </div>
+                        </div>
+
+		                <div class="col-xs-12 col-sm-8">
+                            <div class="box1 col-md-4" style="width:300px; margin:10px;">
+                                <span class="info-container">
+                                    <label> Danh sách user của vùng 1</label>
+                                    <span class="show-info"></span>
+                                </span>
+                                @Html.ListBoxFor(m => m.UserOfRegionIds, new MultiSelectList(Model.ListUserOfRegion, "Id", "Username", Model.UserOfRegionIds), new { onchange = string.Format("javascript:move('UserOfRegionIds','Users')"), style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                @Html.ValidationMessageFor(m => m.UserOfRegionIds)
+                            </div>       
+
+                            <div class="box2 col-md-4" style="width: 300px; margin:10px;">
+                                <span class="info-container">
+                                    <label> Danh sách user của vùng 2 </label>
+                                    <span class="show-info"></span>
+                                </span>
+                                @Html.ListBoxFor(m => m.Users, new MultiSelectList(Model.ListUsers, "Id", "Username", Model.Users), new { onchange = string.Format("javascript:move('Users','UserOfRegionIds')"), style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                
+                            </div>
+		                </div>
+	                </fieldset>
+                    <div class="">
+                    <input type="submit" class="btn btn-sm btn-success" value="@ViewBag.SubmitValue" />
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function ListUserByRegion(regionId, toControlId1) {
+        if (regionId == null || regionId == "") {
+            regionId = -1;
+        }
+        
+        $.ajax({
+            url: '@Url.Action("ListUserByRegion", "Base")',
+            data: JSON.stringify({ regionId: regionId }),
+            contentType: 'application/json; charset=UTF-8',
+            type: 'POST',
+            dataType: 'json'
+        })
+        .success(function (result) {
+            // Thêm vào Control 1
+            $(toControlId1).empty();
+            for (var i = 0; i < result.length; i++) {
+                $(toControlId1).append("<option value=" + result[i].Id + ">" + result[i].UserName + "</option>");
+            }
+        })
+        .error(function (xhr, status) {
+            $(toControlId1).empty();
+            alert(status);
+        });
+    }
+
+    $(document).ready(function () {
+
+        $("#frmRegion").submit(function (e) {
+            $("#UserOfRegionIds option").prop("selected", "selected");
+            $("#Users option").prop("selected", "selected");
+        });
+
+    });
+
+    // Hàm xử lý chuyển giữa 2 danh sách.
+    function move(from, to) {
+        var source, target;
+        var elem = document.createElement('option');
+
+        source = document.getElementById(from);
+        target = document.getElementById(to);
+
+        elem.value = source.options[source.selectedIndex].value;
+        elem.innerHTML = source.options[source.selectedIndex].text;
+        target.appendChild(elem);
+        source.removeChild(source.options[source.selectedIndex]);
+    }
+</script>

@@ -1,0 +1,39 @@
+﻿<ul id="nav" class="hidden-xs">
+    <li id="nav-home" class="level0 parent drop-menu active">
+        <a href="@Url.Action("Index","Home")"><span>Home</span> </a>
+    </li>
+    
+    <li class="level0 parent drop-menu"> <a href="javascript:void()" class="level-top"> <span>Nhà đất bán</span> </a>
+        <ul style="display: none;" class="level1">
+            <li class="level1 first"><a href="#" class="a-product-type" id="productType1"><span>Bán biệt thự</span></a></li>
+            <li class="level1 nav-10-2"> <a href="#" class="a-product-type" id="productType2"> <span>Bán chung cư</span> </a> </li>
+            <li class="level1"> <a href="#" class="a-product-type" id="productType3"> <span>Bán đất thổ cư</span> </a> </li>
+            <li class="level1"> <a href="#" class="a-product-type" id="productType5"> <span>Bán đất dịch vụ </span> </a> </li>
+            <li class="level1"> <a href="#" class="a-product-type" id="productType4"> <span>Bán nhà mặt phố</span> </a> </li>
+            <li class="level1 first parent"><a href="#" class="a-product-type" id="productType6"><span>Bán đất đấu giá</span></a></li>
+        </ul>
+    </li>
+    <li class="level0 parent drop-menu"> <a href="grid.html" class="level-top"> <span>Nhà đất cho thuê</span> </a>
+        <ul style="display: none;" class="level1">
+            <li class="level1 first"><a href="grid.html"><span>Cho thuê biệt thự</span></a></li>
+            <li class="level1 nav-10-2"> <a href="list.html"> <span>Cho thuê chung cư</span> </a> </li>
+            <li class="level1"> <a href="faq.html"> <span>Cho thuê nhà riêng</span> </a> </li>
+            <li class="level1"> <a href="quick_view.html"> <span>Cho thuê cửa hàng</span> </a> </li>
+            <li class="level1"> <a href="newsletter.html"> <span>Cho thuê đất</span> </a> </li>
+            <li class="level1 first parent"><a href="blog.html"><span>Cho thuê văn phòng</span></a></li>
+            <li class="level1 first parent"><a href="blog.html"><span>Cho thuê khác</span></a></li>
+        </ul>
+    </li>
+    <li class="level0 nav-8 level-top"> <a href="grid.html" class="level-top"> <span>Phân vùng</span> </a> </li>
+    <li class="level0 nav-8 level-top"> <a href="grid.html" class="level-top"> <span>ĐĂNG TIN BÁN, CHO THUÊ</span> </a> </li>
+    <li class="level0 nav-8 level-top"> <a href="grid.html" class="level-top"> <span>TÌM MUA OR THUÊ NHÀ</span> </a> </li>
+    <li class="level0 nav-8 level-top"> <a href="grid.html" class="level-top"> <span>TIN BẤT ĐỘNG SẢN</span> </a> </li>
+</ul>
+
+<script type="text/javascript">
+    jQuery('.a-product-type').click(function () {
+        var type = jQuery(this).attr("id");
+        type = type.replace("productType", "");
+        window.location.href = updateURLParameter(window.location.href, 'ProductType', type);
+    });
+</script>

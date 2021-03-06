@@ -1,0 +1,12 @@
+﻿@model Application2016.Areas.Admin.Models.TestModel
+@{
+    ViewBag.Title = "CheckBoxList";
+}
+@using(Html.BeginForm("CheckBoxList","Test",new{id=0}, FormMethod.Post))
+{
+    for(int i = 0; i < Model.Elems.Count; i++)
+    {
+        @Html.CheckBoxFor(m => m.Elems[i].Checked, new { onchange = "UpdateForRow(" + i + ")" })
+        @Model.Elems[i].value
+    }
+}

@@ -1,0 +1,36 @@
+﻿@using Application2016.Helpers;
+@{
+    var ListNeighBorRegion = ViewData["ListNeighBorRegion"] as List<Entities.Item>;
+    bool IsAgency = (bool)ViewData["IsAgency"];
+    var isAdmin = CookieHelper.Get(AdminConfigs.COOKIES_ADMIN) != null ? CookieHelper.Get(AdminConfigs.COOKIES_ADMIN).ToString() : "0";
+    if (isAdmin != "0")
+    {
+        for (int i = 0; i < ListNeighBorRegion.Count; i++)
+        {
+            var r = ListNeighBorRegion[i];
+        <input type="checkbox" name="ListRegionNeighbor" value="@r.Id" checked="@r.Checked" id="ListRegion_@r.Id"/><label for="ListRegion_@r.Id">@r.Text</label>
+        <br />
+        }
+    }
+    else
+    {
+        if (IsAgency)
+        {
+            for (int i = 0; i < ListNeighBorRegion.Count; i++)
+            {
+                var r = ListNeighBorRegion[i];
+        <input type="checkbox" name="ListRegionNeighbor" value="@r.Id" checked="@r.Checked" id="ListRegion_@r.Id" onclick="return false;"/><label for="ListRegion_@r.Id">@r.Text</label>
+        <br />
+            }
+        }
+        else
+        {
+            for (int i = 0; i < ListNeighBorRegion.Count; i++)
+            {
+                var r = ListNeighBorRegion[i];
+            <input type="radio" name="ListRegionNeighbor" value="@r.Id" checked="@r.Checked" id="ListRegion_@r.Id" onclick="javascript:ShowWardOfRegion();"/><label for="ListRegion_@r.Id">@r.Text</label>
+        <br />
+            }
+        }
+    }
+}

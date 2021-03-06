@@ -1,0 +1,109 @@
+﻿@model Application2016.Areas.Admin.Models.ListRoleModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+					<li class="active red bigger-120">Danh sách quyền người dùng</li>
+				</ul>
+                @using (Html.BeginForm("Index", "Role", FormMethod.Get))
+                {
+                    <div class="nav-search" id="nav-search">
+                        @Html.DropDownListFor(m => m.Condition.State, new SelectList(Model.Condition.ListState, "Id", "Text", Model.Condition.State), new { @onchange = "this.form.submit();" })
+                        <span class="input-icon">
+                            @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "nav-search-input", @placeholder = "Search ...", @autocomplete = "on" })
+                            <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                        @Html.HiddenFor(m => m.Condition.Page, new { id = "PageIndex" })
+                    </div>
+                }
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+					@Html.ActionLink("Thêm quyền ", "RoleUpdate", "Role", new { @id = 0 }, new { @class = "btnDefine btn btn-primary" })
+				</div>
+                <div class="row">
+                    <div id="modal-table" class="modal fade" tabindex="-1">
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table id="simple-table" class="table  table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Tên quyền
+                                            </th>
+                                            <th>
+                                                Mã quyền
+                                            </th>
+                                            <th>
+                                                Trạng thái hoạt động
+                                            </th>
+                                            <th>
+                                                Môi giới?
+                                            </th>
+                                            <th>
+                                                Quyền gửi bài
+                                            </th>
+                                            <th>
+                                                Thông tin chi tiết
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.ListRole.Count; i++)
+                                        {
+                                            var entity = Model.ListRole[i];
+                                            <tr>
+                                                <td>
+                                                    <a href="@Url.Action("RoleUpdate", "Role", new { @Id = entity.Id })">@entity.Text </a>
+                                                </td>
+                                                <td>@entity.Code
+                                                </td>
+                                                <td>
+                                                    <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@entity.Active" onclick="return false;">
+                                                    <span class="lbl bigger-120"></span>
+                                                </td>
+                                                <td>
+                                                    <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@entity.IsAgency" onclick="return false;">
+                                                    <span class="lbl bigger-120"></span>
+                                                </td>
+                                                <td>
+                                                    <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@entity.Post" onclick="return false;" />
+                                                    <span class="lbl bigger-120"></span>
+                                                </td>
+                                                <td>
+                                                    @{
+                                            if (entity.IsAgency)
+                                            {
+                                                        <label>
+                                                            Được nhận từ môi giới</label> <span class='ace-icon fa @(entity.ResiveFromAgency ? "fa-check blue" : "fa-times red") bigger-150'></span> <br />
+                                                        <label>
+                                                            Được nhận từ thành viên</label> <span class='ace-icon fa @(entity.ResiveFromMember ? "fa-check blue" : "fa-times red") bigger-150'></span> <br />
+                                                        <label>
+                                                            Số vùng gửi: &nbsp;
+                                                        </label><label style="color:Green"><strong>@entity.SendRegionNum</strong></label>  <br />
+                                                        <label>
+                                                            Số vùng nhận: &nbsp;
+                                                        </label> <label style="color:Green"><strong>@entity.ResiveRegionNum</strong></label> 
+                                            }
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                @Html.Partial("_PagingPartial")
+                            </div>
+                            <!-- /.span -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

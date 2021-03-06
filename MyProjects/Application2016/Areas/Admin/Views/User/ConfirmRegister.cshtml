@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "ConfirmRegister";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section MainContent{
+@{string urlRedirect = "";}
+@if (ViewBag.Message != null) {
+    urlRedirect = Url.Action("Index", "Home");
+    //if (ViewBag.State == "ERROR")
+    //{
+    //    urlRedirect = Url.Action("Register", "User");
+    //}
+    //else
+    //{
+    //    urlRedirect = Url.Action("Login", "User");
+    //}
+}
+<script type="text/javascript">
+    $(window).load(function () {
+        $('#myModal').modal('show');
+    });        
+</script>
+
+<div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title">Thông báo xác nhận thông tin</h4>
+        </div>
+        <div class="modal-body">
+            
+        <p>@ViewBag.Message</p>
+        </div>
+        <div class="modal-footer">
+        <a href="@urlRedirect" class="btn btn-primary">Close</a>
+        </div>
+    </div>
+    </div>
+</div>
+}

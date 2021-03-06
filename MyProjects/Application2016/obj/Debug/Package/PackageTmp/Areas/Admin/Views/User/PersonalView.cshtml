@@ -1,0 +1,299 @@
+﻿@model Application2016.Areas.Admin.Models.UserViewModel
+@using Application2016.Helpers;
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var User = Model.User;
+}
+@section HeaderContent{
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery-ui.custom.min.css")" type="text/css"/>
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery.gritter.min.css")" type="text/css"/>
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/select2.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/bootstrap-datepicker3.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/bootstrap-editable.min.css")" type="text/css"/>
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div id="user-profile-1" class="user-profile row">
+                        <div class="col-xs-12 col-sm-9">
+                            <div class="col-xs-12 col-sm-4 center">
+                                <div>
+                                    <span class="profile-picture">
+                                        @{
+                                            var avatarFile = User.Avatar;
+                                            if (avatarFile != "")
+                                            {
+                                                avatarFile = AdminConfigs.IMAGE_PATH + User.UserName + AdminConfigs.ALTDIRECTORYSEPARATORCHAR + avatarFile;
+                                                User.Avatar = "";
+                                            }
+                                            else
+                                            {
+                                                avatarFile = "~/Assets/Admin/images/avatars/profile-pic.jpg";
+                                            }
+                                        }
+                                        <img id="avatar" class="img-responsive" alt="Avatar" src="@Url.Content(@avatarFile)" />
+                                    </span>
+                                    <div class="space-4">
+                                    </div>
+                                    <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                                        <div class="inline position-relative">
+                                            @User.UserName
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr hr12 dotted">
+                                </div>
+                                <div class="clearfix">
+                                    <span class="bigger-120 blue">Quyền hạn</span>
+                                    <br />
+                                    @foreach (var role in User.UserRoles)
+                                    {
+                                        @role.Text <br />
+                                    }
+                                    <div class="hr hr16 dotted">
+                                    </div>
+                                    <div class="grid2">
+                                        <span class="bigger-120 blue">Vùng gửi</span>
+                                        <br />
+                                        @foreach (var region in User.ListUserInRegionSend.ListItem)
+                                        {
+                                            @region.Text <br />
+                                        }
+                                    </div>
+                                    <div class="grid2">
+                                        <span class="bigger-120 blue">Vùng nhận bán</span>
+                                        <br />
+                                        @foreach (var region in User.ListUserInRegionReceive.ListItem)
+                                        {
+                                            @region.Text <br />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="hr hr16 dotted">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <div class="profile-user-info profile-user-info-striped">
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Tên hiển thị
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="" id="displayName">@User.DisplayName</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Họ tên
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="" id="firstName">@User.FirstName</span> <span class="editable" id="lastName">@User.LastName</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Địa chỉ
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="">@Html.DropDownListFor(m => User.ward.CityId, new SelectList(User.ward.ListCity, "Id", "Text", User.ward.CityId), "Chọn tỉnh/ thành phố", new { @disabled = "disabled" })</span>
+                                            <span class="">@Html.DropDownListFor(m => User.ward.Parent, new SelectList(User.ward.ListDistrict, "Id", "Text", User.ward.Parent), "Chọn quận / huyện", new { @disabled = "disabled" })</span>
+                                            <span class="">@Html.DropDownListFor(m => User.PlaceId, new SelectList(User.ward.ListWard, "Id", "Text", User.PlaceId), "Chọn xã/ phường", new { @disabled = "disabled" })</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Số nhà
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="address">@User.Address</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Giới tính
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="gender">
+                                                @(User.Gender == 1 ? "Nam" : "Nữ")</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Ngày sinh
+                                        </div>
+                                        <div class="profile-info-value col-sm-3">
+                                         <span class="block input-icon input-icon-right fetched-date">
+                                            @User.DateOfBirth						                        
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            PR
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="" id="about">@User.Description</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Số điện thoại
+                                        </div>
+                                        <div class="">
+                                            <span class="" id="phone">@User.Phone</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @Html.Action("ProductFollow", "Product", new { @area = "Admin", @userId = @Model.User.Id, @viewType = 1 })
+
+                            @Html.Action("ProductSale", "Product", new { @userId = @Model.User.Id, @viewType = 1 })
+
+                            @Html.Action("ProductReceiveSelling", "Product", new { @userId = @Model.User.Id, @viewType = 1 })
+
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                            @using (Html.BeginForm("PersonalView", "User", FormMethod.Get, new { area = "Admin" }))
+                            {
+                                @Html.HiddenFor(m => m.Condition.id)
+                                <div class="search-area well well-sm">
+                                    <h4 class="blue smaller">
+                                        <i class="fa fa-map-marker light-orange bigger-110"></i>Vùng hoạt động
+                                    </h4>
+                                    <div>
+                                        @Html.DropDownListFor(m => m.Condition.RegionId, new SelectList(ViewBag.ListRegion, "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();" })
+                                        <br />
+                                    </div>
+                                    <h4 class="blue smaller">
+                                        <i class="fa fa-tags"></i>Quyền hạn
+                                    </h4>
+                                    <div>
+                                        @Html.DropDownListFor(m => m.Condition.RoleId, new SelectList(ViewBag.ListRole, "Id", "Text"), null, new { @class = "form-control", @onchange = "this.form.submit();" })
+                                        <br />
+                                    </div>
+                                    <h4 class="blue smaller">
+                                        <i class="fa fa-user"></i>Tìm theo Username
+                                    </h4>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "form-control", @placeholder = "Tìm theo tên", @onchange = "this.form.submit();" })
+                                    </div>
+                                </div>
+                            }
+                            <div>
+                                <h4 class="blue smaller">
+                                    <i class="fa fa-list"></i>Danh sách user
+                                </h4>
+                                <ul id="listUser" class="ui-menu ui-widget ui-widget-content" role="menu" tabindex="0"
+                                    aria-activedescendant="ui-id-12" style="width: 80% !important; height: 250px;
+                                    overflow: auto">
+                                    @foreach (var item in Model.ListUser)
+                                    {
+                                        <li class="ui-menu-item" tabindex="-1" role="menuitem"><a href="@Url.Action("PersonalView", "User", new { area = "Admin", @id = @item.Id, @RegionId = Model.Condition.RegionId, @RoleId = Model.Condition.RoleId, @SearchText = Model.Condition.SearchText })">@item.Text</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--[if lte IE 8]>
+		<script src="@Url.Content("~/Assets/Admin/js/excanvas.min.js")"></script>
+	<![endif]-->
+    <script src="@Url.Content("~/Assets/Admin/js/jquery-ui.custom.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.gritter.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootbox.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.easypiechart.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-datepicker.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.hotkeys.index.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-wysiwyg.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/select2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/spinbox.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-editable.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/ace-editable.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.maskedinput.min.js")" type="text/javascript"></script>
+    <!-- ace scripts -->
+    <script src="@Url.Content("~/Assets/Admin/js/ace-elements.min.js")"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/ace.min.js")"></script>
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        jQuery(function ($) {
+
+            //editables on first profile page
+            $.fn.editable.defaults.mode = 'inline';
+            $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
+            $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>' +
+			                            '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
+
+            //editables 
+
+            
+
+            // *** editable avatar *** //
+            try {//ie8 throws some harmless exceptions, so let's catch'em
+
+                //first let's add a fake appendChild method for Image element for browsers that have a problem with this
+                //because editable plugin calls appendChild, and it causes errors on IE at unpredicted points
+                try {
+                    document.createElement('IMG').appendChild(document.createElement('B'));
+                } catch (e) {
+                    Image.prototype.appendChild = function (el) { }
+                }
+
+                var last_gritter
+            }
+            catch(){
+
+            }
+
+
+            //////////////////////////////
+            $('#profile-feed-1').ace_scroll({
+                height: '250px',
+                mouseWheelLock: true,
+                alwaysVisible: true
+            });
+
+            $('a[ data-original-title]').tooltip();
+
+            $('.easy-pie-chart.percentage').each(function () {
+                var barColor = $(this).data('color') || '#555';
+                var trackColor = '#E2E2E2';
+                var size = parseInt($(this).data('size')) || 72;
+                $(this).easyPieChart({
+                    barColor: barColor,
+                    trackColor: trackColor,
+                    scaleColor: false,
+                    lineCap: 'butt',
+                    lineWidth: parseInt(size / 10),
+                    animate: false,
+                    size: size
+                }).css('color', barColor);
+            });
+
+            ////////////////////
+            //change profile
+            $('[data-toggle="buttons"] .btn').on('click', function (e) {
+                var target = $(this).find('input[type=radio]');
+                var which = parseInt(target.val());
+                $('.user-profile').parent().addClass('hide');
+                $('#user-profile-' + which).parent().removeClass('hide');
+            });
+
+            /////////////////////////////////////
+            $(document).one('ajaxloadstart.page', function (e) {
+                //in ajax mode, remove remaining elements before leaving page
+                try {
+                    $('.editable').editable('destroy');
+                } catch (e) { }
+                $('[class*=select2]').remove();
+            });
+        });
+    </script>
+}

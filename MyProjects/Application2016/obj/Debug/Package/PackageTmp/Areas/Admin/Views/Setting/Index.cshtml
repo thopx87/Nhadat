@@ -1,0 +1,94 @@
+﻿@model Application2016.Areas.Admin.Models.SettingModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section HeaderContent{
+    <script src="@Url.Content("~/Assets/Admin/js/spinbox.min.js")"  type="text/javascript"></script>
+}
+@section MainContent{
+
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="page-content">
+            <div class="row">
+                <!-- Vùng cập nhật danh sách tỉnh, huyện -->
+                @Html.Partial("_PlacePartial")
+
+                <!-- Vùng cập nhật danh sách vùng -->
+                @Html.Partial("_RegionPartial")
+
+                <!-- Cập nhật cấu hình gửi mail -->
+                @Html.Partial("_MailPartial", Model.MailSetting)
+
+                <!-- Cập nhật thông tin website -->
+                @Html.Partial("_WebsitePartial", Model.webSetting)
+
+                <!-- Cập nhật thông tin mạng xã hội -->
+                @Html.Partial("_SocialNetworkPartial", Model.socialNetworkSetting)
+
+                @*<!-- Cập nhật cấu hình phân quyền-->    
+                @Html.Partial("_RolePartial", Model.RoleSetting)*@
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+<div class="row">
+	
+</div>
+<script type="text/javascript">
+
+    jQuery(function ($) {
+        $('#id-input-file-1 , #id-input-file-2').ace_file_input({
+            no_file: 'No File ...',
+            btn_choose: 'Choose',
+            btn_change: 'Change',
+            droppable: false,
+            onchange: null,
+            thumbnail: false //| true | large
+            //whitelist:'gif|png|jpg|jpeg'
+            //blacklist:'exe|php'
+            //onchange:''
+            //
+        });
+
+        $('#id-input-file-3').ace_file_input({
+            style: 'well',
+            btn_choose: 'Drop files here or click to choose',
+            btn_change: null,
+            no_icon: 'ace-icon fa fa-cloud-upload',
+            droppable: true,
+            thumbnail: 'small'//large | fit
+            //,icon_remove:null//set null, to hide remove/reset button
+            /**,before_change:function(files, dropped) {
+            //Check an example below
+            //or examples/file-upload.html
+            return true;
+            }*/
+            /**,before_remove : function() {
+            return true;
+            }*/
+					,
+            preview_error: function (filename, error_code) {
+                //name of the file that failed
+                //error_code values
+                //1 = 'FILE_LOAD_FAILED',
+                //2 = 'IMAGE_LOAD_FAILED',
+                //3 = 'THUMBNAIL_FAILED'
+                //alert(error_code);
+            }
+
+        }).on('change', function () {
+            //console.log($(this).data('ace_input_files'));
+            //console.log($(this).data('ace_input_method'));
+        });
+
+        $('#SendRegionNum').ace_spinner({ value: 0, min: 0, max: 100, step: 1, on_sides: true, icon_up: 'ace-icon fa fa-plus bigger-110', icon_down: 'ace-icon fa fa-minus bigger-110', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+        $('#ResiveRegionNum').ace_spinner({ value: 0, min: 0, max: 100, step: 1, on_sides: true, icon_up: 'ace-icon fa fa-plus bigger-110', icon_down: 'ace-icon fa fa-minus bigger-110', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+        $('#Cost').ace_spinner({ value: 10, min: 0, max: 100, step: 10, on_sides: true, icon_up: 'ace-icon fa fa-plus bigger-110', icon_down: 'ace-icon fa fa-minus bigger-110', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+    });
+</script>
+
+}

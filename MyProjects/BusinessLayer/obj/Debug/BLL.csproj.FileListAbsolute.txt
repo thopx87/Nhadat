@@ -1,0 +1,10 @@
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\BLL.dll
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\BLL.pdb
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\DAL.dll
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\EntityFramework.dll
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\DAL.pdb
+D:\Projects\MyProjects\MyProjects\BLL\obj\Debug\BLL.dll
+D:\Projects\MyProjects\MyProjects\BLL\obj\Debug\BLL.pdb
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\DataLayer.dll
+D:\Projects\MyProjects\MyProjects\BLL\bin\Debug\DataLayer.pdb
+D:\Projects\MyProjects\MyProjects\BLL\obj\Debug\BLL.csprojResolveAssemblyReference.cache

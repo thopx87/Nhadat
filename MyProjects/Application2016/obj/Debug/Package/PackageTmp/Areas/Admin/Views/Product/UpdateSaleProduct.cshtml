@@ -1,0 +1,495 @@
+﻿@using Application2016.Helpers
+@using Application2016.Enums;
+@model Application2016.Areas.Admin.Models.ProductModel
+@{
+    Layout = null;    
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+</script>
+
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="widget-box">
+			<div class="widget-header">
+				<h4 class="widget-title">Thông tin nhà bán</h4>
+
+				<div class="widget-toolbar">
+					@*<a href="#" data-action="collapse">
+						<i class="ace-icon fa fa-chevron-up"></i>
+					</a>
+
+					<a href="#" data-action="close">
+						<i class="ace-icon fa fa-times"></i>
+					</a>*@
+				</div>
+			</div>
+
+			<div class="widget-body">
+                <div class="widget-main">
+                @using (Html.BeginForm("UpdateSaleProduct", "Product", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(m => m.UserName)
+                    @Html.HiddenFor(m => m.UserId)
+                    @Html.HiddenFor(m => m.RoleId)
+                    @Html.HiddenFor(m => m.RoleText)
+                    @Html.HiddenFor(m => m.UpdateBy)
+                    <fieldset>
+                        <div class="col-sm-8">
+                            <div class="form-group col-sm-12">
+                                <label style="text-decoration:underline; font-size:18px; color:Red;">Chú ý: </label><label><b>Những vùng đánh dấu<span class="required"></span> là những vùng bắt buộc nhập</b></label>
+                            </div>
+                            <div class="form-group col-sm-12">
+								<label class="col-sm-2 required">@AdminConfigs.TEXT_CHOOSE_HOUSE_TYPE</label>
+                                <div class="col-sm-3">
+                                @Html.DropDownListFor(m => m.Product_Type, new SelectList(Model.ListProductType, "Id", "Text"), @AdminConfigs.TEXT_CHOOSE_HOUSE_TYPE, new { @class = "form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Product_Type)
+							</div>
+                            <div class="form-group col-sm-12">
+								<label class="col-sm-2 required">@AdminConfigs.TEXT_CHOOSE_ADDRESS</label>
+                                <div class="col-sm-3">
+                                    @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text"), @AdminConfigs.TEXT_CHOOSE_CITY, new { @class = "form-control", onchange = string.Format("javascript:ListPlaceJson(this.value,'#DistrictId','#WardId')") })
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text"), @AdminConfigs.TEXT_CHOOSE_DISTRICT, new { @class = "form-control", onchange = string.Format("javascript:ListPlaceJson(this.value,'#WardId')") })
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.DropDownListFor(m => m.WardId, new SelectList(Model.ListWard, "Id", "Text"), @AdminConfigs.TEXT_CHOOSE_WARD, new { @class = "form-control", onchange = string.Format("javascript:GetRegionByWard(this.value,'#regionFixed','#lstRegionNeighbor')") })
+                                </div>
+                                <div class="col-sm-2">
+                                </div>
+                                <div class="col-sm-5">
+                                @Html.ValidationMessageFor(m => m.WardId)
+                                </div>
+							</div>							
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2">Vùng (gửi) cố định</label>
+                                <div class="col-sm-3" id="divFixRegion">
+                                    @foreach (var region in Model.ListFixedSendRegion)
+                                    {
+                                        <label data-id="@region.Id">@region.Text</label>  <br />
+                                    }
+                                
+                                <label id="regionFixed">
+                                @Model.regionFixedText
+                                </label>
+                                @Html.HiddenFor(m => m.regionFixedId)
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2 control-label">Vùng lân cận</label>
+                                <div id="lstRegionNeighbor" class="col-sm-3" style="height: 120px; overflow-y:scroll;">   
+                                    @Html.Partial("ListNeighborRegion", new ViewDataDictionary { { "ListNeighBorRegion", Model.ListRegion }, { "IsAgency", Model.IsAgency } })
+                                </div>
+                                <div class="col-sm-5">
+                                    <label>Xã, phường tương ứng</label>
+                                    <textarea readonly="readonly" id="lstWard" class="autosize" cols="60" rows="4">@Model.StrWards1 @(Model.StrWards2 != null ? ", " + Model.StrWards2 : "")</textarea>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group col-sm-12">
+								<label class="col-sm-2 control-label required">@AdminConfigs.TEXT_TITLE</label>
+                                <div class="col-sm-9">
+                                @Html.TextBoxFor(m => m.Text, new { @class = "form-control" })                                
+                                @Html.ValidationMessageFor(m => m.Text)
+                                <br />
+                                </div>
+                                
+							</div>
+                            <div class="form-group col-sm-12">
+								<label class="col-sm-2 control-label">@AdminConfigs.TEXT_HOUSE_NUMBER</label>
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.HouseNumber, new { @class = "form-control" })
+                                </div>                                 
+                                 <label class="col-sm-2 required">Địa chỉ chi tiết</label>
+                                <div class="col-sm-4">
+                                    @Html.TextAreaFor(m => m.Address, new { @class = "autosize limited form-control", maxlength = "800", rows = "4", minlength = "10" })    
+                                    <br />
+                                    @Html.ValidationMessageFor(m => m.Address)                  
+                                </div>
+                                
+							</div>
+                            
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2 required" for="">Diện tích (m<sup>2</sup>)</label>
+                                <div class="col-sm-3">                                    
+                                    @Html.TextBoxFor(m => m.Area, new { @onkeypress = "return isNumberKey(event)", @class = "form-control", maxLength = 7 })
+                                    @Html.ValidationMessageFor(m => m.Area)
+                                </div>
+                                <label class="col-sm-2 required" for="">Giá bán(Triệu đồng)</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(m => m.StandardCost, new { @class = "form-control", @onkeypress = "return isNumberKey(event)", @onKeyUp = "javascript:ToMoneyString(this.value)", maxLength = 10 })  
+                                    @Html.ValidationMessageFor(m => m.StandardCost) <br />
+                                    <label id="lblMoneyString">@Model.StandardCost.MoneyExchange().MoneyFormat()</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2 control-label" for="">Mô tả</label>
+                                <div class="col-sm-9">
+                                    @Html.TextAreaFor(m => m.Description, new { @class = "autosize limited form-control", maxlength = "800",rows="6", @placeholder = "hãy thêm thông tin mô tả về nhà đất của bạn"}) <br /> <br />
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2" for="">Thời gian bán</label>                                
+                                <div>
+                                    Từ ngày
+                                    @Html.TextBoxFor(m => m.SellStartDate, "{0:yyyy-MM-dd HH:mm}", new { style = "width:17%", @readonly = "readonly" })
+	                                Đến ngày
+                                    @Html.TextBoxFor(m => m.SellEndDate, "{0:yyyy-MM-dd HH:mm}", new { style = "width:17%" })
+	                                <script type="text/javascript">
+                                        var d = new Date();
+                                        var year = d.getYear()+1;
+                                        var day = d.getDate();
+	                                    $(function () {
+	                                        $('*[name=SellEndDate]').appendDtpicker({
+                                                "current":"2012-3-4 12:30",
+	                                            "closeOnSelected": true,
+	                                            "locale": "en",
+	                                            "futureOnly": @Model.Id>0? false: true,
+	                                            "minuteInterval": 30 // cach nhau 30 phut.
+	                                        });
+//	                                        $('*[name=SellStartDate]').appendDtpicker({
+////	                                            "closeOnSelected": true,
+//	                                            "locale": "vi"
+//	                                        });
+	                                    });
+	                                </script>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2" for="">Chi phí môi giới</label>
+                               @Html.TextBoxFor(m => m.AgencyCost, new { @class = "col-sm-1"}) &nbsp;
+                               @Html.DropDownListFor(m => m.CostUnit, new SelectList(Model.ListCostUnit, "Id", "Text"), new { onchange = string.Format("javascript:ChangeCostUnit(this.value)") })
+                               <br />@Html.ValidationMessageFor(m => m.AgencyCost)
+                               <label id="tutorialCostUnit">@Model.StrTutrialCostUnit</label>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-2" for="tag">Thẻ (để quảng cáo)</label>
+                                @Html.TextBoxFor(m => m.Tag, new { data_role = "tagsinput" })
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-5"> Ảnh nhà, ảnh giấy tờ</label>
+                                <br />
+                                <div class="form-group container kv-main">            
+                                    @Html.TextBoxFor(m => m.ListImage, new { type = "file", multiple = "true" })
+                                </div>
+                                <script type="text/javascript">
+                                    $('#ListImage').fileinput({
+                                        language: 'vi',
+                                        uploadUrl: '@Url.Action("UpdateImage", "Product", new{username = Model.UserName})',
+                                        allowedFileExtensions : ['jpg', 'png','gif'],
+                                        overwriteInitial: false,
+                                        maxFileSize: 10000000,
+                                        uploadAsync: true,
+                                        minFileCount: 1,
+                                        maxFileCount: 10,
+                                        initialPreview: @Html.Raw(Json.Encode(Model.ListImage)),
+                                        initialPreviewAsData: true, 
+                                        initialPreviewFileType: 'image',
+                                        initialPreviewConfig: @Html.Raw(Json.Encode(Model.LstImageConfig)),
+                                        uploadExtraData: {
+                                            img_key: "1000",
+                                            img_keywords: "house",
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>          
+                        <div class="col-sm-4">
+                            <div class="widget-box" id="widget-box-1">
+								<div class="widget-header">
+									<h5 class="widget-title">Hướng dẫn đăng bài</h5>
+                                    <div class="widget-toolbar">
+										@*<a href="#" data-action="collapse">
+											<i class="ace-icon fa fa-chevron-up"></i>
+										</a>*@
+
+										<a href="#" data-action="close">
+											<i class="ace-icon fa fa-times"></i>
+										</a>
+									</div>
+								</div>
+
+								<div class="widget-body" style="display: block;">
+									<div class="widget-main">
+										<p class="alert alert-info">
+											Hướng dẫn đăng bài
+										</p>
+									</div>
+								</div>
+							</div>
+                            <div class="widget-box" id="widget-box-2">
+								<div class="widget-header">
+									<h5 class="widget-title">Nội quy</h5>
+                                    <div class="widget-toolbar">
+										@*<a href="#" data-action="collapse">
+											<i class="ace-icon fa fa-chevron-up"></i>
+										</a>*@
+
+										<a href="#" data-action="close">
+											<i class="ace-icon fa fa-times"></i>
+										</a>
+									</div>
+								</div>
+
+								<div class="widget-body" style="display: block;">
+									<div class="widget-main">
+										<p class="alert alert-success">
+											Nội quy
+										</p>
+									</div>
+								</div>
+							</div>
+                        </div>                  
+                    </fieldset>
+                    <!-- hiden field -->
+                    
+                    <div class="">
+                        <button type="submit" id="btnAddProduct" class="btn btn-sm btn-success">@ViewBag.SubmitValue</button>
+                    </div>
+                }
+				</div>
+			</div>
+                    
+		</div>
+	</div><!-- /.span -->
+</div><!-- /.row -->
+
+
+<!--[if lte IE 8]>
+		<script src="@Url.Content("~/Assets/Admin/js/excanvas.min.js")"></script>
+	<![endif]-->
+	<script src="@Url.Content("~/Assets/Admin/js/jquery-ui.custom.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/jquery.gritter.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/bootbox.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/jquery.easypiechart.min.js")" type="text/javascript"></script>
+	@*<script src="@Url.Content("~/Assets/Admin/js/bootstrap-datetimepicker.min.js")" type="text/javascript"></script>*@
+	<script src="@Url.Content("~/Assets/Admin/js/jquery.hotkeys.index.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/bootstrap-wysiwyg.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/select2.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/spinbox.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/bootstrap-editable.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/ace-editable.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/jquery.maskedinput.min.js")" type="text/javascript"></script>
+	<!-- ace scripts -->
+	<script src="@Url.Content("~/Assets/Admin/js/ace-elements.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Assets/Admin/js/ace.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.simple-dtpicker.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.inputlimiter.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.maskedinput.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-tag.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/autosize.min.js")" type="text/javascript"></script>
+    @*<script src="@Url.Content("~/Assets/Site/js/common.js")" type="text/javascript"></script>*@
+<script type="text/javascript">
+    jQuery(function($){
+        $("#btnAddProduct").click(function(){
+            $(".fileinput-upload").click();
+            sleep(5000);
+        });
+    });
+
+    function stopRKey(evt) {
+        evt = (evt) ? evt : ((event) ? event : null);
+        var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+        if ((evt.keyCode == 13) && (node.type == "text")) { return false; }
+    }
+
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31 
+        && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    //document.onkeypress = stopRKey; 
+    jQuery(function ($) {
+        //editables on first profile page
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
+        $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>' +
+			                            '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
+
+        autosize($('textarea[class*=autosize]'));
+        $('textarea.limited').inputlimiter({
+            remText: 'Còn lại %n ký tự <br />',
+            limitText: 'Tối đa : %n.'
+        });
+
+        $('#address').editable({
+            mode: 'inline',
+            type: 'wysiwyg',
+            name: 'about',
+
+            wysiwyg: {
+                //css : {'max-width':'300px'}
+            },
+            success: function (response, newValue) {
+                //newValue = newValue.replace(/<\/?[^>]+(>|$)/g, "");
+                $('#Address').val(newValue);
+            }
+        });
+        jQuery('#description').editable({
+            mode: 'inline',
+            type: 'wysiwyg',
+            name: 'about',
+
+            wysiwyg: {
+                //css : {'max-width':'300px'}
+            },
+            success: function (response, newValue) {
+                //newValue = newValue.replace(/<\/?[^>]+(>|$)/g, "");
+                jQuery('#description').val(newValue);
+            }
+        });
+
+        var tag_input = $('#Tag');
+		try{
+			tag_input.tag(
+				{
+				placeholder:tag_input.attr('placeholder'),
+				//enable typeahead by specifying the source array
+				//source: ace.vars['US_STATES'],//defined in ace.js >> ace.enable_search_ahead
+				/**
+				//or fetch data from database, fetch those that match "query"
+				source: function(query, process) {
+					$.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
+					.done(function(result_items){
+					process(result_items);
+					});
+				}
+				*/
+				}
+			)
+			
+			//programmatically add/remove a tag
+			var $tag_obj = $('#Tag').data('tag');
+			var index = $tag_obj.inValues('some tag');
+			$tag_obj.remove(index);
+		}
+		catch(e) {
+			//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+			tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+			//autosize($('#form-field-tags'));
+		}
+    });
+
+    var listFixSendRegion = [];
+    @foreach (var r in Model.ListFixedSendRegion)
+    {
+        @:listFixSendRegion.push(@r.Id);
+    }
+
+    function GetRegionByWard(wardId, toControlId1, toControlId2) {
+        if (wardId != null && wardId > 0) {
+            $.ajax({
+                url: '@Url.Action("GetRegionByWard", "Base")',
+                data: JSON.stringify({ wardId: wardId }),
+                contentType: 'application/json; charset=UTF-8',
+                type: 'POST',
+                dataType: 'json'
+            })
+            .success(function (result) {
+                // Thêm vào Control 1
+                $(toControlId1).empty();
+                $('#regionFixedId').empty();
+                if (result != null) {
+                    if(!listFixSendRegion.indexOf(result.Id) <=0){
+                        $(toControlId1).append(result.Text);
+                        $('#regionFixedId').val(result.Id);
+                    }
+                    GetNeighBorRegion(result.Id, toControlId2);
+                } else {
+                    $('#regionFixedId').val("(Chưa có vùng cố định)");
+                    GetNeighBorRegion(0, toControlId2);
+                }
+                //ShowWardOfRegion();
+            })
+            .error(function (xhr, status) {
+                $(toControlId1).empty();
+                alert(status);
+            });
+        } else {
+            $(toControlId1).empty();
+            $(toControlId2).empty();
+        }
+    }
+
+    function GetNeighBorRegion(regionId, toControlId2) {
+        var cityId = $('#CityId').val();
+        var isAgency = '@Model.IsAgency';
+        $.ajax({
+            url: '@Url.Action("ListNeighborRegion", "Product")',
+            data: { regionId: regionId, isAgency: isAgency, cityId : cityId},
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+        })
+        .success(function (result) {
+            $(toControlId2).html(result);
+            ShowWardOfRegion();
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+    }
+    function ShowWardOfRegion() {
+        var checkedBoxes = document.querySelectorAll('input[name=ListRegionNeighbor]:checked');
+        var idChecked = [];
+
+        // add Fixed region
+        if(jQuery('#regionFixedId').val()!=null){
+            idChecked.push(jQuery('#regionFixedId').val());
+        }
+
+        // add region neighbor.
+        if(checkedBoxes!=null){
+            for(i = 0; i< checkedBoxes.length; i++){
+                idChecked.push(checkedBoxes[i].value);
+            }
+        }
+        $.ajax({
+            url: '@Url.Action("ListPlaceByRegions", "Base")',
+            data: JSON.stringify({ regionIds: idChecked }),
+            contentType: 'application/json; charset=UTF-8',
+            type: 'POST',
+            dataType: 'json'
+        })
+        .success(function (result) {
+            if(result!=null){
+                var strWard = "@Html.Raw(Model.StrWards1)";
+                for(j = 0; j< result.length; j++){
+                    strWard += result[j].Text +', ';
+                }
+                jQuery('#lstWard').val(strWard);
+            }            
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+    }
+    function ChangeCostUnit(val){
+        if(val == 1){
+           jQuery("#tutorialCostUnit").text("(Phần trăm giá trị nhà)");
+        } else{
+            jQuery("#tutorialCostUnit").text('');
+        }
+    }
+
+    function ToMoneyString(money) {
+        money = money*1000000;
+        var strMoney = DocTienBangChu(money);
+        document.getElementById('lblMoneyString').innerHTML = strMoney;
+        };
+</script>

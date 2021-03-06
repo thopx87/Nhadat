@@ -1,0 +1,97 @@
+﻿@model Application2016.Areas.Admin.Models.RoleSettingModel
+<div id="RoleSetting">
+<div class="col-sm-4">
+	<div class="widget-box collapsed">
+		<div class="widget-header">
+			<h4 class="widget-title">Cập nhật cấu hình các quyền</h4>
+
+			<div class="widget-toolbar">
+				<a href="#" data-action="collapse">
+					<i class="ace-icon fa fa-chevron-down"></i>
+				</a>
+
+				@*<a href="#" data-action="close">
+					<i class="ace-icon fa fa-times"></i>
+				</a>*@
+			</div>
+		</div>            
+        @using (Html.BeginForm("UpdateRoleConfig", "Setting", FormMethod.Post, new { id = Model.Id != null ? Model.Id : 0 }))
+        {
+            <div class="widget-body" style="display: none;">
+				<div class="widget-main">
+					<div class="form-group">
+						<div class="col-xs-12">
+                            <label class="col-sm-6">Đối tượng </label>
+							@Html.DropDownListFor(m => m.Id, new SelectList(Model.ListRole, "Id", "Text"), "--Chọn quyền--", new { @onchange = "ChangeRole(this.value)" })
+						</div>
+					</div>
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<label class="col-sm-9">Cho phép đăng bài</label> 
+                            @Html.CheckBoxFor(m => m.Post, new { @check = true })
+						</div>
+					</div>
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<label class="col-sm-9">Cho phép nhận bài từ môi giới </label>
+                            @Html.CheckBoxFor(m => m.ResiveFromAgency, new { @check = true })
+						</div>
+					</div>
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<label class="col-sm-9">Cho phép nhận bài từ thành viên </label>
+                            @Html.CheckBoxFor(m => m.ResiveFromMember, new { @check = true })
+						</div>
+					</div>
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<label class="col-sm-7">Số vùng gửi </label>
+                            @Html.TextBoxFor(m => m.SendRegionNum, new { @class = "spinbox-input form-control text-center" })
+						</div>
+					</div>
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<label class="col-sm-7">Số vùng nhận (Số vùng đăng ký môi giới)</label>
+                            @Html.TextBoxFor(m => m.ResiveRegionNum, new { @class = "spinbox-input form-control text-center" })
+						</div>
+                        <div class="space-6"></div>
+					</div>
+                    
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<label class="col-sm-7">Chi phí (Nghìn đồng) </label>
+                            @Html.TextBoxFor(m => m.Cost, new { @class = "spinbox-input form-control text-center" })
+                            
+						</div>
+					</div>
+                    <label>
+                        <button class="btn btn-info" type="submit" value="Update">Update</button>
+                    </label>
+				</div>
+			</div>                
+        }			
+	</div>
+</div>
+<script type="text/javascript">
+    function ChangeRole(id) {
+        $.ajax({
+            url: "@Url.Action("UpdateRoleConfig","Setting")",
+            data: { id: id },
+            type:'GET',
+            dataType: 'html'
+        })
+        .success(function (result) {
+            $('#RoleSetting').html(result);
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+    }
+
+    jQuery(function ($) {
+        $('#SendRegionNum').ace_spinner({ value: 0, min: 0, max: 100, step: 1, on_sides: true, icon_up: 'ace-icon fa fa-plus bigger-110', icon_down: 'ace-icon fa fa-minus bigger-110', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+        $('#ResiveRegionNum').ace_spinner({ value: 0, min: 0, max: 100, step: 1, on_sides: true, icon_up: 'ace-icon fa fa-plus bigger-110', icon_down: 'ace-icon fa fa-minus bigger-110', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+        $('#Cost').ace_spinner({ value: 10, min: 0, max: 100, step: 10, on_sides: true, icon_up: 'ace-icon fa fa-plus bigger-110', icon_down: 'ace-icon fa fa-minus bigger-110', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+    });
+</script>
+</div>

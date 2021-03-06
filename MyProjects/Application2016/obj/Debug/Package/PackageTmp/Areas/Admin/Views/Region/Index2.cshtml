@@ -1,0 +1,171 @@
+﻿@model Application2016.Areas.Admin.Models.ListRegionModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+				    <li class="active red bigger-120">Danh sách vùng</li>
+			    </ul>
+                <div class="nav-search" id="nav-search">
+                    @using (Html.BeginForm("Index2", "Region", null, FormMethod.Get, new { @class = "form-search" }))
+                    { 
+                        <span class="input-icon">
+                        @Html.DropDownListFor(m => m.Condition.CityId, new SelectList(Model.ListCity, "Id", "Text", Model.Condition.CityId), new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                        @Html.DropDownListFor(m => m.Condition.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text", Model.Condition.DistrictId), new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                            <input type="text" name="text" placeholder="Tìm vùng ..." value="@ViewBag.text" class="nav-search-input" id="searchRegion" autocomplete="off" />
+                            <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                        @Html.HiddenFor(m => m.Condition.Page, new { id = "PageIndex" })
+                    }
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                    <a href ="@Url.Action("UpdateRegion", "Region", new { id = 0, cityId = 0, districtId = 0 })" class="btnDefine btn btn-primary">
+                        <i class="fa fa-plus">&nbsp;Thêm vùng</i></a> 
+                    <a href="@Request.Url" class="btnDefine btn btn-primary"><i class="fa fa-file-excel-o">&nbsp;Xuất ra CSV</i></a> 
+                    <a href="" id="btnExport" class="btnDefine btn btn-primary"><i class="fa fa-file-excel-o">&nbsp;Xuất ra Excel</i></a>
+				</div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        Tên vùng
+                                    </th>
+                                    <th class="center">
+                                        Trạng thái
+                                    </th>
+                                    <th class="center">
+                                        Danh sách xã/ phường
+                                    </th>
+                                    <th class="center">
+                                        Vùng lân cận
+                                    </th>
+                                    <th class="center">
+                                        Số môi giới tối đa
+                                    </th>
+                                    <th class="center">
+                                        Danh sách môi giới
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.ListRegion.Count; i++)
+                                {
+                                    var region = Model.ListRegion[i];
+                                    <tr>
+                                        <td class="">
+                                            <a href="@Url.Action("UpdateRegion", "Region", new { @Id = @region.Id })">@region.Text</a>
+                                        </td>
+                                        <td>
+                                            <label>
+                                                <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@region.Status" onclick="return false;" />
+                                                <span class="lbl bigger-120"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            @{
+                                    var wards = region.ListWard;
+                                    var strWardFull = "";
+                                    var strWardSub = "";
+                                    foreach (var ward in wards)
+                                    {
+                                        strWardFull += ward.Text + "; ";
+                                    }
+                                    if (strWardFull.Length > 80)
+                                    {
+                                        strWardSub = strWardFull.Substring(0, 80) + "...";
+                                    }
+                                    else
+                                    {
+                                        strWardSub = strWardFull;
+                                    }
+                                            }
+                                            <label data-toggle="tooltip" title="@strWardFull">
+                                                @strWardSub</label>
+                                            <a href="@Url.Action("UpdateRegion", "Region", new { id = @region.Id, cityId = @region.CityId, districtId = @region.DistrictId })" class="modal-link btn btn-xs btn-info">
+                                                <i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                                        </td>
+                                        <td>@region.Neighbor.Text
+                                        </td>
+                                        <td>@region.MaxAgency
+                                        </td>
+                                        <td>
+                                            @{
+                                    var users = region.ListUser;
+                                    var strUserFull = "";
+                                    var strUserSub = "";
+                                    foreach (var user in users)
+                                    {
+                                        strUserFull += user.UserName + "; ";
+                                    }
+                                    if (strUserFull.Length > 80)
+                                    {
+                                        strUserSub = strUserFull.Substring(0, 80) + "...";
+                                    }
+                                    else
+                                    {
+                                        strUserSub = strUserFull;
+                                    }
+                                            }
+                                            <label data-toggle="tooltip" title="@strUserFull">@strUserSub</label>
+                                            <a href="@Url.Action("UpdateUser", "Region", new { id = @region.Id })" class="modal-link btn btn-xs btn-info">
+                                                <i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @Html.Partial("_PagingPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#searchRegion").on('change', function () {
+            var url = 'Region/Search';
+            $.get(url, { text: $("#searchRegion").val() }, function (data) {
+
+            });
+        });
+
+        $("#btnExport").click(function () {
+            $.ajax({
+                url: '@Url.Action("ExportToExcel", "Region", new { area = "Admin" })',
+                type: 'GET',
+                success: function () {
+                    window.location = '@Url.Action("ExportToExcel", "Region", new { area = "Admin" })';
+                },
+                error: function () {
+                    alert("Có lỗi khi xuất file!");
+                }
+            });   //end ajax
+        });
+
+        $("#btnExportCSV").click(function () {
+            $.ajax({
+                url: '@Url.Action("ExportToCSV", "Region", new { area = "Admin" })',
+                type: 'GET',
+                success: function () {
+                    window.location = '@Url.Action("ExportToCSV", "Region", new { area = "Admin" })';
+                },
+                error: function () {
+                    alert("Có lỗi khi xuất file!");
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+                    }

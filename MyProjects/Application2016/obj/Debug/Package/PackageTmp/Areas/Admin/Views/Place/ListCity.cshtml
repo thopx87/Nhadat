@@ -1,0 +1,220 @@
+﻿@using Application2016.Helpers;
+@{
+    Layout = null;
+}
+@{var detaiRowClass = "";
+  var arrowClass = "";
+  //var urlCityId = ViewBag.;
+  var urlCityId = Request.Params[AdminConfigs.QUERY_CITY];
+  var urlDistrictId = Request.Params[AdminConfigs.QUERY_DISTRICT];
+  int cityId;
+  int districtId;
+  int.TryParse(urlCityId, out cityId);
+  int.TryParse(urlDistrictId, out districtId);
+}
+@if ((cityId > 0 && districtId > 0))
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetListWard(@districtId,@cityId);
+        });
+    </script>
+}
+<div class="col-xs-12">
+    <table id="tblListCity" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="center">
+                    <label class="pos-rel">
+                        <input type="checkbox" class="ace" />
+                        <span class="lbl"></span>
+                    </label>
+                </th>
+                <th class="detail-col">
+                    Chi tiết
+                </th>
+                <th>@AdminConfigs.TEXT_NAME_CITY
+                </th>
+                <th>
+                    Số huyện
+                </th>
+                <th>
+                    Số vùng
+                </th>
+                <th>
+                    Số môi giới tối đa
+                </th>
+                <th>
+                    Số môi giới hiện tại
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in ViewBag.ListCity as IList<Entities.Place>)
+            {
+                if (cityId == city.Id)
+                {
+                    detaiRowClass = "detail-row open";
+                    arrowClass = "ace-icon fa fa-angle-double-up";
+                }
+                else
+                {
+                    detaiRowClass = "detail-row";
+                    arrowClass = "ace-icon fa fa-angle-double-down";
+                }
+                <tr>
+                    <td class="center">
+                        <label class="pos-rel">
+                            <input type="checkbox" class="ace" />
+                            <span class="lbl"></span>
+                        </label>
+                    </td>
+                    <td class="center">
+                        <div class="action-buttons">
+                            <a href="#" class="green bigger-140 show-details-btn" title="Show Details"><i class="@arrowClass">
+                            </i><span class="sr-only">Details</span> </a>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("UpdateCity", "Place", new { id = city.Id })">
+                            @city.Text
+                        </a>
+                    </td>
+                    <td>@city.ListChild.Count
+                    </td>
+                    <td>@city.CountRegion
+                    </td>
+                    <td>@city.CountAgency
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <div class="hidden-sm hidden-xs btn-group">
+                            <a href="@Url.Action("UpdateDistrict", "Place", new { id = 0, cityId = city.Id })" class="btn btn-xs btn-success" data-toggle="tooltip" title="Thêm quận, huyện">
+                                <i class="ace-icon fa fa-plus center bigger-110 white"></i></a><a href="@Url.Action("UpdateCity", "Place", new { id = city.Id })" class="btn btn-xs btn-info" data-toggle="tootip" title="Chỉnh sửa tỉnh/ thành phố">
+                                    <i class="ace-icon fa fa-pencil bigger-120"></i></a><a href="@Url.Action("DeletePlace", "Place", new { id = city.Id })" onclick="return confirm('@string.Format(AdminConfigs.CONFIRM_DELETE, @city.Text)');" class="btn btn-xs btn-danger" data-toggle="tootip"  title="xóa tỉnh/ thành phố">
+                                        <i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="@detaiRowClass">
+                    <td colspan="8">
+                        <div class="table-detail">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="ui-jqgrid-view">
+                                        <div class="table-header">
+                                            <span class="ui-jqgrid-title">@AdminConfigs.TEXT_LIST_DISTRICT</span>
+                                        </div>
+                                        <div class="ui-jqgrid-hdiv ui-state-default ui-corner-top" style="width: 370px;">
+                                            <div class="ui-jqgrid-hbox">
+                                                <table class="ui-jqgrid-htable ui-common-table " style="width: 370px;">
+                                                    <thead>
+                                                        <tr class="ui-jqgrid-labels" style="height: 20px" role="row">
+                                                            <th class="" style="width: 30px" role="columnheader">
+                                                                STT
+                                                            </th>
+                                                            <th class="" style="width: 120px" role="columnheader">@AdminConfigs.TEXT_NAME_DISTRICT
+                                                            </th>
+                                                            <th class="" style="width: 60px" role="columnheader">
+                                                                Môi giới
+                                                            </th>
+                                                            <th class="" style="width: 60px" role="columnheader">
+                                                                Số vùng
+                                                            </th>
+                                                            <th class="" style="width: 100px" role="columnheader">
+                                                                Chức năng
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="ui-jqgrid-bdiv" style="height: 200px; width: 370px; overflow-y: scroll;">
+                                            <div style="position: relative;">
+                                                <table class="table table-striped table-bordered table-hover">
+                                                    @{int i = 0;}
+                                                    @foreach (var district in city.ListChild as IList<Entities.Place>)
+                                                    {
+                                                        i = i + 1;
+                                                                
+                                                        <tr class="jqgrow ui-row-ltr ui-widget-content ui-priority-secondary" role="row">
+                                                            <td style="width: 30px">@i
+                                                            </td>
+                                                            <td style="width: 120px">
+                                                                <a href="javascript:GetListWard(@district.Id,@city.Id)">@district.Text</a>
+                                                            </td>
+                                                            <td style="width: 60px">
+                                                            </td>
+                                                            <td style="width: 60px">
+                                                            </td>
+                                                            <td style="width: 100px">
+                                                                <div>
+                                                                    <a href="@Url.Action("UpdateWard", "Place", new { id = 0, cityId = district.Parent, districtId = district.Id })">
+                                                                        <span class="ui-icon ace-icon fa fa-plus center bigger-110 blue"></span></a>
+                                                                    <a href="@Url.Action("UpdateDistrict", "Place", new { id = district.Id, cityId = district.Parent })">
+                                                                        <span class="ui-icon ace-icon fa fa-pencil blue"></span></a><a href="@Url.Action("DeletePlace", "Place", new { id = district.Id })" onclick="return confirm('@string.Format(AdminConfigs.CONFIRM_DELETE, @district.Text)')">
+                                                                            <span class="ui-icon ace-icon fa fa-trash-o red"></span></a><a href="@Url.Action("UpdateRegion", "Place", new { id = 0, cityId = district.Parent, districtId = district.Id })" data-toggle="tooltip" title="Chỉnh sửa vùng">
+                                                                                <span class="ui-icon ace-icon fa fa-plus center bigger-110 orange"></span>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="wardData_@city.Id">
+                                </div>
+                                <div id="regionData_@city.Id">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    @Html.Partial("_PagingPartial")
+</div>
+<!-- /.span -->
+<script type="text/javascript">
+    // Lấy danh sách xã, phường theo quận, huyện
+    function GetListWard(districtId, cityId) {
+        $.ajax({
+            url: '@Url.Action("ListWard", "Place")',
+            data: { districtId: districtId, cityId: cityId },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+        })
+        .success(function (result) {
+            $('#wardData_' + cityId).html(result);
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+
+        $.ajax({
+            url: '@Url.Action("ListRegion", "Place")',
+            data: { districtId: districtId, cityId: cityId },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+        })
+        .success(function (result) {
+            $('#regionData_' + cityId).html(result);
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+    }
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

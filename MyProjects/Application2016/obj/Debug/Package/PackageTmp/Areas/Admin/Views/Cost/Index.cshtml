@@ -1,0 +1,127 @@
+﻿@model Application2016.Areas.Admin.Models.ListCostModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+				    <li class="active red bigger-120">Danh sách tính phí</li>
+			    </ul>
+                <div class="nav-search" id="nav-search">
+                    @using (Html.BeginForm("Index", "Cost", FormMethod.Get))
+                    {
+                        <span class="input-icon">
+                        @Html.DropDownListFor(m => m.Condition.TransactionType, new SelectList(Model.Condition.ListTransactionType, "Id", "Text", Model.Condition.TransactionType), new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                        @Html.DropDownListFor(m => m.Condition.ProductType, new SelectList(Model.Condition.ListProductType, "Id", "Text", Model.Condition.ProductType), @AdminConfigs.TEXT_CHOOSE_HOUSE_TYPE, new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                        @Html.DropDownListFor(m => m.Condition.State, new SelectList(Model.Condition.ListState, "Id", "Text", Model.Condition.State), new { @onchange = "this.form.submit();" })
+                        </span>
+                        <span class="input-icon">
+                            @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "nav-search-input", @placeholder = "Search ..." })
+                            <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                        @Html.HiddenFor(m => m.Condition.Page, new { id = "PageIndex" })
+                    }
+                </div>
+                <!-- /.nav-search -->
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                    <a href="@Url.Action("CostSetting", "Cost", new { @Id = 0 })" class="btnDefine btn btn-primary">Thêm mới</a>
+				</div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        
+                                    </th>
+                                    <th class="center">
+                                        Tên
+                                    </th>
+                                    <th class="center">
+                                        Thời gian
+                                    </th>
+                                    <th class="center">
+                                        Trạng thái
+                                    </th>
+                                    <th class="center">
+                                        Địa lý/ Vùng
+                                    </th>
+                                    <th class="center">
+                                        Loại nhà
+                                    </th>
+                                    <th class="center">
+                                        Nhóm
+                                    </th>
+                                    <th class="center">
+                                        Đối tượng
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @for (int i = 0; i < Model.ListCostSetting.Count; i++)
+                            {
+                                var m = Model.ListCostSetting[i];
+                                <tr>
+                                    <td class="center">
+                                        <a href="#" class="green bigger-140 show-details-btn" title="Xem chi tiết"><i class="ace-icon fa fa-angle-double-down">
+                                        </i></a>
+                                    </td>
+                                    <td class="">
+                                        <a href="@Url.Action("CostSetting", "Cost", new { @Id = @m.Id })">@m.SettingName</a>
+                                    </td>
+                                    <td style="max-width:100px;">
+                                        @(m.TimeStart != null ? m.TimeStart.Value.ToString("dd/MM/yyyy hh:mm") : "")
+                                        <br />
+                                        @(m.TimeEnd != null ? m.TimeEnd.Value.ToString("dd/MM/yyyy hh:mm") : "")
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@m.IsApply" onclick="return false;" />
+                                            <span class="lbl bigger-120"> </span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        @(m.CityName + "-" + m.DistrictName + "-" + m.WardName)
+                                        <br />
+                                        @(m.RegionId > 0 ? "Vùng: " + m.RegionName : "")
+                                    </td>
+                                    <td>
+                                        @m.ProductTypeName
+                                    </td>
+                                    <td>
+                                        @m.GroupName
+                                    </td>
+                                    <td>
+                                        @{
+                                string lstUserName = "";
+                                if (m.ListUserName.Count > 0)
+                                {
+                                    foreach (var u in m.ListUserName)
+                                    {
+                                        lstUserName += u + ",";
+                                    }
+                                    lstUserName = lstUserName.Remove(lstUserName.Length - 1);
+                                }   
+                                        }
+                                        @lstUserName
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        @Html.Partial("_PagingPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                    }

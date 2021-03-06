@@ -1,0 +1,116 @@
+﻿@using Application2016.Helpers;
+@using Application2016.Areas.Admin.Models          
+<style type="text/css">
+ul {
+  list-style-type: none;
+}
+</style>
+
+@{
+    if (ViewBag.ListArticle != null && ViewBag.ListArticle.Count >0)
+    {
+        List<Entities.Article> ListArticle = ViewBag.ListArticle as List<Entities.Article>;
+        string categoryText = ListArticle[0].CategoryText;
+        
+        <div class="col-xs-12 col-sm-3 centered">
+        <div class="widget-box widget-color-blue">
+            <div class="widget-header">
+                <h5 class="widget-title bigger lighter">
+                    <i class="ace-icon fa fa-table"></i>@categoryText
+                </h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                <ul>
+                @foreach (var article in ListArticle)
+                {
+                    <li>
+                        <a href="/@AdminConfigs.FRIENDLY_LINK_ARTICLE.ToFriendlyUrl(article.Id,@article.Alias)" class="blue" title="@article.Title">@article.Title </a>
+                    </li> 
+                }     
+                </ul>                               
+                </div>
+            </div>
+        </div>
+    </div>  
+    }
+    
+    <div class="col-xs-12 col-sm-3 centered">
+        <div class="widget-box widget-color-blue">
+            <div class="widget-header">
+                <h5 class="widget-title bigger lighter">
+                    <i class="ace-icon fa fa-table"></i>Thông tin nhà đất bán
+                </h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                   
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div class="col-xs-12 col-sm-3 centered">
+        <div class="widget-box widget-color-blue">
+            <div class="widget-header">
+                <h5 class="widget-title bigger lighter">
+                    <i class="ace-icon fa fa-table"></i>Thông tin nhà đất cho thuê
+                </h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  widget-container-col  -->
+    <div class="col-xs-12 col-sm-3 centered">
+        <div class="widget-box widget-color-red">
+            <div class="widget-header">
+                <h5 class="widget-title bigger lighter">
+                    <i class="ace-icon fa fa-table"></i>Thông tin website
+                </h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    @{
+                        List<SettingCommonModel> websiteInfo = ViewBag.WebsiteInfo as List<SettingCommonModel>;
+
+                        List<SettingCommonModel> listSocialInfo = ViewBag.Social as List<SettingCommonModel>;
+                    }
+                    <ul class="list-unstyled spaced2">
+                    @if (websiteInfo.Count > 0)
+                    {                        
+						<li>
+							<i class="ace-icon fa fa-envelope green"></i>
+							@websiteInfo[0].Value
+						</li>
+
+						<li>
+							<i class="ace-icon fa fa-phone green"></i>
+							@websiteInfo[1].Value
+						</li>
+
+						<li>
+							<i class="ace-icon fa fa-map-marker green"></i>
+							@websiteInfo[3].Value
+						</li>
+                    }
+                    
+                    @if(listSocialInfo.Count>0)
+                    {   
+                        foreach(var social in listSocialInfo)
+                        {
+                            <li>
+							    <i class="ace-icon fa fa-check green"></i>
+							    <a href="@social.Value">@social.Title</a>
+						    </li>
+                        }
+                    }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>  
+    
+}

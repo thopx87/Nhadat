@@ -1,0 +1,113 @@
+﻿@model Application2016.Areas.Admin.Models.BoxLinkModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        @using (Html.BeginForm("Update", "BoxLink", FormMethod.Post))
+        {
+            <div class="main-content-inner">
+                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                    <input type="submit" class="btnDefine btn btn-success" value="Lưu">
+                    <a href="@Url.Action("Index", "BoxLink")" class="btnDefine btn btn-purple">Danh sách cài
+                        đặt</a>
+                </div>
+                <div class="page-content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="widget-box">
+                                        <div class="widget-header">
+                                            <h4 class="widget-title">
+                                                Thông tin BoxLink</h4>
+                                            <div class="widget-toolbar">
+                                            </div>
+                                        </div>
+                                        <div class="widget-body">
+                                            <div class="widget-main">
+                                                <fieldset>
+                                                    <div class="col-xs-6 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Trạng thái hiển thị</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                <input type="checkbox" name="BoxLink.Display" value="true" id="Display" checked="@Model.BoxLink.Display" class="ace ace-switch ace-switch-3"/>
+                                                                <span class="lbl">
+                                                                </span>
+                                                                <input name="BoxLink.Display" type="hidden" value="false" />
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Thứ tự</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                @Html.TextBoxFor(m => m.BoxLink.Order)
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Vị trí</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                @Html.DropDownListFor(m => m.BoxLink.Position, new SelectList(Model.ListPosition,"Id","Text"), new { })
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Tên</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                @Html.TextBoxFor(m => m.BoxLink.BoxName)
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Hiển thị tên?</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                <input type="checkbox" name="BoxLink.DisplayBoxName" value="true" id="DisplayBoxName" checked="@Model.BoxLink.DisplayBoxName" class="ace ace-switch ace-switch-3"/>
+                                                                <span class="lbl">
+                                                                </span>
+                                                                <input name="BoxLink.DisplayBoxName" type="hidden" value="false" />
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Màu sắc</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                @Html.DropDownListFor(m => m.BoxLink.Color, new SelectList(Model.ListColor, "Id", "Text"), new { })
+                                                            </label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-xs-6 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Bảng dữ liệu</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                @Html.DropDownListFor(m => m.BoxLink.FromTable, new SelectList(Model.ListTable, "Id", "Text"), new { })
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Điều kiện</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                @Html.DropDownListFor(m => m.BoxLink.FromTable, new SelectList(Model.ListCondition, "Id", "Text"), new { })
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        }
+    </div>
+}

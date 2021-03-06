@@ -1,0 +1,81 @@
+﻿@model Application2016.Areas.Admin.Models.LoginModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Areas/Admin/Views/User/_LoginLayout.cshtml";
+}
+
+@section MainLogin{
+
+<div id="login-box" class="login-box visible widget-box no-border visible">
+	<div class="widget-body">
+        <div class="widget-main">
+		    <h4 class="header blue lighter bigger">
+			    <i class="ace-icon fa fa-coffee green"></i>
+			    Tài khoản của bạn
+		    </h4>
+
+		    <div class="space-6"></div>
+                                            
+            @using (Html.BeginForm("Login", "User", new { area = "Admin" }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.Hidden("returnUrl", (string)ViewBag.ReturnURL)
+		    <fieldset>
+			    <label class="block clearfix">
+				    <span class="block input-icon input-icon-right">
+					    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @placeholder = "Email hoặc Username" })
+                        @Html.ValidationMessageFor(m => m.Username)
+					    <i class="ace-icon fa fa-user"></i>
+				    </span>
+			    </label>
+
+			    <label class="block clearfix">
+				    <span class="block input-icon input-icon-right">
+					    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Mật khẩu" })
+                        @Html.ValidationMessageFor(m => m.Password)
+					    <i class="ace-icon fa fa-lock"></i>
+				    </span>
+			    </label>
+
+			    <div class="space"></div>
+
+			    <div class="">
+				    <label class="">
+                        @Html.EditorFor(m => m.Remember, new { @class = "ace" })
+                        <span class="lbl"> Remember Me</span>
+				    </label>
+                            
+                    <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+						    <i class="ace-icon fa fa-key"></i>
+						    <span class="bigger-110">Login</span>
+					    </button>
+			    </div>
+
+			    <div class="space-4"></div>
+		    </fieldset>
+            }
+	    </div><!-- /.widget-main -->
+
+	    <div class="toolbar clearfix">
+		    <div>
+			    <a href="@Url.Action("ForgotPassword", "User")" data-target="#forgot-box" class="forgot-password-link">
+				    <i class="ace-icon fa fa-arrow-left"></i>
+				    Quên mật khẩu
+			    </a>
+		    </div>
+
+		    <div>
+                                            
+			    <a href="@Url.Action("Register","User")" data-target="#signup-box" class="user-signup-link">
+				    Đăng ký
+				    <i class="ace-icon fa fa-arrow-right"></i>
+			    </a>
+		    </div>
+	    </div>
+    </div>
+</div>
+
+}
+
+

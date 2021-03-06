@@ -1,0 +1,81 @@
+﻿@model Application2016.Areas.Admin.Models.CategoryModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        @using (Html.BeginForm("Update", "Category", FormMethod.Post))
+        {
+            <div class="main-content-inner">
+                <div class="page-content">
+                     <div class="page-header">
+                        <input type="submit" class="btnDefine btn btn-success" value="Lưu" />
+                        <a href="@Url.Action("Index", "Cost")" class="btnDefine btn btn-purple">Danh sách cài đặt</a>
+			        </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="widget-box">
+                                        <div class="widget-header">
+                                            <h4 class="widget-title">
+                                                Thông tin thư mục</h4>
+                                            <div class="widget-toolbar">
+                                            </div>
+                                        </div>
+                                        <div class="widget-body">
+                                            <div class="widget-main">
+                                                <fieldset>
+                                                    <div class="col-xs-6 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Chọn thư mục cha</label>
+                                                            @Html.DropDownListFor(m => m.Category.Parent, new SelectList(@Model.ListCategory, "Id", "Text"), new { @class = "col-sm-6", @id = "Id" })
+                                                        </div>
+                                                        <div class="space-4 col-sm-12"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Tên thư mục</label>
+                                                            @Html.TextBoxFor(m => m.Category.Text, new { @class = "col-xs-12 col-sm-6" })
+                                                            @Html.HiddenFor(m => m.Category.Id)
+                                                        </div>
+                                                        <div class="space-4 col-sm-12"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Mã thư mục</label>
+                                                            @Html.TextBoxFor(m => m.Category.Code, new { @class = "col-xs-12 col-sm-6" })
+                                                        </div>
+                                                        <div class="space-4 col-sm-12"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Dạng thư mục</label>
+                                                            @Html.DropDownListFor(m => m.Category.Type, new SelectList(Model.ListCategoryType,"Id","Text"), new { @class = "col-xs-12 col-sm-6" })
+                                                        </div>
+                                                        <div class="space-4 col-sm-12"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6" for="form-field-7">
+                                                                Trạng thái hiển thị</label>
+                                                            <label class="col-xs-12 col-sm-6 ">
+                                                                <input type="checkbox" name="Category.Display" value="true" id="Display" checked="@Model.Category.Display" class="ace ace-switch ace-switch-3"/>
+                                                                <span class="lbl">
+                                                                </span>
+                                                                <input name="Category.Display" type="hidden" value="false" />
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        }
+    </div>
+}

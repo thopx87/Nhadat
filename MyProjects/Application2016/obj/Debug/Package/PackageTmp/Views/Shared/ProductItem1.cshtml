@@ -1,0 +1,69 @@
+﻿@foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+{
+    string image = "no avatar";
+    if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+    {
+        image = item.Avatar_Url + item.Avatar;
+    }  
+    <div class="item">
+        <div class="col-item">
+            <div class="item-inner">
+                <div class="item-img">
+                    <div class="new-label new-top-left">
+                        New</div>
+                    <div class="item-img-info">
+                        <a href="@Url.Action("Detail", "Product")/@item.Id" title="@item.Text" class="product-image"> 
+                            <img src="@Url.Content(@image)" alt="Ut tincidunt tortor" />
+                        </a>
+                        <div class="item-box-hover">
+                            <div class="box-inner">
+                                <div class="product-detail-bnt">
+                                    @*<a href="quick_view.html" class="button detail-bnt"><span>Quick View</span></a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-info">
+                    <div class="info-inner">
+                        <div class="item-title">
+                            <a href="grid.html" title="Sample Product">@item.Text </a>
+                        </div>
+                        <div class="item-content">
+                            @*<div class="rating">
+                                <div class="ratings">
+                                    <div class="rating-box">
+                                        <div class="rating" style="width: 80%">
+                                        </div>
+                                    </div>
+                                    <p class="rating-links">
+                                        <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a>
+                                    </p>
+                                </div>
+                            </div>*@
+                            <div class="item-price">
+                                <div class="price-box">
+                                    <span class="regular-price"><span class="price">@item.StandardCost</span> </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div class="input-group">
+                            @*<input type="text" class="form-control" style="width: 120px;" id="txtOrder_@item.Id" />
+                            <span class="add-to-links">@*<a href="wishlist.html" class="link-wishlist" title="Add to Wishlist"> <span>Add to Wishlist</span></a>
+                                <button title="đặt mua" data-toggle="modal" data-target="#orderPrice" class="button btn-cart">
+                                <button title="đặt mua" class="button btn-cart btn-order" id="btnOrder_@item.Id">
+                                    <span>Đặt mua</span></button>
+                            </span>*@
+                            <a href="@Url.Action("Detail", "Product", new { Id = @item.Id })" class="button btn-cart">Đặt mua</a>
+                            <a href="@Url.Action("Detail", "Product", new { Id = @item.Id })" class="button btn-cart">Theo dõi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+}

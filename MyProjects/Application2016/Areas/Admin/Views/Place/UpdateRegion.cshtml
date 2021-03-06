@@ -1,0 +1,123 @@
+﻿@model Application2016.Areas.Admin.Models.RegionModel
+@{
+    ViewBag.Title = "Update region";
+}
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="widget-box">
+			<div class="widget-header">
+				<h4 class="widget-title">Thông tin 1 vùng</h4>
+
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="ace-icon fa fa-chevron-up"></i>
+					</a>
+
+					<a href="#" data-action="close">
+						<i class="ace-icon fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="widget-body">
+                <div class="widget-main">
+                @using (Html.BeginForm("UpdateRegion", "Place", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post, new { id = "frmRegion" }))
+                {
+	                <fieldset>
+		                <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+				                <label class="col-sm-5" for="form-field-8">Tỉnh/ Thành phố</label>
+                                <!-- GetCity_Ward() function in Index.html file -->
+                                @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity,"Id","Text", Model.CityId), "Chọn Tỉnh/ thành phố", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#DistrictId','#WardOfDistrictIds')") })
+			                </div>
+                            <div class="form-group" id="divDistrict">
+				                <label class="col-sm-5" for="form-field-8">Quận / Huyện</label>
+                                @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text", Model.DistrictId), "Chọn quận / huyện", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#WardOfDistrictIds')") })                
+			                </div>
+                            <div class="form-group">
+				                <label class="col-sm-5" for="form-field-9">Tên Vùng</label>
+                                @Html.TextBoxFor(m => m.Text, new { @class = "form-control", @placeholder = "Tên Vùng" })
+                                @Html.ValidationMessageFor(m => m.Text)
+			                </div>
+                            <div class="form-group">
+				                <label class="col-sm-5" for="form-field-9">Trạng thái xuất bản?</label>
+                                @Html.CheckBoxFor(m => m.Status, new { @checked = true }) 
+                                @Html.ValidationMessageFor(m => m.Status)
+			                </div>
+                        </div>
+
+		                <div class="col-xs-12 col-sm-8">
+                            <div class="box1 col-md-4" style="width:300px; margin:10px;">
+                                <span class="info-container">
+                                    <label> Danh sách xã / phường của vùng </label>
+                                    <span class="show-info"></span>
+                                </span>
+                                @Html.ListBoxFor(m => m.WardOfRegionIds, new MultiSelectList(Model.ListWardOfRegion, "Id", "Text", Model.WardOfRegionIds), new { onchange = string.Format("javascript:move('WardOfRegionIds','WardOfDistrictIds')"), style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                @Html.ValidationMessageFor(m => m.WardOfRegionIds)
+                            </div>
+                            <div class="box2 col-md-4" style="width: 300px; margin:10px;">
+                                <span class="info-container">
+                                    <label> Danh sách xã / phường trong huyện</label>
+                                    <span class="show-info"></span>
+                                </span>
+                                @Html.ListBoxFor(m => m.WardOfDistrictIds, new MultiSelectList(Model.ListWardOfDistrict, "Id", "Text", Model.WardOfDistrictIds), new { onchange = string.Format("javascript:move('WardOfDistrictIds','WardOfRegionIds')"), style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                
+                            </div>
+		                </div>
+	                </fieldset>
+                    <div class="">
+                    <input type="submit" class="btn btn-sm btn-success" value="@ViewBag.SubmitValue" />
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#frmRegion").submit(function (e) {
+
+            $("#WardOfRegionIds option").prop("selected", "selected");
+            $("#WardOfDistrictIds option").prop("selected", "selected");
+        });
+
+    });
+
+    // Hàm xử lý chuyển giữa 2 danh sách.
+    function move(from, to) {
+        var source, target;
+        var elem = document.createElement('option');
+
+        source = document.getElementById(from);
+        target = document.getElementById(to);
+
+        elem.value = source.options[source.selectedIndex].value;
+        elem.innerHTML = source.options[source.selectedIndex].text;
+        target.appendChild(elem);
+        source.removeChild(source.options[source.selectedIndex]);
+    }
+
+    $(document).ready(function () {
+        $("#MaxAgency").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: Ctrl+C
+            (e.keyCode == 67 && e.ctrlKey === true) ||
+            // Allow: Ctrl+X
+            (e.keyCode == 88 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>

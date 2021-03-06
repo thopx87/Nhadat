@@ -1,0 +1,58 @@
+﻿@using Application2016.Helpers
+@model Application2016.Areas.Admin.Models.CityModel
+@{
+    Layout = null;
+}
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="widget-box">
+			<div class="widget-header">
+				<h4 class="widget-title">Thông tin 1 tỉnh/Thành phố</h4>
+
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="ace-icon fa fa-chevron-up"></i>
+					</a>
+
+					<a href="#" data-action="close">
+						<i class="ace-icon fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="widget-body">
+                <div class="widget-main">
+                
+                @using (Html.BeginForm("UpdateCity", "Place", new { id = @Model == null ? 0 : Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <fieldset>
+                        <div class="col-xs-12 col-sm-6">
+                                <div class="form-group">
+								<label class="col-sm-8" for="form-field-8">@AdminConfigs.TEXT_NAME_CITY</label>
+                                @Html.TextBoxFor(m => m.Text, new { @class = "form-control", @placeholder = @AdminConfigs.TEXT_NAME_CITY })
+                                @Html.ValidationMessageFor(m => m.Text)
+							</div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group">
+                                @Html.RadioButtonFor(m => m.isCity, "true", new { @name="RadioCity1" })<label for="RadioCity1">Thành phố</label> 
+                                @Html.RadioButtonFor(m => m.isCity, "false", new { @name = "RadioCity2" }) <label for="RadioCity2">Tỉnh</label> 
+                            </div>
+                            <div class="form-group">
+								<label for="form-field-11">Địa chỉ</label>
+                                @Html.TextAreaFor(m => m.Address, new { @class = "autosize-transition form-control" })
+							</div>
+                        </div>                                
+                    </fieldset>
+                    <div class="">
+                    <input type="submit" class="btn btn-sm btn-success" value="@ViewBag.SubmitValue" />
+                    </div>
+                }
+				</div>
+			</div>
+                    
+		</div>
+	</div><!-- /.span -->
+</div><!-- /.row -->

@@ -1,0 +1,253 @@
+﻿<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/bootstrap.min.css")"  type="text/css" />
+		<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/font-awesome/4.5.0/css/font-awesome.min.css")"  type="text/css" />
+		<!-- text fonts -->
+		<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/fonts.googleapis.com.css")"  type="text/css" />
+
+        <link rel="icon" href="@Url.Content("~/Assets/Images/home-default.png")">
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace-part2.min.css")" class="ace-main-stylesheet" />
+		<![endif]-->
+		<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace-skins.min.css")"  type="text/css" />
+		<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace-rtl.min.css")"  type="text/css" />
+        <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/css-define.css")"  type="text/css" />
+        <link href="@Url.Content("~/Assets/Template1/css/skin.green.css")" rel="stylesheet" type="text/css" />
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="../../Assets/css/ace-ie.min.css" />
+		<![endif]-->
+        
+		<!-- ace styles -->
+		<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace.min.css")" class="ace-main-stylesheet"/>
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                ×</button>
+            <h4 class="orange center lighter bigger">
+                <i class="ace-icon fa fa-email red"></i>Gửi email</h4>
+        </div>
+        <div class="modal-body">
+            <div class="widget-body">
+                <div class="widget-main">
+                    @using (Html.BeginForm("DoSendMailMulti", "User", FormMethod.Post))
+                    {
+                    <fieldset>
+                        <div class="col-md-12">
+                            <div class="row">
+                                
+                            </div>
+                        </div>
+
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="radio" checked="checked" name="objSend" id="objChoiced" value="1" class="ace input-lg" /> <label for="objChoiced" class="lbl bigger-120">Gửi cho những người đã chọn</label>  
+                                <input type="radio" name="objSend" id="objAll" value="2" class="ace input-lg"/> <label for="objAll" class="lbl bigger-120">Gửi cho toàn bộ.</label>
+                            </span>
+                        </label>
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="text" id="SendTo" name="SendTo" value="@ViewBag.ListEmail" placeholder="Người nhận" class ="form-control"/>
+                                <i class="ace-icon fa fa-user red"></i>
+                            </span>
+                        </label>
+                        <label class="block clearfix">
+                            <span class="block">
+                                @Html.TextBox("Subject", null, new { @class = "form-control", @placeholder = "Chủ đề ..." })
+                            </span>
+                        </label>                        
+                        <label class="block clearfix">
+                            <div class="wysiwyg-editor" id="editor1">                            
+                            </div>
+                            @Html.Hidden("Content")
+                        </label>
+                        <div class="clearfix">
+                            <button type="button" id="btnRegister" class="width-100 btn btn-sm btn-success">
+                                <span class="orange bigger-150">Gửi</span> <i class="ace-icon fa fa-arrow-right icon-on-right">
+                                </i>
+                            </button>
+                        </div>
+                    </fieldset>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/jquery-ui.custom.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/jquery.ui.touch-punch.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/markdown.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/bootstrap-markdown.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/jquery.hotkeys.index.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/bootstrap-wysiwyg.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/bootbox.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/ace-elements.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/ace.min.js")"></script>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#btnRegister").click(function(){
+            $("#Content").val($("#editor1").html());
+        });
+
+
+        $('textarea[data-provide="markdown"]').each(function(){
+            var $this = $(this);
+
+		    if ($this.data('markdown')) {
+		        $this.data('markdown').showEditor();
+		    }
+		    else $this.markdown()
+		
+		    $this.parent().find('.btn').addClass('btn-white');
+        })
+
+        function showErrorAlert (reason, detail) {
+		    var msg='';
+		    if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+		    else {
+			    //console.log("error uploading file", reason, detail);
+		    }
+		    $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+		     '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+	    }
+        $('#editor1').ace_wysiwyg({
+		        toolbar:
+		        [
+			        'font',
+			        null,
+			        'fontSize',
+			        null,
+			        {name:'bold', className:'btn-info'},
+			        {name:'italic', className:'btn-info'},
+			        {name:'strikethrough', className:'btn-info'},
+			        {name:'underline', className:'btn-info'},
+			        null,
+			        {name:'insertunorderedlist', className:'btn-success'},
+			        {name:'insertorderedlist', className:'btn-success'},
+			        {name:'outdent', className:'btn-purple'},
+			        {name:'indent', className:'btn-purple'},
+			        null,
+			        {name:'justifyleft', className:'btn-primary'},
+			        {name:'justifycenter', className:'btn-primary'},
+			        {name:'justifyright', className:'btn-primary'},
+			        {name:'justifyfull', className:'btn-inverse'},
+			        null,
+			        {name:'createLink', className:'btn-pink'},
+			        {name:'unlink', className:'btn-pink'},
+			        null,
+			        {name:'insertImage', className:'btn-success'},
+			        null,
+			        'foreColor',
+			        null,
+			        {name:'undo', className:'btn-grey'},
+			        {name:'redo', className:'btn-grey'}
+		        ],
+		        'wysiwyg': {
+			        fileUploadError: showErrorAlert
+		        }
+	        }).prev().addClass('wysiwyg-style2');
+
+	        $('[data-toggle="buttons"] .btn').on('click', function(e){
+		        var target = $(this).find('input[type=radio]');
+		        var which = parseInt(target.val());
+		        var toolbar = $('#editor1').prev().get(0);
+		        if(which >= 1 && which <= 4) {
+			        toolbar.className = toolbar.className.replace(/wysiwyg\-style(1|2)/g , '');
+			        if(which == 1) $(toolbar).addClass('wysiwyg-style1');
+			        else if(which == 2) $(toolbar).addClass('wysiwyg-style2');
+			        if(which == 4) {
+				        $(toolbar).find('.btn-group > .btn').addClass('btn-white btn-round');
+			        } else $(toolbar).find('.btn-group > .btn-white').removeClass('btn-white btn-round');
+		        }
+	        });
+
+	        //RESIZE IMAGE
+	
+	        //Add Image Resize Functionality to Chrome and Safari
+	        //webkit browsers don't have image resize functionality when content is editable
+	        //so let's add something using jQuery UI resizable
+	        //another option would be opening a dialog for user to enter dimensions.
+	        if ( typeof jQuery.ui !== 'undefined' && ace.vars['webkit'] ) {
+		
+		        var lastResizableImg = null;
+		        function destroyResizable() {
+			        if(lastResizableImg == null) return;
+			        lastResizableImg.resizable( "destroy" );
+			        lastResizableImg.removeData('resizable');
+			        lastResizableImg = null;
+		        }
+
+		        var enableImageResize = function() {
+			        $('.wysiwyg-editor')
+			        .on('mousedown', function(e) {
+				        var target = $(e.target);
+				        if( e.target instanceof HTMLImageElement ) {
+					        if( !target.data('resizable') ) {
+						        target.resizable({
+							        aspectRatio: e.target.width / e.target.height,
+						        });
+						        target.data('resizable', true);
+						
+						        if( lastResizableImg != null ) {
+							        //disable previous resizable image
+							        lastResizableImg.resizable( "destroy" );
+							        lastResizableImg.removeData('resizable');
+						        }
+						        lastResizableImg = target;
+					        }
+				        }
+			        })
+			        .on('click', function(e) {
+				        if( lastResizableImg != null && !(e.target instanceof HTMLImageElement) ) {
+					        destroyResizable();
+				        }
+			        })
+			        .on('keydown', function() {
+				        destroyResizable();
+			        });
+	            }
+
+		        enableImageResize();
+	        }
+    });
+</script>
+<script type="text/javascript">
+    var message = '@Html.Raw(@ViewBag.Message)';
+    var result = '@ViewBag.Result';
+    if (result == '1') {
+        if (message.length > 0) {
+            alert(message);
+        }
+        $('#email_model').modal('hide');
+        location.reload(false)
+    } else if (result < 0) {
+        alert(message);
+    }
+    $('#btnRegister').on('click', function (e) {
+        var self = $(this);
+        $.ajax({
+            url: '@Url.Action("DoSendMailMulti","User", new {area="Admin"})',
+            type: 'POST',
+            async: false,
+            data: self.closest('form').serialize(),
+            success: function (data) {
+                var message = '@Html.Raw(@ViewBag.Message)';
+                var result = '@ViewBag.Result';
+                if (result == '1') {
+                    if (message.length > 0) {
+                        alert(message);
+                    }
+                    $('#email_model').modal('hide');
+                    location.reload(false)
+                } else {
+                    if (result == '0' && message.length > 0) {
+                        alert(message);
+                    }
+                    $('#email_model').html(data);
+                }
+            }
+        });
+        e.preventDefault();
+    });
+</script>

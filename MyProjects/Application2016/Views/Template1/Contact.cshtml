@@ -1,0 +1,209 @@
+﻿@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_LayoutTemplate1.cshtml";
+}
+@section MainContent{
+    <div class="col-xs-12 col-sm-2">
+        @Html.Action("ProductNew", "Template1")
+    </div>
+    <div class="col-xs-12 col-sm-10">
+        <form id="id-message-form" class=" form-horizontal message-form col-xs-12">
+        <div id="id-message-new-navbar" class="message-navbar clearfix">
+            <div class="message-bar">
+                <div class="message-toolbar">
+                    <button type="button" class="btn btn-xs btn-white btn-primary">
+                        <i class="ace-icon fa fa-floppy-o bigger-125"></i><span class="bigger-110">Save Draft</span>
+                    </button>
+                    <button type="button" class="btn btn-xs btn-white btn-primary">
+                        <i class="ace-icon fa fa-times bigger-125 orange2"></i><span class="bigger-110">Discard</span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div class="messagebar-item-left">
+                    <a href="#" class="btn-back-message-list"><i class="ace-icon fa fa-arrow-left bigger-110 middle blue">
+                    </i><b class="middle bigger-110">Back</b> </a>
+                </div>
+                <div class="messagebar-item-right">
+                    <span class="inline btn-send-message">
+                        <button type="button" class="btn btn-sm btn-primary no-border btn-white btn-round">
+                            <span class="bigger-110">Send</span> <i class="ace-icon fa fa-arrow-right icon-on-right">
+                            </i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-recipient">
+                    Người nhận:</label>
+                <div class="col-sm-9">
+                    <span class="input-icon">
+                        <input type="email" name="recipient" id="form-field-recipient" data-value="alex@doe.com"
+                            value="" placeholder="test@gmail.com" />
+                        <i class="ace-icon fa fa-user"></i></span>
+                </div>
+            </div>
+            <div class="hr hr-18 dotted">
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-subject">
+                    Chủ đề:</label>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="input-icon block col-xs-12 no-padding">
+                        <input maxlength="100" type="text" class="col-xs-12" name="subject" id="form-field-subject"
+                            placeholder="Subject" />
+                        <i class="ace-icon fa fa-comment-o"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="hr hr-18 dotted">
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">
+                    <span class="inline space-24 hidden-480"></span>Nội dung:
+                </label>
+                <div class="col-sm-9">
+                    <div class="wysiwyg-editor">
+                    </div>
+                </div>
+            </div>
+            <div class="hr hr-18 dotted">
+            </div>
+            <div class="form-group no-margin-bottom">
+                <label class="col-sm-3 control-label no-padding-right">
+                    File đính kèm:</label>
+                <div class="col-sm-9">
+                    <div id="form-attachments">
+                        <input type="file" name="attachment[]" />
+                    </div>
+                </div>
+            </div>
+            <div class="align-right">
+                <button id="id-add-attachment" type="button" class="btn btn-sm btn-danger">
+                    <i class="ace-icon fa fa-paperclip bigger-140"></i>Thêm file đính kèm
+                </button>
+            </div>
+            <div class="space">
+            </div>
+        </div>
+        </form>
+    </div>
+    <script src="../../Assets/Template1/js/bootstrap-wysiwyg.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+//        Inbox.show_form();
+
+        Inbox.show_form = function () {
+            if ($('.message-form').is(':visible')) return;
+            if (!form_initialized) {
+                initialize_form();
+            }
+
+
+            var message = $('.message-list');
+            $('.message-container').append('<div class="message-loading-overlay"><i class="fa-spin ace-icon fa fa-spinner orange2 bigger-160"></i></div>');
+
+            setTimeout(function () {
+                message.next().addClass('hide');
+
+                $('.message-container').find('.message-loading-overlay').remove();
+
+                $('.message-list').addClass('hide');
+                $('.message-footer').addClass('hide');
+                $('.message-form').removeClass('hide').insertAfter('.message-list');
+
+                $('.message-navbar').addClass('hide');
+                $('#id-message-new-navbar').removeClass('hide');
+
+
+                //reset form??
+                $('.message-form .wysiwyg-editor').empty();
+
+                $('.message-form .ace-file-input').closest('.file-input-container:not(:first-child)').remove();
+                $('.message-form input[type=file]').ace_file_input('reset_input');
+
+                $('.message-form').get(0).reset();
+
+            }, 300 + parseInt(Math.random() * 300));
+        }
+
+        function initialize_form() {
+            if (form_initialized) return;
+            form_initialized = true;
+
+            //intialize wysiwyg editor
+            $('.message-form .wysiwyg-editor').ace_wysiwyg({
+                toolbar:
+						[
+							'bold',
+							'italic',
+							'strikethrough',
+							'underline',
+							null,
+							'justifyleft',
+							'justifycenter',
+							'justifyright',
+							null,
+							'createLink',
+							'unlink',
+							null,
+							'undo',
+							'redo'
+						]
+            }).prev().addClass('wysiwyg-style1');
+
+
+
+            //file input
+            $('.message-form input[type=file]').ace_file_input()
+					.closest('.ace-file-input')
+					.addClass('width-90 inline')
+					.wrap('<div class="form-group file-input-container"><div class="col-sm-7"></div></div>');
+
+            //Add Attachment
+            //the button to add a new file input
+            $('#id-add-attachment')
+					.on('click', function () {
+					    var file = $('<input type="file" name="attachment[]" />').appendTo('#form-attachments');
+					    file.ace_file_input();
+
+					    file.closest('.ace-file-input')
+						.addClass('width-90 inline')
+						.wrap('<div class="form-group file-input-container"><div class="col-sm-7"></div></div>')
+						.parent().append('<div class="action-buttons pull-right col-xs-1">\
+							<a href="#" data-action="delete" class="middle">\
+								<i class="ace-icon fa fa-trash-o red bigger-130 middle"></i>\
+							</a>\
+						</div>')
+						.find('a[data-action=delete]').on('click', function (e) {
+						    //the button that removes the newly inserted file input
+						    e.preventDefault();
+						    $(this).closest('.file-input-container').hide(300, function () { $(this).remove() });
+						});
+					});
+        } //initialize_form
+
+        $('#id-add-attachment')
+		    .on('click', function () {
+			    var file = $('<input type="file" name="attachment[]" />').appendTo('#form-attachments');
+			    file.ace_file_input();
+
+			    file.closest('.ace-file-input')
+			    .addClass('width-90 inline')
+			    .wrap('<div class="form-group file-input-container"><div class="col-sm-7"></div></div>')
+			    .parent().append('<div class="action-buttons pull-right col-xs-1">\
+				    <a href="#" data-action="delete" class="middle">\
+					    <i class="ace-icon fa fa-trash-o red bigger-130 middle"></i>\
+				    </a>\
+			    </div>')
+			    .find('a[data-action=delete]').on('click', function (e) {
+				    //the button that removes the newly inserted file input
+				    e.preventDefault();
+				    $(this).closest('.file-input-container').hide(300, function () { $(this).remove() });
+			    });
+		    });
+    });
+</script>
+}

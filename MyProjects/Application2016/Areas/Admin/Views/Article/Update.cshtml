@@ -1,0 +1,227 @@
+﻿@model Application2016.Areas.Admin.Models.ArticleModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    @*<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace.min.css")" class="ace-main-stylesheet" id="main-ace-style" />*@
+    @*<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace-skins.min.css")" />*@
+    @*<link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/ace-rtl.min.css")" />*@
+    <div class="main-content">
+        @using (Html.BeginForm("Update", "Article", FormMethod.Post))
+        {
+            <div class="main-content-inner">
+                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+				    <li class="active red bigger-120">Cập nhật bài viết</li>
+			    </ul>
+                </div>
+                <div class="page-content">
+                    <div class="page-header">
+                        <input type="submit" class="btnDefine btn btn-success" id="btnSave" value="Lưu" />
+                        <a href="@Url.Action("Index", "Article")" class="btnDefine btn btn-purple">Danh sách
+                            bài viêt</a>
+                    </div>
+                    <!-- /.page-header -->
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <label style="text-decoration:underline; font-size:18px; color:Red;">Chú ý: </label><label><b>Những vùng đánh dấu<span class="required"></span> là những vùng bắt buộc nhập</b></label> <br />
+                        </div>
+                        <div class="space-4 col-sm-12">
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="col-sm-2" for="form-field-7">
+                                Chọn thư mục </label>
+                            @Html.DropDownListFor(m => m.Article.CategoryId, new SelectList(@Model.ListCategory, "Id", "Text"), new { @class = "col-sm-6", @id = "Id" })
+                        </div>
+                        <div class="space-4 col-sm-12">
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="col-sm-2" for="form-field-7">
+                                Tiêu đề bài viết<span class="required"></span></label>
+                            @Html.TextBoxFor(m => m.Article.Title, new { @class = "col-xs-12 col-sm-6" })
+                            @Html.HiddenFor(m => m.Article.Id)
+                        </div>
+                        <div class="space-4 col-sm-12">
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="col-sm-2" for="form-field-7">
+                                Bí danh</label>
+                            @Html.TextBoxFor(m => m.Article.Alias, new { @class = "col-xs-12 col-sm-6" })
+                        </div>
+                        <div class="space-4 col-sm-12">
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="col-sm-2" for="form-field-7">
+                                Trạng thái hiển thị</label>
+                            <label class="col-xs-10">
+                                <input type="checkbox" name="Article.Display" value="true" id="Display" checked="@Model.Article.Display" class="ace ace-switch ace-switch-3"/>
+                                <span class="lbl"></span>
+                                <input name="Article.Display" type="hidden" value="false" />
+                            </label>
+                        </div>
+                        <div class="space-4 col-sm-12">
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="wysiwyg-editor" id="editor1">
+                             @Html.Raw(Model.Article.Body)
+                            </div>
+                            @Html.HiddenFor(m => m.Article.Body)
+                        </div>
+                        <div class="space-4 col-sm-12">
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="col-sm-2" for="form-field-7">
+                                Key word</label>
+                            @Html.TextBoxFor(m => m.Article.MetaKeyWord, new { @class = "col-xs-12 col-sm-6" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        }
+    </div>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/jquery-ui.custom.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/jquery.ui.touch-punch.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/markdown.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/bootstrap-markdown.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/jquery.hotkeys.index.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/bootstrap-wysiwyg.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/bootbox.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/ace-elements.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Assets/Admin/js/ace.min.js")"></script>
+    <script type="text/javascript">
+	    jQuery(function($){
+	        $("#btnSave").click(function(){
+                $("#Article_Body").val($("#editor1").html());
+            });
+
+	        $('textarea[data-provide="markdown"]').each(function(){
+                var $this = $(this);
+
+		        if ($this.data('markdown')) {
+		          $this.data('markdown').showEditor();
+		        }
+		        else $this.markdown()
+		
+		        $this.parent().find('.btn').addClass('btn-white');
+            })
+	
+	
+	
+	        function showErrorAlert (reason, detail) {
+		        var msg='';
+		        if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+		        else {
+			        //console.log("error uploading file", reason, detail);
+		        }
+		        $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+		         '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+	        }
+
+	        //$('#editor1').ace_wysiwyg();//this will create the default editor will all buttons
+
+	        //but we want to change a few buttons colors for the third style
+	        $('#editor1').ace_wysiwyg({
+		        toolbar:
+		        [
+			        'font',
+			        null,
+			        'fontSize',
+			        null,
+			        {name:'bold', className:'btn-info'},
+			        {name:'italic', className:'btn-info'},
+			        {name:'strikethrough', className:'btn-info'},
+			        {name:'underline', className:'btn-info'},
+			        null,
+			        {name:'insertunorderedlist', className:'btn-success'},
+			        {name:'insertorderedlist', className:'btn-success'},
+			        {name:'outdent', className:'btn-purple'},
+			        {name:'indent', className:'btn-purple'},
+			        null,
+			        {name:'justifyleft', className:'btn-primary'},
+			        {name:'justifycenter', className:'btn-primary'},
+			        {name:'justifyright', className:'btn-primary'},
+			        {name:'justifyfull', className:'btn-inverse'},
+			        null,
+			        {name:'createLink', className:'btn-pink'},
+			        {name:'unlink', className:'btn-pink'},
+			        null,
+			        {name:'insertImage', className:'btn-success'},
+			        null,
+			        'foreColor',
+			        null,
+			        {name:'undo', className:'btn-grey'},
+			        {name:'redo', className:'btn-grey'}
+		        ],
+		        'wysiwyg': {
+			        fileUploadError: showErrorAlert
+		        }
+	        }).prev().addClass('wysiwyg-style2');
+
+	        $('[data-toggle="buttons"] .btn').on('click', function(e){
+		        var target = $(this).find('input[type=radio]');
+		        var which = parseInt(target.val());
+		        var toolbar = $('#editor1').prev().get(0);
+		        if(which >= 1 && which <= 4) {
+			        toolbar.className = toolbar.className.replace(/wysiwyg\-style(1|2)/g , '');
+			        if(which == 1) $(toolbar).addClass('wysiwyg-style1');
+			        else if(which == 2) $(toolbar).addClass('wysiwyg-style2');
+			        if(which == 4) {
+				        $(toolbar).find('.btn-group > .btn').addClass('btn-white btn-round');
+			        } else $(toolbar).find('.btn-group > .btn-white').removeClass('btn-white btn-round');
+		        }
+	        });
+
+	        //RESIZE IMAGE
+	
+	        //Add Image Resize Functionality to Chrome and Safari
+	        //webkit browsers don't have image resize functionality when content is editable
+	        //so let's add something using jQuery UI resizable
+	        //another option would be opening a dialog for user to enter dimensions.
+	        if ( typeof jQuery.ui !== 'undefined' && ace.vars['webkit'] ) {
+		
+		        var lastResizableImg = null;
+		        function destroyResizable() {
+			        if(lastResizableImg == null) return;
+			        lastResizableImg.resizable( "destroy" );
+			        lastResizableImg.removeData('resizable');
+			        lastResizableImg = null;
+		        }
+
+		        var enableImageResize = function() {
+			        $('.wysiwyg-editor')
+			        .on('mousedown', function(e) {
+				        var target = $(e.target);
+				        if( e.target instanceof HTMLImageElement ) {
+					        if( !target.data('resizable') ) {
+						        target.resizable({
+							        aspectRatio: e.target.width / e.target.height,
+						        });
+						        target.data('resizable', true);
+						
+						        if( lastResizableImg != null ) {
+							        //disable previous resizable image
+							        lastResizableImg.resizable( "destroy" );
+							        lastResizableImg.removeData('resizable');
+						        }
+						        lastResizableImg = target;
+					        }
+				        }
+			        })
+			        .on('click', function(e) {
+				        if( lastResizableImg != null && !(e.target instanceof HTMLImageElement) ) {
+					        destroyResizable();
+				        }
+			        })
+			        .on('keydown', function() {
+				        destroyResizable();
+			        });
+	            }
+
+		        enableImageResize();
+	        }
+        });
+    </script>
+}

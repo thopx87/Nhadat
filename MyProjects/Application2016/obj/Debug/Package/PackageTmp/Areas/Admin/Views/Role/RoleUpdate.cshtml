@@ -1,0 +1,281 @@
+﻿@model Application2016.Areas.Admin.Models.RoleModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            @using (Html.BeginForm("RoleUpdate", "Role", FormMethod.Post))
+            {            
+                @Html.HiddenFor(m => m.Role.Id)
+                @Html.HiddenFor(m=>m.Role.IsAdmin)
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                    <ul class="breadcrumb">
+					    <li class="active red bigger-120">Thêm/Sửa quyền người dùng</li>
+				    </ul>
+                </div>
+                <div class="page-content">
+                    <div class="page-header">
+					    <input type="submit" class="btnDefine btn btn-success" value="Lưu" />
+                        <a href="@Url.Action("Index", "Role")"  class="btnDefine btn btn-primary">Quay lại</a>
+				    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info">
+                                <button class="close" data-dismiss="alert">
+                                    <i class="ace-icon fa fa-times"></i>
+                                </button>
+                                <i class="ace-icon fa fa-hand-o-right"></i>Chú ý: Mã quyền không được trùng với
+                                mã đã tồn tại
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4 class="widget-title">
+                                            Cài đặt quyền</h4>
+                                        <div class="widget-toolbar">
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <fieldset>
+                                                <div class="col-xs-6 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-7">
+                                                            Tên quyền</label>
+                                                        @Html.TextBoxFor(r => r.Role.Text, new { @placeholder = "Tên quyền" })
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Mã quyền</label>
+                                                        @Html.TextBoxFor(r => r.Role.Code, new { @placeholder = "Mã quyền" })
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Trạng thái áp dụng
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            <input type="checkbox" name="Role.Active" value="true" id="Active" checked="@Model.Role.Active" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.Active" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Được phép post bài
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            <input type="checkbox" name="Role.Post" value="true" id="Post" checked="@Model.Role.Post" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.Post" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Là môi giới?
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            <input type="checkbox" name="Role.IsAgency" value="true" id="IsAgency" checked="@Model.Role.IsAgency" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.IsAgency" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4" id="regionAgencySetting" style="display:@(Model.Role.IsAgency?"block":"none");">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4 class="widget-title">
+                                            Cài đặt môi giới</h4>
+                                        <div class="widget-toolbar">
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <fieldset>
+                                                <div class="col-xs-6 col-sm-12">
+                                                    
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Được nhận từ môi giới khác
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            <input type="checkbox" name="Role.ResiveFromAgency" value="true" id="ResiveFromAgency" checked="@Model.Role.ResiveFromAgency" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.ResiveFromAgency" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Được nhận từ thành viên
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            <input type="checkbox" name="Role.ResiveFromMember" value="true" id="ResiveFromMember" checked="@Model.Role.ResiveFromMember" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.ResiveFromMember" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Số vùng gửi
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            @Html.TextBoxFor(r => r.Role.SendRegionNum, new { @placeholder = "số vùng gửi" })
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6" for="form-field-8">
+                                                            Số vùng nhận
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-6 ">
+                                                            @Html.TextBoxFor(r => r.Role.ResiveRegionNum, new { @placeholder = "số vùng nhận" })
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-7" for="form-field-8">
+                                                            Xem được số nhà
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-5">
+                                                            <input type="checkbox" name="Role.CanViewHouseNum" value="true" id="CanViewHouseNum" checked="@Model.Role.CanViewHouseNum" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.CanViewHouseNum" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-7" for="form-field-8">
+                                                            Nhận diện được tin chính chủ
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-5">
+                                                            <input type="checkbox" name="Role.CanCheckOwnerArticle" value="true" id="CanCheckOwnerArticle" checked="@Model.Role.CanCheckOwnerArticle" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.CanCheckOwnerArticle" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="space-4 col-sm-12">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-7" for="form-field-8">
+                                                            Chỉ được gửi theo vùng cố định
+                                                        </label>
+                                                        <label class="col-xs-12 col-sm-5">
+                                                            <input type="checkbox" name="Role.OnlySendFixedRegion" value="true" id="OnlySendFixedRegion" checked="@Model.Role.OnlySendFixedRegion" class="ace ace-switch ace-switch-3"/>
+                                                            <span class="lbl"></span>
+                                                            <input name="Role.OnlySendFixedRegion" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                    @*<div class="col-xs-12 col-sm-12">
+											            <div id="div-region" class="col-sm-12 col-sm-12" style="overflow-x:auto; height:260px; display:@(Model.Role.OnlySendFixedRegion?"block":"none");">
+                                                                @for (int i = 0; i < Model.ListRegion.Count; i++)
+                                                                {
+                                                                    var r = Model.ListRegion[i];
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input id="ListRegion_@(i)__Id" name="ListRegion[@(i)].Id" type="hidden" value="@r.Id" />
+                                                                            <input type="checkbox" name="ListRegion[@(i)].Checked" value="true" id="ListRegion_@r.Id" checked="@r.Checked" class="ace ace-switch ace-switch-3"/>
+                                                                            <span class="lbl">
+                                                                            <label for="ListRegion_@r.Id">@r.Text</label>
+                                                                            </span>
+                                                                            <input name="ListRegion[@(i)].Checked" type="hidden" value="false" />
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            </div>
+											        </div>*@
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4 class="widget-title">
+                                            Danh sách các quyền đã cài đặt</h4>
+                                        <div class="widget-toolbar">
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <fieldset>
+                                                <table class="table  table-bordered table-hover">
+                                                    <tr>
+                                                        <th>
+                                                            Tên
+                                                        </th>
+                                                        <th>
+                                                            Mã
+                                                        </th>
+                                                    </tr>
+                                                    @foreach (var role in Model.ListRole)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @role.Text
+                                                            </td>
+                                                            <td>
+                                                                @role.Code
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+<script type="text/javascript">
+    $('#IsAgency').click(function () {
+        if (!$(this).is(':checked')) {
+            $("#regionAgencySetting").css("display", "none");
+        } else {
+            $("#regionAgencySetting").css("display", "block");
+        }
+    });
+
+//    $('#OnlySendFixedRegion').click(function () {
+//        if ($(this).is(':checked')) {
+//            $("#div-region").css("display", "block");
+//        } else {
+//            $("#div-region").css("display", "none");
+//        }
+//    });
+</script>
+
+}
+}

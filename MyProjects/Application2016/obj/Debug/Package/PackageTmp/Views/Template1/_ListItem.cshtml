@@ -1,0 +1,98 @@
+﻿@using Application2016.Helpers;
+@using Application2016.Enums;
+@{
+    var ListProduct = ViewBag.ListProduct as IList<Entities.Product>;
+}
+<style>
+    .search-btn-action {
+    position: relative;
+    }
+    .search-media .search-actions 
+    {
+        min-width: 160px;
+        max-width: 170px;
+    }
+    .product-text-list
+    {
+        min-width: 150px;
+        width:20%;
+        display: inline-block;
+    }
+</style>
+
+<div class="row">
+<!-- muốn cho di chuyển được khung thì thêm class widget-container-col  ui-sortable-->
+    <div class="col-xs-12" id="widget-container-col-2">
+        <div class="widget-box widget-color-red2" id="widget-box-2">
+            <div class="widget-header">
+                <h5 class="widget-title bigger lighter">
+                    <i class="ace-icon fa fa-home"></i>@ViewBag.BoxTitle
+                </h5>
+                <div class="widget-toolbar widget-toolbar-light no-border">
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <div class="row">
+                        <div class="col-xs-12">
+                        @foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+                        {
+                            string image = "no avatar";
+                            if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+                            {
+                                image = Url.Content(item.Avatar_Url + item.Avatar);
+                            }
+                            else
+                            {
+                                image = Url.Content("~/Assets/Images/home-default.png");
+                            }
+                            
+                            <div class="media search-media">
+                                <div class="media-left">
+                                    <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id,item.Text_Alias)">
+                                        <img class="media-object" height="72" src="@image" data-src="holder.js/72x72" alt="@item.Text" />
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div>
+                                        <h4 class="media-heading">
+                                            <a href="/@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id,item.Text_Alias)" class="blue">@item.Text</a>
+                                        </h4>
+                                    </div>
+                                    <p>
+                                    <span class="product-text-list">Loại đất: @item.PTypeText</span>
+                                    <span class="product-text-list">Địa chỉ: @item.DistrictText</span>
+                                    <span class="product-text-list">
+                                    Diện tích: @item.Area.AreaFormat()                                    
+                                    </span>
+                                    </p>
+                                    <p>
+                                        @item.Description</p>
+                                    <div class="search-actions text-center">
+                                        <span class="blue bolder bigger-150">@(item.UpdateCost > 0 ? item.UpdateCost.Value.MoneyFormat() : item.StandardCost.MoneyFormat())</span>
+                                        <div class="action-buttons bigger-125">
+                                            @*<a href="#"><i class="ace-icon fa fa-phone green"></i></a><a href="#"><i class="ace-icon fa fa-heart red">
+                                            </i></a><a href="#"><i class="ace-icon fa fa-star orange2"></i></a>*@
+                                            
+                                        </div>
+                                        <a class="search-btn-action btn btn-sm btn-info " style="width:49%; float: left; margin-right:2px;" href="../@AdminConfigs.FRIENDLY_LINK_PRODUCT_DETAIL.ToFriendlyUrl(item.Id,item.Text_Alias)" >Đặt mua</a>
+                                        @if (item.IsFollow)
+                                        {
+                                            <a href="javascript:void(0);" class="search-btn-action btn btn-sm btn-default" style="width:49%; float: left;" onclick="updateFollow(this.id)">Theo dõi</a>
+                                        }
+                                        else
+                                        {                                            
+                                            <a class="search-btn-action btn btn-sm btn-info" style="width:49%; float: left;" id="btnFollow_@item.Id" onclick="updateFollow(this.id)">Theo dõi</a>
+                                        }
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

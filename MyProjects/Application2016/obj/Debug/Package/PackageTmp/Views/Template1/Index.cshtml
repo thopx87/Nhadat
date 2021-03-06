@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutTemplate1.cshtml";
+}
+@section MainContent{
+<script src="@Url.Content("~/Assets/Template1/js/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        // widget box drag & drop example
+        $('.widget-container-col').sortable({
+            connectWith: '.widget-container-col',
+            items: '> .widget-box',
+            handle: ace.vars['touch'] ? '.widget-title' : false,
+            cancel: '.fullscreen',
+            opacity: 0.8,
+            revert: true,
+            forceHelperSize: true,
+            placeholder: 'widget-placeholder',
+            forcePlaceholderSize: true,
+            tolerance: 'pointer',
+            start: function (event, ui) {
+                //when an element is moved, it's parent becomes empty with almost zero height.
+                //we set a min-height for it to be large enough so that later we can easily drop elements back onto it
+                ui.item.parent().css({ 'min-height': ui.item.height() })
+                //ui.sender.css({'min-height':ui.item.height() , 'background-color' : '#F5F5F5'})
+            },
+            update: function (event, ui) {
+                ui.item.parent({ 'min-height': '' })
+                //p.style.removeProperty('background-color');
+
+
+                //save widget positions
+                var widget_order = {}
+                $('.widget-container-col').each(function () {
+                    var container_id = $(this).attr('id');
+                    widget_order[container_id] = []
+
+
+                    $(this).find('> .widget-box').each(function () {
+                        var widget_id = $(this).attr('id');
+                        widget_order[container_id].push(widget_id);
+                        //now we know each container contains which widgets
+                    });
+                });
+
+                ace.data.set('demo', 'widget-order', widget_order, null, true);
+            }
+        });
+
+    });		
+</script>
+    <div class="col-xs-12 col-sm-2">
+        @Html.Partial("_BoxSearchLeft")
+
+        @Html.Action("ProductNew", "Template1")
+    </div>
+    <div class="col-xs-12 col-sm-10">
+        @Html.Partial("_GridItem")
+        <div class="space-12">
+        </div>
+        @Html.Action("Template1ProductFeature", "Template1")
+    </div>
+}

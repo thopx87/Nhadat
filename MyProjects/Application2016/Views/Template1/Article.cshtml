@@ -1,0 +1,16 @@
+﻿@model Application2016.Models.ArticleModel
+@{
+    ViewBag.Title = "Article";
+    Layout = "~/Views/Shared/_LayoutTemplate1.cshtml";
+}
+
+<h2>Article</h2>
+@section MainContent{
+    <div class="col-xs-12 col-sm-2">
+        @Html.Action("ProductNew", "Template1")
+    </div>
+    <div class="col-xs-12 col-sm-10">        
+        @Html.Raw(Model.Article.Body)
+    </div>
+
+}

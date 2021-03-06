@@ -1,0 +1,75 @@
+﻿@using Application2016.Helpers;
+<ol id="products-list" class="products-list" style="width:100%">
+@foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+{
+    string image = "no avatar";
+    if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+    {
+        image = item.Avatar_Url + item.Avatar;
+    }  
+    
+    <li class="item">
+        <div class="col-item">
+            <div class="product-image"> 
+                <!-- Check sản phẩm giảm giá -->
+                @if (item.UpdateCost > 0)
+                {
+                <div class="sale-label sale-top-right">
+                    &#8595Sale
+                </div>
+                }
+                <!-- Check sản phẩm mới -->
+                @if (item.UpdateTime > DateTime.Today.AddDays(-2))
+                {
+                    <div class="new-label">
+                    New
+                    </div>
+                }
+                
+                <a href="@Url.Action("Detail", "Product")/@item.Id" title="@item.Text"> 
+                    <img src="@Url.Content(@image)" alt="@item.Text" />
+                </a>
+            </div>
+            <div class="product-shop">
+                <div class="row">
+                <div class="col-xs-6 col-md-8">
+                    <h2 class="product-name" ><a href="@Url.Action("Detail", "Product")/@item.Id" title="@item.Text" >  @item.Text </a></h2>
+                </div>
+                <div class="col-xs-6 col-md-2">
+                    <a href="@Url.Action("Detail", "Product", new { Id = @item.Id })" class="button btn-cart">Đặt mua</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <p class="special-price"><span id="product-price-212" class="price">
+                        @(item.UpdateCost > 0 ? item.UpdateCost.Value.MoneyFormat() : item.StandardCost.MoneyFormat())
+                     </span> </p>
+                </div>
+                <div class="col-xs-6 col-md-2">
+                    <p class=""> @item.PTypeText</p>
+                </div>
+                <div class="col-xs-6 col-md-1">
+                    <p class="">@item.DistrictText</p>
+                </div>
+                <div class="col-xs-6 col-md-2">
+                    <p class="">Diện tích: @item.Area.AreaFormat()</p>
+                </div>
+                 <div class="col-xs-6 col-md-2">
+                    <a href="#" id="btnFollow_@item.Id" class="button btn-cart btnFollow" onclick="updateFollow(this.id)">Theo dõi</a>
+                </div>
+            </div>
+            <div class="price-box">
+                
+            </div>
+            <div class="actions">
+                
+                
+            </div>
+            </div>
+        </div>
+    </li>
+}
+</ol>
+<script type="text/javascript">
+    
+</script>

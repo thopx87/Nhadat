@@ -1,0 +1,7 @@
+D:\Projects\MyProjects\MyProjects\DAL\bin\Debug\DAL.dll.config
+D:\Projects\MyProjects\MyProjects\DAL\bin\Debug\DAL.dll
+D:\Projects\MyProjects\MyProjects\DAL\bin\Debug\DAL.pdb
+D:\Projects\MyProjects\MyProjects\DAL\bin\Debug\EntityFramework.dll
+D:\Projects\MyProjects\MyProjects\DAL\obj\Debug\ResolveAssemblyReference.cache
+D:\Projects\MyProjects\MyProjects\DAL\obj\Debug\DAL.dll
+D:\Projects\MyProjects\MyProjects\DAL\obj\Debug\DAL.pdb

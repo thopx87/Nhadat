@@ -1,0 +1,46 @@
+﻿@model Application2016.Models.ProductConditions
+@using Application2016.Helpers;
+<div class="category-products">
+    <div class="toolbar">
+            <div class="sorter">
+                <div class="view-mode">
+                    <a class="button button-grid"
+                        title="List" href="#" onclick="ChangeDisplayType()">Grid</a>
+                    <span class="button button-active button-list" title="Grid">List</span>
+                </div>
+            </div>
+            
+            <div class="find-dropdown">
+                <button type="submit" title="Search" class="btnDefine btn-primary" value="Search">
+                    Search</button>
+            </div>
+            <div class="find-dropdown">
+               @* @Html.DropDownListFor(m => m.Limit, Model.ListLimit, new { @class = "right-arrow" })*@
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.WardId, new SelectList(Model.ListWard, "Id", "Text"), new { @class = "right-arrow" })
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text"), new { @class = "right-arrow" })
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text"), new { @class = "right-arrow" })
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.ProductType, new SelectList(Model.ListProductType, "Id", "Text"))
+            </div>
+            <div class="find-dropdown">
+                @Html.TextBoxFor(m => m.Text, new { @placeholder = "Tìm kiếm ...", @class = "" })
+            </div>
+            <div class="find-dropdown">
+                @Html.Partial("_PagingPartial")
+            </div>
+        </div>
+        @Html.Partial("ProductItem2", ViewBag.ListProduct as ViewDataDictionary)
+</div>
+<script type="text/javascript">
+    function ChangeDisplayType() {
+        // View function in _Layout.cshtml
+        window.location.href = updateURLParameter(window.location.href, 'displayType', 'Grid');
+    };
+</script>

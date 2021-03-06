@@ -1,0 +1,43 @@
+﻿<div class="col-sm-4">
+	<div class="widget-box collapsed">
+		<div class="widget-header">
+			<h4 class="widget-title">Cập nhật danh sách vùng</h4>
+
+			<div class="widget-toolbar">
+				<a href="#" data-action="collapse">
+					<i class="ace-icon fa fa-chevron-down"></i>
+				</a>
+
+				@*<a href="#" data-action="close">
+					<i class="ace-icon fa fa-times"></i>
+				</a>*@
+			</div>
+		</div>
+        @using (Html.BeginForm("UpdateRegion", "Setting", FormMethod.Post, new { id = 1, enctype = "multipart/form-data" }))
+        {
+            <div class="widget-body" style="display: none;">
+				<div class="widget-main">
+                    <div class="form-group">
+						<div class="col-xs-12">
+							<input type="radio" name="chkFrom" value="1" id="chkFromCSV" checked="checked"/> <label for="chkFromCSV">CSV</label>
+                            <input type="radio" name="chkFrom" value="2" id="chkFromExcel"/> <label for="chkFromExcel">Excel</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12">
+							<input type="file" id="id-input-file-2" name="file" />
+						</div>
+					</div>
+                    @*<div class="form-group">
+						<div class="col-xs-12">
+							<input multiple="" type="file" id="id-input-file-3" />
+						</div>
+					</div>*@
+                    <label>
+                        <button class="btn btn-info" type="submit" value="Update">Update</button>
+                    </label>
+				</div>
+			</div>                
+        }			
+	</div>
+</div>

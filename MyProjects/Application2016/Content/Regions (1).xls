@@ -1,0 +1,16 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<div>
+	<table cellspacing="0" rules="all" border="1" style="border-collapse:collapse;">
+		<tr>
+			<th scope="col">Id</th><th scope="col">Text</th><th scope="col">CityId</th><th scope="col">DistrictId</th><th scope="col">Status</th><th scope="col">NeighborId</th><th scope="col">ListWard</th><th scope="col">ListUser</th>
+		</tr><tr>
+			<td>2</td><td>Cầu giấy 1</td><td>1</td><td>60</td><td>1</td><td>3</td><td>61,62,63,64,66</td><td>1,2,3</td>
+		</tr><tr>
+			<td>3</td><td>Cầu Giấy 2</td><td>1</td><td>60</td><td>1</td><td>4</td><td>65,67,68</td><td>&nbsp;</td>
+		</tr><tr>
+			<td>7</td><td>Ho&#224;n Kiếm 1</td><td>1</td><td>17</td><td>1</td><td>3</td><td>18,19,20,22</td><td>1</td>
+		</tr><tr>
+			<td>8</td><td>Ho&#224;n Kiếm 2</td><td>1</td><td>17</td><td>1</td><td>7</td><td>24,25,27,28</td><td>&nbsp;</td>
+		</tr>
+	</table>
+</div>

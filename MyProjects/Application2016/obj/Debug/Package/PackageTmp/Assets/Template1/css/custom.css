@@ -1,0 +1,33 @@
+﻿.ace-nav>li>a 
+{
+    background-color: #5BC85B;
+}
+.ace-nav>li>a:hover{background-color:#137C13;color:#FFF}
+
+.navbar .navbar-nav>li>a
+{
+    color:white;
+}
+
+.sidebar.h-sidebar .nav-list 
+{
+    border-bottom: 2px solid #5BC85B;
+}
+
+.ace-nav>li.light-blue>a:focus,.ace-nav>li.light-blue>a:hover,.ace-nav>li.light-blue>a {
+    background-color: #5BC85B;
+}
+
+.regis-agency-name
+{
+        text-align: right;
+    padding: 6px 10px 6px 4px;
+    font-weight: 400;
+    /* color: #667E99; */
+    background-color: transparent;
+    width: 110px;
+    vertical-align: middle;
+    display:table-cell;
+    min-width: 120px;
+}
+.required:after { content:" *"; color: Red; }

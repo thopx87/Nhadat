@@ -1,0 +1,110 @@
+﻿@using Application2016.Helpers
+@{
+    Layout = null;
+}
+<div id="navbar" class="navbar navbar-default ace-save-state">
+    <div class="navbar-container ace-save-state" id="navbar-container">
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span> <span class="icon-bar"></span><span class="icon-bar">
+            </span><span class="icon-bar"></span>
+        </button>
+        <div class="navbar-header pull-left">
+            <a href="@Url.Action("Index", "Home", new { area = "" })">
+                <img src="@Url.Content("~/Assets/images/logo2.png")" height="45px" alt="" />
+            </a>
+        </div>
+        <nav role="navigation" class="navbar-menu pull-left collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+                @if (CookieHelper.Get(AdminConfigs.COOKIES_ADMIN) == "1")
+                {
+				<li>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="menu-icon fa fa-cog"></i>
+						Super Admin
+						<i class="ace-icon fa fa-angle-down bigger-110"></i>
+					</a>
+
+					<ul class="dropdown-menu dropdown-light-blue dropdown-caret">
+						<li class="@(ViewBag.ActionSubMenu.ToString() == "Role" ? "active" : "")">
+					        <a href="@Url.Action("Index", "Role")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Quyền người dùng
+					        </a>
+					        <b class="arrow"></b>
+				        </li>
+				        <li class="@(ViewBag.ActionSubMenu.ToString() == "User" ? "active" : "")">
+					        <a href="@Url.Action("List", "User")?page=1">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Danh sách người dùng
+					        </a>
+				        </li>
+                        <li class="@(ViewBag.ActionSubMenu.ToString() == "Place" ? "active" : "")">
+					        <a href="@Url.Action("Index", "Place")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Quản lý địa lý
+					        </a>
+				        </li>
+                        <li class="@(ViewBag.ActionSubMenu.ToString() == "Region" ? "active" : "")">
+					        <a href="@Url.Action("Index2", "Region")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Quản lý vùng
+					        </a>
+				        </li>
+                        <li class="@(ViewBag.ActionSubMenu.ToString() == "Cost" ? "active" : "")">
+					        <a href="@Url.Action("Index", "Cost")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Danh sách tính phí
+					        </a>
+				        </li>
+                        <li class="@(ViewBag.ActionSubMenu.ToString() == "Category" ? "active" : "")">
+					        <a href="@Url.Action("Index", "Category")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Quản lý thư mục
+					        </a>
+				        </li>
+                        <li class="@(ViewBag.ActionSubMenu.ToString() == "Article" ? "active" : "")">
+					        <a href="@Url.Action("Index", "Article")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Quản lý bài viết
+					        </a>
+				        </li>
+					</ul>
+				</li>
+                }
+                @if (CookieHelper.Get(AdminConfigs.COOKIES_AGENCY) == "1")
+                {
+                <li class="">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				        <i class="menu-icon fa fa-user"></i>
+				        <span class="menu-text"> Dành cho môi giới </span>
+				        <b class="arrow fa fa-angle-down bigger-110"></b>
+			        </a>
+                    <b class="arrow"></b>
+			        <ul  class="dropdown-menu dropdown-light-blue dropdown-caret">
+				        <li class="">
+					        <a href="@Url.Action("ProductReceiveSelling", "Product")">
+						        <i class="menu-icon fa fa-caret-right"></i>
+						        Sản phẩm nhận bán
+					        </a>
+
+					        <b class="arrow"></b>
+				        </li>
+                    </ul>
+                </li>
+                }
+			</ul>
+		</nav>
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <li class="transparent dropdown-modal">
+                    @Html.Action("GetMessage", "Template1", new { @area = "" })
+                </li>
+                @*@Html.Partial("_HeaderPartial_Task")
+                @Html.Action("Notification", "Base")
+                @Html.Partial("_HeaderPartial_Message")*@
+                @Html.Partial("_HeaderPartial_Account")
+            </ul>
+        </div>
+    </div>
+    <!-- /.navbar-container -->
+</div>

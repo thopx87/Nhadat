@@ -1,0 +1,512 @@
+﻿@model Application2016.Models.ProductModel
+@using Application2016.Helpers
+@using Application2016.Enums;
+@{
+    ViewBag.Title = "Chi tiết - "+ Model.Text;
+    Layout = "~/Views/Shared/_LayoutTemplate1.cshtml";
+
+    int loginUser = CookieHelper.Get(AdminConfigs.COOKIES_USER_ID) != null ? int.Parse(CookieHelper.Get(AdminConfigs.COOKIES_USER_ID)) : -1;
+    var isAdmin = CookieHelper.Get(AdminConfigs.COOKIES_ADMIN) != null ? CookieHelper.Get(AdminConfigs.COOKIES_ADMIN).ToString() : "0";
+}
+@section MainContent{
+    <style type="text/css">
+        .carousel-control .glyphicon-chevron-left, .carousel-control .glyphicon-chevron-right, .carousel-control .icon-next, .carousel-control .icon-prev
+        {
+            position: absolute;
+            top: 83% !important;
+            z-index: 5;
+            display: inline-block;
+            margin-top: -10px;
+        }
+        h4
+        {
+            margin: 20px 10px 10px;
+        }
+        p
+        {
+            margin: 10px;
+        }
+        
+        #carousel-example-generic
+        {
+            margin: 20px auto;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        #carousel-custom
+        {
+            margin: 20px auto;
+            width: 100%;
+            max-width: 400px;
+        }
+        #carousel-custom .carousel-indicators
+        {
+            margin: 10px 0 0;
+            overflow: auto;
+            position: static;
+            text-align: left;
+            white-space: nowrap;
+            width: 100%;
+        }
+        #carousel-custom .carousel-indicators li
+        {
+            background-color: transparent;
+            -webkit-border-radius: 0;
+            border-radius: 0;
+            display: inline-block;
+            height: auto;
+            margin: 0 !important;
+            width: auto;
+        }
+        #carousel-custom .carousel-indicators li img
+        {
+            display: block;
+            opacity: 0.5;
+        }
+        #carousel-custom .carousel-indicators li.active img
+        {
+            opacity: 1;
+        }
+        #carousel-custom .carousel-indicators li:hover img
+        {
+            opacity: 0.75;
+        }
+        #carousel-custom .carousel-outer
+        {
+            position: relative;
+        }
+        .Old-price
+        {
+            text-decoration:line-through;
+            font-size:20px;
+            color: Red;
+        }
+        
+        .Curr-price
+        {
+            font-size: 20px;
+            color: Red;
+        }
+        .New-price
+        {
+            font-size: 20px;
+            color: #FF20FF;
+        }
+    </style>
+    <div class="main-content-inner">
+        <div class="page-content">
+            <div class="page-header">
+                <h1>
+                    @(Model.Transaction_Type == (short)TransactionType.BAN_NHA?"NHÀ ĐẤT BÁN":"NHÀ ĐẤT CHO THUÊ") - @Model.CityText :
+                    @Model.Text
+                
+                <div class="pull-right">
+                    @if(isAdmin !="0")
+                    {
+                        @*@Html.ActionLink("Chỉnh sửa", Model.Transaction_Type == (short)TransactionType.BAN_NHA ? "UpdateSaleProduct" : "UpdateLeaseProduct", "Product", new { @area = "Admin", id = Model.Id }, new { @class = "btn btn-round", @style = "float:left; margin-right: 10px;" })*@
+                        <a href="@Url.Action(Model.Transaction_Type == (short)TransactionType.BAN_NHA ? "UpdateSaleProduct" : "UpdateLeaseProduct", "Product", new { area = "Admin", id=Model.Id })" class="btn btn-round" style="float:left; margin-right: 10px;">
+                            <i class="ace-icon fa fa-edit bigger-120"></i>Chỉnh sửa</a>
+                    }
+                    @if (Model.UserId == loginUser || isAdmin != "0")
+                    {
+                        <a href="#" class="btn btn-danger btn-round" style="float:left; margin-right: 10px;" onclick="UpdateWasSelling(@Model.Id)">
+                            <i class="ace-icon fa fa-check"></i> Đã bán</a>
+                        
+                        <a href="#" class="btn btn-danger btn-round" style="float:left; margin-right: 10px;" onclick="return DoDelete()">
+                            <i class="ace-icon fa fa-trash-o bigger-120"></i>Xóa</a>
+                    }
+                </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-2">
+            @Html.Partial("_BoxMenuLeft")
+        </div>
+        <div class="col-xs-12 col-sm-10">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4">
+                    @if (Model.ListImage.Count > 0)
+                    {
+                        <div id='carousel-custom' class='carousel slide' data-ride='carousel'>
+                            <div class='carousel-outer'>
+                                <div class='carousel-inner'>
+                                    @for (int i = 0; i < Model.ListImage.Count; i++)
+                                    {
+                                        Entities.ProductImage img = Model.ListImage[i];
+                                        var imgFull = Url.Content(img.ImageUrl + img.Text);
+                                        var cssClass = "item";
+                                        if (i == 0)
+                                        {
+                                            cssClass = "item active";
+                                        }
+                                        <div class='@cssClass'>
+                                            <img src='@imgFull' style="max-height:300px;" alt='' />
+                                        </div>
+                                    }
+                                </div>
+                                <a class='left carousel-control' href='#carousel-custom' data-slide='prev'><span
+                                    class='glyphicon glyphicon-chevron-left'></span></a><a class='right carousel-control'
+                                        href='#carousel-custom' data-slide='next'><span class='glyphicon glyphicon-chevron-right'>
+                                        </span></a>
+                            </div>
+                            <ol class='carousel-indicators'>
+                                @for (int i = 0; i < Model.ListImage.Count; i++)
+                                {
+                                    Entities.ProductImage img = Model.ListImage[i];
+                                    var imgFull = Url.Content(img.ImageUrl + img.Text);
+                                    var cssClass = "";
+                                    if (i == 0)
+                                    {
+                                        cssClass = "item";
+                                    }
+                                    <li data-target='#carousel-custom' data-slide-to='@i' class='@cssClass'>
+                                        <img src='@imgFull' height="40px;" alt='' /></li>
+                                }
+                            </ol>
+                        </div>
+                    }
+                    else
+                    {
+                        <img class="media-object" src="@Url.Content("~/Assets/images/home-default.png")" alt="Không có ảnh" />
+                    }
+                </div>
+                <div class="col-xs-12 col-sm-5">
+                    <span class="product-additional" style="color: Red"><strong>Thông tin sản phẩm</strong></span><br />
+                    <br />
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Kiểu nhà
+                                </th>
+                                <td>@Model.ProductTypeText
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Địa chỉ
+                                </th>
+                                <td>
+                                    @Model.Address <br />
+                                    <strong>(@Model.DistrictText - @Model.CityText)</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Số nhà
+                                </th>
+                                <td>@Model.HouseNumber
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Giá bán
+                                </th>
+                                <td>
+                                    @if (@Model.NewCost > 0)
+                                    {
+                                        <p class="@(Model.StandardCost != @Model.NewCost ? "Old-price" : "Curr-price")">
+                                            @Model.StandardCost.MoneyFormat()
+                                        </p>
+                                        string strCost = Model.NewCost.ConvertMoneyToString();
+                                        <p class="New-price">
+                                            @Model.NewCost.MoneyFormat()</p>
+                                            @strCost
+                                        
+                                    }
+                                    else
+                                    {
+                                        string strCost = Model.StandardCost.ConvertMoneyToString();
+                                        <p class="New-price">
+                                            @Model.StandardCost.MoneyFormat()</p>
+                                            @strCost
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Diện tích
+                                </th>
+                                <td>@Math.Floor(@Model.Area) (m <sup>2</sup>)
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Người đăng
+                                </th>
+                                <td>
+                                    @if (CookieHelper.Get(AdminConfigs.COOKIES_ADMIN) == "1")
+                                    {
+                                        <a href="@Url.Action("PersonalView", "User", new { area = "Admin", @Id = @Model.UserId })">@Model.Username</a>
+                                    }
+                                    else
+                                    {
+                                    @Model.Username
+                                    }
+                                    <br />
+                                    @Model.PhoneNumber
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Ngày đăng
+                                </th>
+                                <td>@Model.SellStartDate.GetValueOrDefault().ToString("dd/MM/yyyy HH:mm:ss tt")
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Ngày kết thúc
+                                </th>
+                                <td>@Model.SellEndDate.GetValueOrDefault().ToString("dd/MM/yyyy HH:mm:ss tt")
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Hoa hồng cho môi giới
+                                </th>
+                                <td>@(Model.AgencyCost + "%")
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @using (Html.BeginForm())
+                    {
+
+                        <div class="add-to-box">
+                            <div class="input-group" style="display: flex; width: 100%;">
+                                <!-- autofocus ?? -->
+                                <input class="form-control focus" onkeyup="javascript:ToMoneyString(this.value)"
+                                    onkeypress="return isNumberKey(event)" id="txtMoney" style="width: 200px; float: left;
+                                    margin-right: 10px;" />
+                                <div class="actions">
+                                    <span class="input-group-btn">
+                                        @if (Model.IsPoster)
+                                        {
+
+                                            <a href="@Url.Action("Detail", "Template1", new { Id = @Model.Id })" class="btn btn-danger btn-round" style="float:left; margin-right: 10px;" onclick="DoChangeCost()">
+                                                Sửa giá</a>
+                                        }
+                                        else
+                                        {
+
+                                            <a href="@Url.Action("Detail", "Template1", new { Id = @Model.Id })" class="btn btn-danger btn-round" style="float:left; margin-right: 10px;" onclick="DoChangeCost()">
+                                                Đặt mua</a>
+                                            <a href="#" id="btnFollow_@Model.Id" class="btn btn-danger btn-round" style="float:left; margin-right: 10px;" onclick="updateFollow(this.id)">
+                                                Theo dõi</a>
+                                        }
+                                    </span>
+                                </div>
+                                <span class="input-group-btn"></span>
+                            </div>
+                            <label id="lblMoneyString">
+                            </label>
+                        </div>
+                    }
+                    <div class="widget-box">
+                        <div class="widget-header">
+                            <h4 class="widget-title">
+                                Thông tin chi tiết</h4>
+                            <div class="widget-toolbar">
+                                <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+                                @*<a href="#" data-action="close">
+					                <i class="ace-icon fa fa-times"></i>
+				                </a>*@
+                            </div>
+                        </div>
+                        <div class="widget-body" style="display: block;">
+                            <div class="widget-main">
+                                <table class="table">
+                                    <tr>
+                                        <td>
+                                            Mô tả
+                                        </td>
+                                        <td>
+                                            @Model.Description
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Địa chỉ chi tiết
+                                        </td>
+                                        <td>
+                                            @Model.Address
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="product-additional">
+                        @if (@Model.ListChangeCost.Count > 0)
+                        {
+
+                            <span class="product-additional" style="color: Red"><strong>Danh sách thông tin đặt
+                                mua</strong></span><br />
+                            <br />
+
+                            <table class="table  table-striped">
+                                <tbody>
+                                    @foreach (var item in @Model.ListChangeCost)
+                                    {
+                                        if (@item.Cost < @Model.NewCost)
+                                        {
+                                        <tr>
+                                            <td style="min-width: 60px">
+                                                <strong>@item.UserName</strong> 
+                                                <br />
+                                                @(item.PhoneNumber !=null? "( " +item.PhoneNumber +" )":"")
+                                            </td>
+                                            <td style="min-width: 40px">
+                                                <span style="color: green">@item.Cost.MoneyFormatShort() </span>
+                                            </td>
+                                            <td style="min-width: 40px">
+                                                &nbsp; @item.UpdateTime.ToString("dd/MM/yyyy")
+                                            </td>
+                                        </tr>
+                                        }
+                                        else
+                                        {
+                                            if (item.UpdateTime > DateTime.Now.AddDays(-3))
+                                            {
+                                                <tr>
+                                                    <td style="min-width: 60px">
+                                                        <strong>@item.UserName</strong> <br />
+                                                        @(item.PhoneNumber !=null? "( " +item.PhoneNumber +" )":"")
+                                                    </td>
+                                                    <td style="min-width: 40px">
+                                                        <span style="color: blue">@item.Cost.MoneyFormatShort() </span>
+                                                    </td>
+                                                    <td style="min-width: 40px">
+                                                        &nbsp; @item.UpdateTime.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+
+                            <span class="product-additional" style="color: Red"><strong>Chưa có người đặt giá</strong></span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                    @Html.Action("Template1ProductSuggest", "Template1", new { @withOutId = Model.Id, @cityId = Model.CityId, @districtId = Model.DistrictId })
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function ToMoneyString(money) {
+            money= money*1000000;
+            var strMoney = DocTienBangChu(money);
+            document.getElementById('lblMoneyString').innerHTML = strMoney;
+        };
+
+        function DoChangeCost() {
+            jQuery.ajax({
+                type: 'POST',
+                url: '@Url.Action("DoChangeCost", "Product")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    productId : '@Model.Id',
+                    money: jQuery("#txtMoney").val()
+                }),
+                success: function (data) {
+                    // your code from above
+                    alert(data.Text);
+                    window.location.reload(true)
+                    
+                    if(data.Value >0){
+                    } else if(data.Value){
+
+                    }
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                }
+            });
+        }
+
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        function DoDelete(){
+            var conf = '@Html.Raw(AdminConfigs.CONFIRM_DELETE_PRODUCT)';
+            if(confirm(conf)){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteProduct", "Template1")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        Id : '@Model.Id',
+                        userId: '@loginUser'
+                    }),
+                    success: function (data) {
+                        if(data <0){
+                            alert("@Html.Raw(AdminConfigs.MESSAGE_DELETE_ERROR)");
+                            window.location.reload(true)
+                        } else{
+                            alert("@Html.Raw(AdminConfigs.MESSAGE_DELETE_SUCCESS)");
+                            window.location.href="@Url.Content("~/")";
+                        }
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    }
+                });
+            }else{
+                window.location.reload(true);
+            }
+        }
+
+        function UpdateWasSelling(id) {
+            var conf = '@Html.Raw(AdminConfigs.CONFIRM_PRODUCT_SOLD)';
+            if(confirm(conf)){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateWasSelling", "Product", new { area = "Admin" })',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        productId: id
+                    }),
+                    success: function (data) {
+                        //alert("@Html.Raw(AdminConfigs.MESSAGE_UPDATE_SUCCESS)");
+                        window.location.href="@Url.Content("~/")";
+                    },
+                    error: function (xhr, textStatus, error) {
+                        alert("@Html.Raw(AdminConfigs.MESSAGE_UPDATE_ERROR)");
+                        window.location.reload(true)
+                    }
+                });
+            } else{
+                window.location.reload(true);
+            }
+        }
+    </script>
+}

@@ -1,0 +1,42 @@
+﻿@{int tabId = ViewBag.TabID == null ? 0 : (int)ViewBag.TabID;}
+<div id="sidebar" class="sidebar h-sidebar navbar-collapse collapse ace-save-state">
+    <ul class="nav nav-list">
+        <li class="hover @(tabId == 0?"active open":"")">
+            <a href="@Url.Action("Index","Template1")">
+                <span class="menu-text">Trang chủ</span>
+            </a><b class="arrow"></b>
+        </li>
+        <li class="hover @(tabId == 1?"active open":"")">
+            <a href="@Url.Action("Index", "Template1", new { @TransactionType =1})" data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle disabled ">
+                <span class="menu-text">Nhà đất bán</span><b class="arrow fa fa-angle-down">
+                </b>
+            </a><b class="arrow"></b>
+            @*<ul class="submenu">
+                <li class="hover"><a href="top-menu.html">Biệt thự liền kề </a></li>
+                <li class="hover"><a href="top-menu.html">Chung cư </a></li>
+                <li class="hover"><a href="top-menu.html">Thổ cư </a></li>
+            </ul>*@
+        </li>
+        <li class="hover @(tabId == 2?"active open":"")">
+            <a href="@Url.Action("Index", "Template1", new { @TransactionType =2})" class="dropdown-toggle"><span class="menu-text">Nhà đất cho thuê </span><b class="arrow fa fa-angle-down"></b></a>
+            <b class="arrow"></b>
+            @*<ul class="submenu">
+                <li class="hover"><a href="top-menu.html">Biệt thự liền kề </a></li>
+                <li class="hover"><a href="top-menu.html">Chung cư </a></li>
+                <li class="hover"><a href="top-menu.html">Thổ cư </a></li>
+            </ul>*@
+        </li>
+        <li class="hover @(tabId == 4?"active open":"")"><a href="#" onclick="alert('Chức năng đang được cài đặt. Xin vui lòng chưa dùng chức năng này nhé.')"><span class="menu-text">Tìm/Thuê nhà </span></a><b class="arrow"></b></li>
+        <li class="hover @(tabId == 5?"active open":"")"><a href="#" onclick="alert('Chức năng đang được cài đặt. Xin vui lòng chưa dùng chức năng này nhé.')"><span class="menu-text">Tin bất động sản </span></a><b class="arrow"></b></li>
+        <li class="hover @(tabId == 6?"active open":"")"><a href="@Url.Action("Index", "Template1", new { @TransactionType =6})"><span class="menu-text">Bài viết </span></a><b class="arrow"></b></li>
+        @*<li class="hover @(tabId == 6?"active open":"")"><a href="@Url.Action("Contact","Template1")"><span class="menu-text">Liên hệ </span></a><b class="arrow"></b></li>*@
+    </ul>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".dropdown-toggle").click(function () {
+            var url = $(this).attr("href");
+            $(location).attr('href', url);
+        });
+    }); 
+</script>

@@ -1,0 +1,90 @@
+﻿@using Application2016.Enums;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+					<li class="active red bigger-120">Quản lý địa lý</li>
+				</ul>
+                <div class="nav-search" id="nav-search">
+                    @using (Html.BeginForm())
+                    {
+                        <span class="input-icon">
+                            <input type="text" placeholder="Search ..." class="nav-search-input" id="txtSearch"
+                                autocomplete="on" />
+                            <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                    }
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+					<a href="@Url.Action("UpdateCity", "Place", new { id = 0 })" id="city" class="btnDefine btn btn-primary">
+                        <i class="fa fa-plus"></i>Thêm Tỉnh/ Thành phố</a> 
+                    <a href="@Url.Action("UpdateDistrict", "Place", new { id = 0, cityId = 0 })" id="district" class="btnDefine btn btn-primary">
+                        <i class="fa fa-plus"></i>Thêm Quận/ Huyện</a> 
+                    <a href="@Url.Action("UpdateRegion", "Place", new { id = 0, cityId = 0, districtId = 0 })" id="region" class="btnDefine btn btn-primary">
+                        <i class="fa fa-plus"></i>Thêm Vùng</a> 
+                    <a href="@Url.Action("UpdateWard", "Place", new { id = 0, cityId = 0, districtId = 0 })" id="ward" class="btnDefine btn btn-primary">
+                        <i class="fa fa-plus"></i>Thêm Xã / Phường</a>
+				</div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        @{
+                            if (ViewBag.Message != "" && ViewBag.Message != null)
+                            {
+                            <div class="@ViewBag.AlertClass">
+                                <i class="ace-icon fa fa-hand-o-right"></i>
+                                @ViewBag.Message
+                                <button class="close" data-dismiss="alert">
+                                    <i class="ace-icon fa fa-times"></i>
+                                </button>
+                            </div>
+                            }
+                            ViewBag.Message = "";
+                        }
+                        <div id="placeData">
+                            @{
+                                if (ViewBag.ActionForm != null)
+                                {
+                                @Html.Partial((string)ViewBag.ActionForm)
+                                    ViewBag.ActionForm = null;
+                                }
+                            }
+                        </div>
+                        <div class="row" id="divListCity">
+                            @Html.Partial("ListCity")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('.show-details-btn').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').next().toggleClass('open');
+            $(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+        });
+
+        // Xử lý lấy thông tin của tỉnh, huyện, xã
+        function GetPlace(url) {
+            $.ajax({
+                url: url,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+        .success(function (result) {
+            $('#placeData').html(result);
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+        }
+    </script>
+    @Html.Partial("_PopupPartial")
+}

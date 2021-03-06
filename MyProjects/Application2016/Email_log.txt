@@ -1,0 +1,16 @@
+
+Log Entry : 10:55:48 PM Tuesday, July 10, 2018
+Lỗi xử lý: Mailbox unavailable. The server response was: 5.4.5 Daily user sending quota exceeded. u11-v6sm25687314pfd.125 - gsmtp
+--------------------------------------------------
+
+Log Entry : 10:17:11 AM Friday, July 27, 2018
+Lỗi xử lý: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required. Learn more at
+--------------------------------------------------
+
+Log Entry : 10:24:01 AM Friday, July 27, 2018
+Lỗi xử lý: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required. Learn more at
+--------------------------------------------------
+
+Log Entry : 10:25:32 AM Friday, July 27, 2018
+Lỗi xử lý: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required. Learn more at
+--------------------------------------------------

@@ -1,0 +1,116 @@
+﻿<strong>Tổng số trang:</strong> <label style="color:red">@ViewBag.MaxPage</label>  <strong>Tổng số bản ghi:</strong> <label style="color:red"> @ViewBag.TotalRecord </label>
+
+@if (ViewBag.MaxPage > 1)
+{
+    
+    <ul class="pagination pull-right no-margin">
+        @if (ViewBag.page > 1)
+        {
+        <!-- First page -->
+            
+        <li class="">
+		    <a class="page" page-index='@(1)' href='#' class="btn btn-default">
+                First
+            </a>
+	    </li>
+        <!-- Preview page -->
+        
+        <li class="prev">
+		    <a class="page" page-index='@(ViewBag.Page - 1)' href="#" class="btn btn-default">
+                &laquo; Prev
+            </a>
+	    </li>    
+        }
+
+        <!-- Loop page -->
+        @{
+            int numPageShow = ViewBag.PageShow;
+            int pageStart = 1;
+            int pagePreview = ViewBag.PagePreview;
+            int currPage = ViewBag.Page;
+            int maxPage = ViewBag.MaxPage;
+            if (maxPage < numPageShow)
+            {
+                numPageShow = maxPage;
+                
+                for (int i = 1; i <= numPageShow; i++)
+                {
+                    if (i == currPage) 
+                    {
+                        <li class="active">
+                            <a>@i</a>
+	                    </li>
+                    }
+                    else
+                    {
+                        <li class="">
+		                    <a class="page"  page-index='@(i)' href="#" >
+                               @i
+                            </a>
+	                    </li>
+                    }
+
+                }
+            }
+            else
+            {
+                // Tính trang bắt đầu hiển thị.
+
+                if (currPage - 1 > pagePreview)
+                {
+                    if (maxPage - currPage >= pagePreview)
+                    {
+                        pageStart = currPage - pagePreview;
+                    }
+                    else
+                    {
+                        pageStart = maxPage - numPageShow + 1;
+                    }
+                }
+                for (int j = pageStart; j < numPageShow + pageStart; j++)
+                {
+                    if (j == currPage)
+                    {
+                        <li class="active">
+		                    <a>@j</a>
+	                    </li>
+                    }
+                    else
+                    {
+                       <li class="">
+		                <a class="page" page-index='@(j)' href="#" >
+                           @j
+                        </a>
+	                </li>
+                    }
+
+                }
+            }
+        }
+
+        <!-- Next page -->
+        @if (ViewBag.page < ViewBag.MaxPage)
+        {    
+        <li class="next">
+		    <a class="page" page-index='@(ViewBag.Page + 1)' href="#" 
+               class="btn btn-default">
+                Next &raquo;
+            </a>
+	    </li>        
+        
+        <!-- End page -->
+	    <li>
+		    <a class="page" page-index='@ViewBag.MaxPage' href="#" class="btn btn-default">
+                End
+            </a>
+	    </li>
+        }
+    </ul>
+}
+
+<script type="text/javascript">
+    $(".page").click(function () {
+        $("#PageIndex").val($(this).attr('page-index'));
+        $('form').eq(0).submit();
+    });
+</script>

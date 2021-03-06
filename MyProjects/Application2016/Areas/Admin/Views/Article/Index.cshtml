@@ -1,0 +1,130 @@
+﻿@model Application2016.Areas.Admin.Models.ListArticleModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">              
+                <ul class="breadcrumb">
+				    <li class="active red bigger-120">Danh sách bài viết</li>
+			    </ul>
+                <div class="nav-search" id="nav-search">
+                    @using (Html.BeginForm("Index","Article",FormMethod.Get))
+                    {
+                    <span class="input-icon">
+                        @Html.DropDownListFor(m => m.Condition.CatId, new SelectList(Model.ListCategory, "Id", "Text", Model.Condition.CatId), new { @onchange = "this.form.submit();" })
+                    </span>
+                    <span class="input-icon">
+                        @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "nav-search-input",@style="width: 250px", @placeholder = "Tiêu đề, nội dung ..."})
+                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                    </span>
+                    <span class="input">
+                        <input name="Condition.DisplayOnly" id="Condition_DisplayOnly" class="ace input-lg" type="checkbox" checked="@Model.Condition.DisplayOnly" onclick="this.form.submit();" />
+                            <label class="lbl bigger-120" for="Condition_DisplayOnly">Chỉ những bài đang hiển thị</label>
+                        <input name="Condition.DisplayOnly" type="hidden" value="false">
+                    </span>
+                    @Html.HiddenFor(m => m.Condition.Page)
+                    }
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                    <a href="@Url.Action("Update", "Article", new { @Id = 0 })" class="btnDefine btn btn-primary">Thêm mới</a>
+			    </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        
+                                    </th>
+                                    <th class="center">
+                                        Tên thư mục
+                                    </th>
+                                    <th class="center">
+                                        Tiêu đề bài viết
+                                    </th>
+                                    <th class="center">
+                                        Nội dung
+                                    </th>
+                                    <th class="center">
+                                        Trạng thái hiển thị
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @for (int i = 0; i < Model.ListArticle.Count; i++)
+                            {
+                                var m = Model.ListArticle[i];
+                                <tr>
+                                    <td class="center">
+                                        <a href="#" class="green bigger-140 show-details-btn" title="Xem chi tiết"><i class="ace-icon fa fa-angle-double-down">
+                                        </i></a>
+                                    </td>
+                                    <td>
+                                        <label>@m.CategoryText</label>
+                                    </td>
+                                    <td>
+                                        <label><a href="@Url.Action("Update", "Article", new { id = m.Id })"> @m.Title</a></label>
+                                    </td>
+                                    <td>
+                                        <label data-toggle="tooltip" title="@m.Body">@(m.Body.Length>100?m.Body.Substring(0,100)+"...":m.Body)</label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@m.Display" onclick="return false;" />
+                                            <span class="lbl bigger-120"> </span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        @Html.Partial("_PagingPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="my-modal" class="modal fade" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="smaller lighter blue no-margin" id="modalTitle"></h3>
+				</div>
+
+				<div class="modal-body" id="modalBody">
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+    <script src="@Url.Content("~/Assets/Admin/js/ace-elements.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('.modal.aside').ace_aside();
+
+            $('#aside-inside-modal').addClass('aside').ace_aside({ container: '#my-modal > .modal-dialog' });
+
+            //$('#top-menu').modal('show')
+
+            $(document).one('ajaxloadstart.page', function (e) {
+                //in ajax mode, remove before leaving page
+                $('.modal.aside').remove();
+                $(window).off('.aside')
+            });
+
+        })
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+		</script>
+
+}

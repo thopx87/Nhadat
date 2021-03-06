@@ -1,0 +1,156 @@
+﻿@model Application2016.Areas.Admin.Models.RegionModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "UpdateRegion";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            @using (Html.BeginForm("UpdateRegion", "Region", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post, new { id = "frmRegion" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="page-content">
+                    <div class="page-header">
+                        <input type="submit" class="btnDefine btn btn-success" value="Lưu" />
+                        <a href="@Url.Action("Index2", "Region")" class="btnDefine btn btn-success">Danh sách vùng</a>
+				    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title">
+                                        Thông tin 1 vùng</h4>
+                                    <div class="widget-toolbar">
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <fieldset>
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-6" for="form-field-8">@AdminConfigs.TEXT_NAME_CITY</label>
+                                                    @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text", Model.CityId), @AdminConfigs.TEXT_CHOOSE_CITY, new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#DistrictId','#WardOfDistrictIds')") })
+                                                </div>
+                                                <div class="form-group" id="divDistrict">
+                                                    <label class="col-sm-6" for="form-field-8">@AdminConfigs.TEXT_NAME_DISTRICT</label>
+                                                    @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text", Model.DistrictId), @AdminConfigs.TEXT_CHOOSE_DISTRICT, new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#WardOfDistrictIds')") })
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-6" for="form-field-9">@AdminConfigs.TEXT_NAME_REGION</label>
+                                                    @Html.TextBoxFor(m => m.Text, new { @class = "form-control", @placeholder = @AdminConfigs.TEXT_NAME_REGION })
+                                                    @Html.ValidationMessageFor(m => m.Text)
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-6" for="form-field-9">
+                                                        Trạng thái xuất bản?</label>
+                                                    @Html.CheckBoxFor(m => m.Status, new { @checked = true })
+                                                    @Html.ValidationMessageFor(m => m.Status)
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-8">
+                                                <div class="box1 col-md-4" style="width: 200px; margin: 10px;">
+                                                    <span class="info-container">
+                                                        <label style="height: 35px">
+                                                            Danh sách xã / phường của vùng
+                                                        </label>
+                                                        <span class="show-info"></span></span>
+                                                    @Html.ListBoxFor(m => m.WardOfRegionIds, new MultiSelectList(Model.ListWardOfRegion, "Id", "Text", Model.WardOfRegionIds), new { onchange = string.Format("javascript:move('WardOfRegionIds','WardOfDistrictIds')"), style = "height:270px; width: 200px;", multiple = "true", size = 10 })
+                                                    @Html.ValidationMessageFor(m => m.WardOfRegionIds)
+                                                </div>
+                                                <div class="box2 col-md-4" style="width: 200px; margin: 10px;">
+                                                    <span class="info-container">
+                                                        <label style="height: 35px">
+                                                            Danh sách xã / phường trong huyện</label>
+                                                        <span class="show-info"></span></span>
+                                                    @Html.ListBoxFor(m => m.WardOfDistrictIds, new MultiSelectList(Model.ListWardOfDistrict, "Id", "Text", Model.WardOfDistrictIds), new { onchange = string.Format("javascript:move('WardOfDistrictIds','WardOfRegionIds')"), style = "height:270px; width: 200px;", multiple = "true", size = 10 })
+                                                </div>
+                                                <div class="box2 col-md-4" style="width: 200px; margin: 10px;">
+                                                    <span class="info-container">
+                                                        <label style="height: 35px">
+                                                            Chọn vùng gợi ý</label>
+                                                        <span class="show-info"></span></span>@*@Html.TextBox("NeighBor", null, new { @readonly = "true" })*@
+                                                    @Html.DropDownListFor(m => m.NeighborId, new SelectList(Model.ListRegion, "Id", "Text"), "--Không chọn--", new { onchange = string.Format("javascript:ChangeNeighBor(this.value, '#lstWardOfRegion')"), style = "height:270px; width: 200px;", multiple = "true", size = 10, title = "tooltip" })
+                                                </div>
+                                                <div class="box2 col-md-4" style="width: 110px">
+                                                    <span class="info-container">
+                                                        <label style="height: 35px">@AdminConfigs.TEXT_NAME_WARD</label>
+                                                        <span class="show-info"></span></span>
+                                                    <label id="lstWardOfRegion">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+        </div>
+    </div>
+<script type="text/javascript">
+
+//    $(document).ready(function () {
+//        $('#NeighborId').change(function () {
+//            var selectedText = $(this).find('option:selected').text();
+//            $('#NeighBor').val(selectedText);
+//        });
+//    });
+    function ChangeNeighBor(regionId, toControlId1) {
+        if (regionId != null && regionId != "") {
+            $.ajax({
+                url: '@Url.Action("ListPlaceByRegion", "Base")',
+                data: JSON.stringify({ regionId: regionId }),
+                contentType: 'application/json; charset=UTF-8',
+                type: 'POST',
+                dataType: 'json'
+            })
+            .success(function (result) {
+                // Thêm vào Control 1
+                $(toControlId1).empty();
+                for (var i = 0; i < result.length; i++) {
+                    $(toControlId1).append('<strong>'+result[i].Text + "</strong><br />");
+                }
+            })
+            .error(function (xhr, status) {
+                alert(status);
+            });
+        } else {
+            $(toControlId1).empty();
+        }
+    }
+
+    $(document).ready(function () {
+
+        $("#frmRegion").submit(function (e) {
+
+            $("#WardOfRegionIds option").prop("selected", "selected");
+            $("#WardOfDistrictIds option").prop("selected", "selected");
+        });
+
+    });
+
+    // Hàm xử lý chuyển giữa 2 danh sách.
+    function move(from, to) {
+        var source, target;
+        var elem = document.createElement('option');
+
+        source = document.getElementById(from);
+        target = document.getElementById(to);
+        elem.value = source.options[source.selectedIndex].value;
+        elem.innerHTML = source.options[source.selectedIndex].text;
+        //elem.setAttribute('selected',true);
+        target.appendChild(elem);
+        source.removeChild(source.options[source.selectedIndex]);
+    }
+
+    // Hiển thị tooltip
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>
+}

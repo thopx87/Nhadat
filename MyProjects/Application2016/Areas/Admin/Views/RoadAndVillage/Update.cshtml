@@ -1,0 +1,187 @@
+﻿@using Application2016.Helpers;
+@model Application2016.Areas.Admin.Models.Road_VillageModel
+@{
+    ViewBag.Title = "Region Update";
+}
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="widget-box">
+			<div class="widget-header">
+				<h4 class="widget-title">Thông tin đường / làng</h4>
+
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="ace-icon fa fa-chevron-up"></i>
+					</a>
+
+					<a href="#" data-action="close">
+						<i class="ace-icon fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="widget-body">
+                <div class="widget-main">
+                @using (Html.BeginForm("Update", "RoadAndVillage", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post, new { id = "frmRoadAndVillage" }))
+                {
+	                <fieldset>
+		                <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+				                <label class="col-sm-5" for="form-field-8">@AdminConfigs.TEXT_NAME_CITY</label>
+                                @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text", Model.CityId), @AdminConfigs.TEXT_CHOOSE_CITY, new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#DistrictId','#WardId')") })
+			                </div>
+                            <div class="form-group" id="divDistrict">
+				                <label class="col-sm-5" for="form-field-8">@AdminConfigs.TEXT_NAME_DISTRICT</label>
+                                @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text", Model.DistrictId), @AdminConfigs.TEXT_CHOOSE_DISTRICT, new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#WardId')") })                
+			                </div>
+                            <div class="form-group" id="divWard">
+				                <label class="col-sm-5" for="form-field-8">@AdminConfigs.TEXT_NAME_WARD</label>
+                                @Html.DropDownListFor(m => m.WardId, new SelectList(Model.ListWard, "Id", "Text", Model.WardId), @AdminConfigs.TEXT_CHOOSE_WARD, new { onchange = string.Format("javascript:SelectChange('#WardId','#WardHiden')") })
+                                <label>@Html.ValidationMessageFor(m => m.WardId) </label>
+                                @Html.Hidden("WardHiden", -1)
+			                </div>
+                            <div class="form-group">
+				                <label class="col-sm-5" for="form-field-9">@AdminConfigs.TEXT_NAME_REGION</label>
+                                @Html.DropDownListFor(m => m.RegionId, new SelectList(Model.ListRegion, "Id", "Text", Model.RegionId), @AdminConfigs.TEXT_CHOOSE_REGION, new { onchange = string.Format("javascript:SelectChange('#RegionId','#RegionHiden')") })
+                                <label>@Html.ValidationMessageFor(m => m.RegionId)</label>
+                                @Html.Hidden("RegionHiden", -1)
+			                </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="box2 col-md-4" style="width: 300px; margin:10px;">
+                                <div class="form-group">
+                                    @Html.RadioButtonFor(m => m.Type,"True", new {id="road" }) <label for="road"> Đường</label>
+                                    @Html.RadioButtonFor(m => m.Type, "False", new { id = "village" })<label for="village"> Làng / thôn </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+				                <label for="form-field-9">Tên đường/ làng</label>
+                                @Html.TextBoxFor(m => m.Text, new { @class = "form-control", @placeholder = "Tên đường / làng"})
+                                @Html.ValidationMessageFor(m => m.Text)
+			                </div>
+                            <div class="form-group">
+				                <label for="form-field-9">Mô tả</label>
+                                @Html.TextBoxFor(m => m.Description, new { @class = "form-control", @placeholder = "Mô tả"})
+			                </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="box2 col-md-4" style="width: 300px; margin:10px;">
+                                <span class="info-container">
+                                    <label> Danh sách đường/ làng đã có</label>
+                                    <span class="show-info"></span>
+                                </span>
+                                @Html.ListBox("ListRoad", new MultiSelectList(ViewBag.ListRoad, "Id", "Text"), new {style = "height:270px; width: 300px;", multiple = "true", size = 10 })
+                                
+                            </div>
+                        </div>
+	                </fieldset>
+                    <div class="">
+                    <input type="submit" class="btn btn-sm btn-success" value="@ViewBag.SubmitValue" />
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//    function ListPlaceJson(parentId, toControlId1) {
+//        if (parentId != null && parentId != "") {
+//            $.ajax({
+//                url: '@Url.Action("ListPlaceJson", "Base")',
+//                data: JSON.stringify({ parentId: parentId }),
+//                contentType: 'application/json; charset=UTF-8',
+//                type: 'POST',
+//                dataType: 'json'
+//            })
+//            .success(function (result) {
+//                // Thêm vào Control 1
+//                $(toControlId1).empty();
+//                $(toControlId1).append("<option value='-1'>--- chọn ---</option>");
+//                for (var i = 0; i < result.length; i++) {
+//                    $(toControlId1).append("<option value=" + result[i].Id + ">" + result[i].Text + "</option>");
+//                }
+
+//            })
+//            .error(function (xhr, status) {
+//                alert(status);
+//            });
+//        } else {
+//            $(toControlId1).empty();
+//        }
+//    }
+
+    // Lấy giá trị thay đổi của select control.
+    function SelectChange(control, hidenControl) {
+        $(hidenControl).val($(control).val());
+        ListRoadAndVillageJson();
+    }
+
+    // Lấy danh sách đường/ làng đưa vào chuỗi json
+    function ListRoadAndVillageJson() {
+        var wardValue = $('#WardHiden').val();
+        if (wardValue == null || wardValue =="") {
+            wardValue = -1;
+        }
+        // Xác định kiểu xã, phường.
+        if (wardValue > 0) {
+
+        }
+
+        var regionValue = $('#RegionHiden').val();
+        if(regionValue == null || regionValue ==""){
+            regionValue = -1;
+        }
+        $.ajax({
+            url: '@Url.Action("ListRoadAndVillageJson", "Base")',
+            data: JSON.stringify({ wardId: wardValue, regionId: regionValue }),
+            contentType: 'application/json; charset=UTF-8',
+            type: 'POST',
+            dataType: 'json'
+        })
+        .success(function (result) {
+            // Thêm vào list
+            $('#ListRoad').empty();
+            for (var i = 0; i < result.length; i++) {
+                $('#ListRoad').append("<option value=" + result[i].Id + ">" + result[i].Text + "</option>");
+            }
+        })
+        .error(function (xhr, status) {
+            alert(status);
+            $('#ListRoad').empty();
+        });
+    }
+
+    // xử lý lọc dữ liệu
+    jQuery.fn.filterByText = function (textbox) {
+        return this.each(function () {
+            var select = this;
+            var options = [];
+            $(select).find('option').each(function () {
+                options.push({ value: $(this).val(), text: $(this).text() });
+            });
+            $(select).data('options', options);
+
+            $(textbox).bind('change keyup', function () {
+                var options = $(select).empty().data('options');
+                var search = $.trim($(this).val());
+                var regex = new RegExp(search, "gi");
+
+                $.each(options, function (i) {
+                    var option = options[i];
+                    if (option.text.match(regex) !== null) {
+                        $(select).append(
+                        $('<option>').text(option.text).val(option.value)
+                    );
+                    }
+                });
+            });
+        });
+    };
+
+    // Filter --> hàm đặt trong trang trang _AdminLayout.cshtml
+    $(function () {
+        $('#ListRoad').filterByText($('#Text'));
+    });
+
+</script>

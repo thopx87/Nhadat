@@ -1,0 +1,165 @@
+﻿@model Application2016.Models.Template1SearchModel
+@using Application2016.Helpers
+<link rel="stylesheet" href="@Url.Content("~/Assets/Template1/css/select2.min.css")"  type="text/css" />
+<link rel="stylesheet" href="@Url.Content("~/Assets/Template1/css/jquery-ui.custom.min.css")"  type="text/css" />
+<link href="@Url.Content("~/Assets/Template1/css/bootstrap-slider.min.css")" rel="stylesheet" type="text/css" />
+@using (Html.BeginForm("Index", "Template1", FormMethod.Get, new { @id="formSearch" }))
+{
+    <div class="search-area well well-sm">
+        <div class="search-filter-header bg-success">
+            <h5 class="smaller no-margin-bottom">
+                <i class="ace-icon fa fa-sliders light-green bigger-130"></i>Nhập thông tin cần tìm
+            </h5>
+        </div>
+        <div class="space-10">
+        </div>
+        <h4 class="blue smaller">
+            <i class="fa"></i>Chọn kiểu giao dịch
+        </h4>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    @Html.DropDownListFor(m => m.TransactionType, new SelectList(DefaultData.ListTransactionType(), "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();" })
+                </div>
+            </div>
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                @Html.TextBoxFor(m => m.SearchText, new { @class = "form-control", @placeholder = "Tìm theo tên nhà", @onchange = "this.form.submit();" })
+            </div>
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        <h4 class="blue smaller">
+            <i class="fa fa-user"></i>Người đăng
+        </h4>
+        <div>
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @list = "Users" })
+            @Html.HiddenFor(m => m.UserId)
+            <datalist id="Users">
+            @if (Model.ListUser.Count > 0)
+            {
+                foreach (var user in Model.ListUser)
+                {
+                    <option value="@user.Text" id="@user.Id"></option>    
+                }
+            }
+            </datalist>
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        <h4 class="blue smaller">
+            <i class="fa fa-tags"></i>Loại nhà
+        </h4>
+        <div>
+            @Html.DropDownListFor(m => m.ProductType, new SelectList(ViewBag.ListProductType, "Id", "Text"), @AdminConfigs.TEXT_CHOOSE_HOUSE_TYPE, new { @class = "form-control", @onchange = "this.form.submit();" })
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        <h4 class="blue smaller">
+            <i class="fa fa-map-marker light-orange bigger-110"></i>Địa lý
+        </h4>
+        <div>
+            @Html.DropDownListFor(m => m.CityId, new SelectList(ViewBag.ListCity, "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();" })
+            <br />
+            @Html.DropDownListFor(m => m.DistrictId, new SelectList(ViewBag.ListDistrict, "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();" })
+            <br />
+            @Html.DropDownListFor(m => m.WardId, new SelectList(ViewBag.ListWard, "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();" })
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        <h4 class="blue smaller">
+            <i class="fa fa-area-chart bigger-110"></i>Diện tích
+        </h4>
+        <div class="search-filter-element">
+            <p style="display: flex; text-align:center;">
+                Từ:
+                @Html.DropDownListFor(m => m.MinArea, new SelectList(ViewBag.ListAreaMin, "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();", @style = "width: 35%;" })
+                Đến:
+                @Html.DropDownListFor(m => m.MaxArea, new SelectList(ViewBag.ListAreaMax, "Id", "Text"), new { @class = "form-control", @onchange = "this.form.submit();", @style = "width: 35%;" })
+                m<sup>2</sup>
+            </p>
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        <h4 class="blue smaller">
+            <i class="fa fa-location-arrow bigger-110"></i>Giá bán
+        </h4>
+        <div class="search-filter-element">
+            <b>0</b> &nbsp;
+            <input id="costSlider" type="text" style="width:135px;" value="" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="[@Model.MinCost,@Model.MaxCost]"/>
+            &nbsp; <b>20 tỷ</b>
+            <br />
+            Giá bán từ:
+            <label id="lblCost">@Model.MinCost đến @Model.MaxCost Tỷ đồng</label>
+            @Html.HiddenFor(m => m.MinCost)
+            @Html.HiddenFor(m => m.MaxCost)
+        </div>
+        <div class="hr hr-dotted">
+        </div>
+        <button type="reset" class="btn btn-default btn-round btn-white">
+            <i class="ace-icon fa fa-undo"></i>Hủy tìm
+        </button>
+        <button type="submit" class="btn btn-default btn-round btn-white">
+            <i class="ace-icon fa fa-search nav-search-icon"></i>Tìm kiếm
+        </button>
+    </div>
+}
+<script type="text/javascript">
+    var touch = '@Url.Content("~/Assets/Template1/js/jquery.mobile.custom.min.js")';
+    if ('ontouchstart' in document.documentElement) document.write("<script src='" + touch + "'>" + "<" + "/script>");
+</script>
+<script src="@Url.Content("~/Assets/Template1/js/ace-extra.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Template1//js/tree.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Template1/js/select2.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Template1/js/jquery-ui.custom.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Template1/js/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Template1/js/holder.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Assets/Template1/js/bootstrap-slider.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    new Slider('#costSlider', {});
+    new Slider('#areaSlider', {});
+
+    $(document).ready(function () {
+        $("#costSlider").slider({
+            range: true,
+            min: 0,
+            max: 20,
+            values: [0, 20]
+        });
+
+        $("#areaSlider").slider({
+            range: true,
+            min: 0,
+            max: 200,
+            values: [0, 200]
+        });
+
+        $("#costSlider").change(function (e) {
+            var value = $(this).attr('value');
+            var arrVal = value.split(',');
+            $('#MinCost').val(arrVal[0]);
+            $('#MaxCost').val(arrVal[1]);
+            $('#lblCost').html(arrVal[0] + " đến " + arrVal[1] + " Tỷ đồng");
+        });
+
+        $("#areaSlider").change(function (e) {
+            var value = $(this).attr('value');
+            var arrVal = value.split(',');
+            $('#MinArea').val(arrVal[0]);
+            $('#MaxArea').val(arrVal[1]);
+            $('#lblArea').html(arrVal[0] + " đến " + arrVal[1] + " m<sup>2</sup>");
+        });
+
+        $("#Username").on("change", function (e) {
+            var id = $("#Users option[value='" + $('#Username').val() + "']").attr('id');
+            if (id != "undefined") {
+                $("#UserId").val(id);
+                $("#formSearch").submit();
+            }
+        });
+    });
+</script>

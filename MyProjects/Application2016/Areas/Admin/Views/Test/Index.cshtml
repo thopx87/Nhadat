@@ -1,0 +1,16 @@
+﻿@model Application2016.Areas.Admin.Models.TestModel
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Update", "Test", new { id = Model != null ? Model.id : 0 }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="submit" value="submit" /> <br />
+    foreach(var item in Model.Elems)
+    {
+        @Html.TextBoxFor(m => item.id)
+        @Html.TextBoxFor(m => item.value)
+        <br />
+    }
+}

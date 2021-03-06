@@ -1,0 +1,464 @@
+﻿@model Application2016.Areas.Admin.Models.UserModel
+@using Application2016.Helpers;
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section HeaderContent{
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery-ui.custom.min.css")" type="text/css"/>
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery.gritter.min.css")" type="text/css"/>
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/select2.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/bootstrap-editable.min.css")" type="text/css"/>
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/bootstrap-datepicker3.min.css")" type="text/css" />
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            @using (Html.BeginForm("UpdatePersonalInfo", "User", new { id = @Model != null ? Model.Id : 0 }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                    <a href="@Request.Url" id="btnRefresh" class="btnDefine btn btn-primary">Refresh</a>
+                    <div class="nav-search" id="nav-search">
+                        
+                    </div>
+                    <!-- /.nav-search -->
+                </div>
+                <div class="page-content">
+                    <div class="row">
+                        @{
+                if (ViewBag.Message != "" && ViewBag.Message != null)
+                {
+                        <div class="@AdminConfigs.CLASS_ALERT_DANGER">
+                            <i class="ace-icon fa fa-hand-o-right"></i>
+                            @ViewBag.Message
+                            <button class="close" data-dismiss="alert">
+                                <i class="ace-icon fa fa-times"></i>
+                            </button>
+                        </div>
+                }
+                ViewBag.Message = "";
+                        }
+                        <div id="user-profile-1" class="user-profile row">
+                            <div class="col-xs-12 col-sm-3 center">
+                                <div>
+                                    <span class="profile-picture">
+                                        @{
+                var avatarFile = Model.Avatar;
+                if (avatarFile != "")
+                {
+                    avatarFile = AdminConfigs.IMAGE_PATH + Model.UserName + AdminConfigs.ALTDIRECTORYSEPARATORCHAR + avatarFile;
+                    Model.Avatar = "";
+                }
+                else
+                {
+                    avatarFile = "~/Assets/Admin/images/avatars/profile-pic.jpg";
+                }
+                                        }
+                                        <img id="avatar" class="editable img-responsive" alt="Avatar" src="@Url.Content(@avatarFile)" />
+                                        @Html.HiddenFor(m => m.Avatar)
+                                    </span>
+                                    <div class="space-4">
+                                    </div>
+                                    <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                                        <div class="inline position-relative">
+                                            <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown"><i class="ace-icon fa fa-circle light-green">
+                                            </i>&nbsp; <span class="white">@Model.UserName</span> </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr hr12 dotted">
+                                </div>
+                                <div class="clearfix">
+                                    <span class="bigger-120 blue">Quyền hạn</span>
+                                        <br />
+                                        @foreach (var role in Model.UserRoles)
+                                        {
+                                            @role.Text <br />
+                                        }
+                                        <div class="hr hr16 dotted"></div>
+                                    <div class="grid2">
+                                        <span class="bigger-120 blue">Vùng gửi</span>
+                                        <br />
+                                        @foreach (var region in Model.ListUserInRegionSend.ListItem)
+                                        {
+                                            @region.Text <br />
+                                        }
+                                    </div>
+                                    <div class="grid2">
+                                        <span class="bigger-120 blue">Vùng nhận bán</span>
+                                        <br />
+                                        @foreach (var region in Model.ListUserInRegionReceive.ListItem)
+                                        {
+                                            @region.Text <br />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="hr hr16 dotted">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-9">
+                                <div class="profile-user-info profile-user-info-striped">
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Tên hiển thị
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="displayName">@Model.DisplayName</span>
+                                        </div>
+                                        @Html.HiddenFor(m => m.DisplayName)
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Họ tên
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="firstName">@Model.FirstName</span> <span class="editable"
+                                                id="lastName">@Model.LastName</span>
+                                        </div>
+                                        @Html.HiddenFor(m => m.FirstName)
+                                        @Html.HiddenFor(m => m.LastName)
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Địa chỉ
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable">@Html.DropDownListFor(m => m.ward.CityId, new SelectList(Model.ward.ListCity, "Id", "Text", Model.ward.CityId), "Chọn tỉnh/ thành phố", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#ward_Parent','#PlaceId')") })</span>
+                                            <span class="editable">@Html.DropDownListFor(m => m.ward.Parent, new SelectList(Model.ward.ListDistrict, "Id", "Text", Model.ward.Parent), "Chọn quận / huyện", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#PlaceId')") })</span>
+                                            <span class="editable">@Html.DropDownListFor(m => m.PlaceId, new SelectList(Model.ward.ListWard, "Id", "Text", Model.PlaceId), "Chọn xã/ phường")</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Số nhà
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="address">@Model.Address</span>
+                                        </div>
+                                        @Html.HiddenFor(m => m.Address)
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Giới tính
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="gender">
+                                                @Html.RadioButtonFor(m => m.Gender, 1, new {}) Nam
+                                                @Html.RadioButtonFor(m => m.Gender, 2, new { }) Nữ </span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Ngày sinh
+                                        </div>
+                                        <div class="profile-info-value col-sm-3">
+                                         <span class="block input-icon input-icon-right fetched-date">
+						                        @Html.TextBoxFor(m => m.DateOfBirth, "{0:dd/MM/yyyy}", new { @class = "form-control date-picker", @placeholder = "Ngày sinh", @data_date_format = "dd/mm/yyyy" })
+                                                <i class="ace-icon fa fa-calendar bigger-110"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            PR
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="about">@Model.Description</span>
+                                        </div>
+                                        @Html.HiddenFor(m => m.Description)
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            Số điện thoại
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="phone">@Model.Phone</span>
+                                        </div>
+                                        @Html.HiddenFor(m => m.Phone)
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            
+                                        </div>
+                                        <div class="profile-info-value">
+                                            <button type="submit" id="btnSubmit" class="btnDefine btn btn-success">Đăng ký</button>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!--[if lte IE 8]>
+		<script src="@Url.Content("~/Assets/Admin/js/excanvas.min.js")"></script>
+	<![endif]-->
+    <script src="@Url.Content("~/Assets/Admin/js/jquery-ui.custom.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.gritter.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootbox.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.easypiechart.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-datepicker.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.hotkeys.index.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-wysiwyg.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/select2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/spinbox.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/bootstrap-editable.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/ace-editable.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/jquery.maskedinput.min.js")" type="text/javascript"></script>
+    <!-- ace scripts -->
+    <script src="@Url.Content("~/Assets/Admin/js/ace-elements.min.js")"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/ace.min.js")"></script>
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        $(function () {
+            $('.fetched-date input').datepicker({
+                dateFormat: 'dd-mm-yy',
+                minDate: '+5d',
+                changeMonth: true,
+                changeYear: true,
+                altFormat: "yy-mm-dd",
+                autoclose: true
+            });
+        });
+        jQuery(function ($) {
+
+            //editables on first profile page
+            $.fn.editable.defaults.mode = 'inline';
+            $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
+            $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>' +
+			                            '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
+
+            //editables 
+
+            //text editable
+            $('#displayName')
+			.editable({
+			    type: 'text',
+			    name: 'displayName',
+			    success: function (response, newValue) {
+			        $('#DisplayName').val(newValue);
+			    }
+			});
+            $('#firstName')
+			.editable({
+			    type: 'text',
+			    name: 'firstName',
+			    success: function (response, newValue) {
+			        $('#FirstName').val(newValue);
+			    }
+			});
+            $('#lastName')
+			.editable({
+			    type: 'text',
+			    name: 'lastName',
+			    success: function (response, newValue) {
+			        $('#LastName').val(newValue);
+			    }
+			});
+
+            $('#phone')
+            .editable({
+                type: 'text',
+                name: 'phone',
+                success: function (response, newValue) {
+                    $('#Phone').val(newValue);
+                }
+            });
+
+            $('#address').editable({
+                type: 'wysiwyg',
+                name: 'about',
+
+                wysiwyg: {
+                    //css : {'max-width':'300px'}
+                },
+                success: function (response, newValue) {
+                    newValue = newValue.replace(/<\/?[^>]+(>|$)/g, "");
+                    $('#Address').val(newValue);
+                }
+            });
+
+            $('#about').editable({
+                mode: 'inline',
+                type: 'wysiwyg',
+                name: 'about',
+
+                wysiwyg: {
+                    //css : {'max-width':'300px'}
+                },
+                success: function (response, newValue) {
+                    newValue = newValue.replace(/<\/?[^>]+(>|$)/g, "");
+                    $('#Description').val(newValue);
+                }
+            });
+
+            // *** editable avatar *** //
+            try {//ie8 throws some harmless exceptions, so let's catch'em
+
+                //first let's add a fake appendChild method for Image element for browsers that have a problem with this
+                //because editable plugin calls appendChild, and it causes errors on IE at unpredicted points
+                try {
+                    document.createElement('IMG').appendChild(document.createElement('B'));
+                } catch (e) {
+                    Image.prototype.appendChild = function (el) { }
+                }
+
+                var last_gritter
+                $('#avatar').editable({
+                    type: 'image',
+                    name: 'avatar',
+                    value: null,
+                    //onblur: 'ignore',  //don't reset or hide editable onblur?!
+                    image: {
+                        //specify ace file input plugin's options here
+                        btn_choose: 'Change Avatar',
+                        droppable: true,
+                        maxSize: 200000, //~200Kb
+
+                        //and a few extra ones here
+                        name: 'avatar', //put the field name here as well, will be used inside the custom plugin
+                        on_error: function (error_type) {//on_error function will be called when the selected file has a problem
+                            if (last_gritter) $.gritter.remove(last_gritter);
+                            if (error_type == 1) {//file format error
+                                last_gritter = $.gritter.add({
+                                    title: 'File vừa chọn không phải file ảnh!',
+                                    text: 'Xin hãy chọn 1 trong các định dạng jpg|gif|png!',
+                                    class_name: 'gritter-error gritter-center'
+                                });
+                            } else if (error_type == 2) {//file size rror
+                                last_gritter = $.gritter.add({
+                                    title: 'Dung lượng file quá lớn!',
+                                    text: 'Dung lượng file tối đa là 200Kb!',
+                                    class_name: 'gritter-error gritter-center'
+                                });
+                            }
+                            else {//other error
+                            }
+                        },
+                        on_success: function () {
+                            $.gritter.removeAll();
+                        }
+                    },
+                    url: function (params) {
+                        // ***UPDATE AVATAR HERE*** //
+                        //for a working upload example you can replace the contents of this function with 
+                        //examples/profile-avatar-update.js
+                        var deferred = new $.Deferred
+
+                        var value = $('#avatar').next().find('input[type=hidden]:eq(0)').val();
+                        if (!value || value.length == 0) {
+                            deferred.resolve();
+                            return deferred.promise();
+                        }
+
+
+                        //dummy upload
+                        setTimeout(function () {
+                            if ("FileReader" in window) {
+                                //for browsers that have a thumbnail of selected image
+                                var thumb = $('#avatar').next().find('img').data('thumb');
+                                if (thumb) $('#avatar').get(0).src = thumb;
+                                $('#Avatar').val(thumb);
+                            }
+
+                            deferred.resolve({ 'status': 'OK' });
+
+                            if (last_gritter) $.gritter.remove(last_gritter);
+                            last_gritter = $.gritter.add({
+                                title: 'Thay Avatar thành công!',
+                                text: 'Avatar mới sẽ được lưu thực sự sau khi cập nhật thông tin!',
+                                class_name: 'gritter-info gritter-center'
+                            });
+                        }, parseInt(Math.random() * 800 + 800))
+
+                        return deferred.promise();
+
+                        // ***END OF UPDATE AVATAR HERE*** //
+                    },
+
+                    success: function (response, newValue) { }
+                })
+            } catch (e) { }
+
+
+            //////////////////////////////
+            $('#profile-feed-1').ace_scroll({
+                height: '250px',
+                mouseWheelLock: true,
+                alwaysVisible: true
+            });
+
+            $('a[ data-original-title]').tooltip();
+
+            $('.easy-pie-chart.percentage').each(function () {
+                var barColor = $(this).data('color') || '#555';
+                var trackColor = '#E2E2E2';
+                var size = parseInt($(this).data('size')) || 72;
+                $(this).easyPieChart({
+                    barColor: barColor,
+                    trackColor: trackColor,
+                    scaleColor: false,
+                    lineCap: 'butt',
+                    lineWidth: parseInt(size / 10),
+                    animate: false,
+                    size: size
+                }).css('color', barColor);
+            });
+
+            ////////////////////
+            //change profile
+            $('[data-toggle="buttons"] .btn').on('click', function (e) {
+                var target = $(this).find('input[type=radio]');
+                var which = parseInt(target.val());
+                $('.user-profile').parent().addClass('hide');
+                $('#user-profile-' + which).parent().removeClass('hide');
+            });
+
+            /////////////////////////////////////
+            $(document).one('ajaxloadstart.page', function (e) {
+                //in ajax mode, remove remaining elements before leaving page
+                try {
+                    $('.editable').editable('destroy');
+                } catch (e) { }
+                $('[class*=select2]').remove();
+            });
+        });
+
+//        function ListPlaceJson(parentId, toControlId1, toControlId2) {
+//            if (parentId != null && parentId != "") {
+//                $.ajax({
+//                    url: '@Url.Action("ListPlaceJson", "Base")',
+//                    data: JSON.stringify({ parentId: parentId }),
+//                    contentType: 'application/json; charset=UTF-8',
+//                    type: 'POST',
+//                    dataType: 'json'
+//                })
+//            .success(function (result) {
+//                // Thêm vào Control 1
+//                $(toControlId1).empty();
+//                $(toControlId2).empty();
+//                if (result.length == 0) {
+//                } else {
+//                    for (var i = 0; i < result.length; i++) {
+//                        $(toControlId1).append("<option value=" + result[i].Id + ">" + result[i].Text + "</option>");
+//                    }
+//                    // Thêm vào control 2 theo ID đầu tiên của trontrol 1
+//                    if (toControlId2 != null && toControlId2 != "") {
+//                        $(toControlId2).empty();
+//                        ListPlaceJson(result[0].Id, toControlId2, "");
+//                    }
+//                }
+//            })
+//            .error(function (xhr, status) {
+//                alert(status);
+//            });
+//            } else {
+//                $(toControlId1).empty();
+//            }
+//        }
+    </script>
+}

@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section HeaderContent{
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery-ui.custom.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/chosen.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery.gritter.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/select2.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Assets/Admin/css/jquery.simple-dtpicker.css")" />
+
+    <link href="@Url.Content("/Assets/Admin/css/fileinput.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Assets/Admin/js/fileinput.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assets/Admin/js/fileinput-vi.js")" type="text/javascript"></script>
+}
+@section MainContent{
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+            <a href="@Request.Url" id="btnRefresh" class="btnDefine btn"><i class="fa fa-refresh"></i>&nbsp; Refresh</a>
+            <div class="nav-search" id="nav-search">
+		        <form class="form-search">
+			        <span class="input-icon">
+				        <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+				        <i class="ace-icon fa fa-search nav-search-icon"></i>
+			        </span>
+		        </form>
+	        </div><!-- /.nav-search -->
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs padding-18 tab-size-bigger" id="productMenu">
+                            @{var cls = ViewBag.ActionForm == "UpdateSaleProduct" ? "active" : "";}
+				            <li class="@cls">
+                                <a href="@Url.Action("UpdateSaleProduct", "Product", new { id = 0 })">
+						            <i class="blue ace-icon fa fa-question-circle bigger-120"></i>
+						            Bán nhà
+					            </a>
+				            </li>
+                            @{cls = ViewBag.ActionForm == "UpdateLeaseProduct" ? "active" : "";}
+				            <li class="@cls">
+					            <a href ="@Url.Action("UpdateLeaseProduct", "Product", new { id = 0 })">
+						            <i class="green ace-icon fa fa-user bigger-120"></i>
+						            Cho thuê
+					            </a>
+				            </li>
+                            @{cls = ViewBag.ActionForm == "UpdateRentProduct" ? "active" : "";}
+				            <li class="@cls">
+					            <a href ="@Url.Action("UpdateRentProduct", "Product", new { id = 0 })">
+						            <i class="orange ace-icon fa fa-credit-card bigger-120"></i>
+						            Thuê nhà
+					            </a>
+				            </li>
+			            </ul>
+       
+                         @{
+                            if(ViewBag.ActionForm !=null){
+                                @Html.Partial((string)ViewBag.ActionForm)
+                                ViewBag.ActionForm = null;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+	            <div class="col-xs-12 col-sm-12">
+                    @Html.Partial("ListProduct2", ViewBag.ListProduct as ViewDataDictionary)
+                    @Html.Partial("_PagingPartial")
+	            </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

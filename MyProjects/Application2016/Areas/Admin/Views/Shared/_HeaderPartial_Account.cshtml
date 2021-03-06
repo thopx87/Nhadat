@@ -1,0 +1,115 @@
+﻿@using Application2016.Helpers;
+@{
+    Layout = null;
+
+    var avatar = "";
+    object tempAvatar = CookieHelper.Get(AdminConfigs.COOKIES_AVATAR);
+    if (tempAvatar != null && tempAvatar.ToString() != "")
+    {
+        avatar = AdminConfigs.IMAGE_PATH + CookieHelper.Get(AdminConfigs.COOKIES_USERNAME) + AdminConfigs.ALTDIRECTORYSEPARATORCHAR + tempAvatar.ToString();
+        avatar = Url.Content(avatar);
+    }
+    else
+    {
+        avatar = Url.Content("~/Assets/Admin/images/avatars/user.jpg");
+    }
+}
+
+
+<li class="light-blue dropdown-modal">
+	<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+		<img class="nav-user-photo" src="@avatar" alt="@CookieHelper.Get(AdminConfigs.COOKIES_USERNAME)" />
+		<span class="user-info">
+			<small>Xin chào:</small>
+			@CookieHelper.Get(AdminConfigs.COOKIES_USERNAME)
+		</span>
+
+		<i class="ace-icon fa fa-caret-down"></i>
+	</a>
+
+	<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+		<li>
+			<a id="btnSetting" href="@Url.Action("Index", "Setting")">
+				<i class="ace-icon fa fa-cog"></i>
+				Settings
+			</a>
+		</li>
+        @*<li>
+			<a id="btnQuery" href="@Url.Action("DBQuery", "Setting")">
+				<i class="ace-icon fa fa-cog"></i>
+				Truy vấn SQL
+			</a>
+		</li>*@
+		<li>
+            <a href="@Url.Action("PersonalInfo", "User")/@TempData[AdminConfigs.TEMP_USER_ID]">
+				<i class="ace-icon fa fa-user"></i>
+				Thông tin cá nhân
+			</a>
+		</li>
+        <li>
+            <a href="@Url.Action("ChangePassword", "User")">
+				<i class="ace-icon fa fa-key"></i>
+				Đổi mật khẩu
+			</a>
+		</li>
+        <li>
+            <a style="display:none" id="btnTestEmail" href="javascript:void(0); return false;">
+				<i class="ace-icon fa fa-user"></i>
+				Test connect Email
+			</a>
+		</li>
+
+		<li class="divider"></li>
+
+		<li>
+			<a href="#" id="logout" data-href="@Url.Action("DoLogout","Base")" data-toggle="modal"  data-target="#confirm-logout">
+				<i class="ace-icon fa fa-power-off"></i>
+				Đăng xuất
+			</a>
+		</li>
+	</ul>
+</li>
+
+<div class="modal fade" id="confirm-logout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Logout
+            </div>
+            <div class="modal-body">
+                @AdminConfigs.CONFIRM_LOGOUT
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">OK</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#confirm-logout').on('show.bs.modal', function (e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+
+    $("#btnTestEmail").click(function () {
+        $.ajax({
+            url: '@Url.Action("TestConnectEmail", "Base")',
+            contentType: 'application/json; charset=UTF-8',
+            type: 'POST',
+            dataType: 'json'
+        })
+        .success(function (result) {
+            if (result == true) {
+                alert("Kết nối mail thành công");
+            } else {
+                alert("Kết nối mail thất bại");
+            }
+        })
+        .error(function (xhr, status) {
+            $(toControlId1).empty();
+            alert(status);
+        });
+    });
+</script>
+
+

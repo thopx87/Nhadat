@@ -1,0 +1,106 @@
+﻿@model Application2016.Areas.Admin.Models.ListBoxLinkModel
+@using Application2016.Helpers
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section MainContent{
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <a href="@Url.Action("Update", "BoxLink", new { @Id = 0 })" class="btnDefine btn btn-primary">Thêm mới</a>
+                <div class="nav-search" id="nav-search">
+                    <span class="input-icon">
+                        @Html.TextBoxFor(m => m.Condition.SearchText, new { @class = "nav-search-input", @placeholder = "Search ..."})
+                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                    </span>
+                    @Html.HiddenFor(m => m.Condition.Page)
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        Id
+                                    </th>
+                                    <th class="center">
+                                        Tên box
+                                    </th>
+                                    <th class="center">
+                                        Trạng thái hiển thị
+                                    </th>
+                                    <th class="center">
+                                        Thứ tự hiển thị
+                                    </th>
+                                    <th class="center">
+                                        Vị trí hiển thị
+                                    </th>
+                                    <th class="center">
+                                        Màu sắc
+                                    </th>
+                                    <th class="center">
+                                        Bảng dữ liệu
+                                    </th>
+                                    <th class="center">
+                                        Điều kiện
+                                    </th>
+                                    <th class="center">
+                                        Số lượng
+                                    </th>
+                                    <th class="center">
+                                        Sắp xếp
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @for (int i = 0; i < Model.ListBoxLink.Count; i++)
+                            {
+                                var m = Model.ListBoxLink[i];
+                                <tr>
+                                    <td class="center">
+                                        @m.Id
+                                    </td>
+                                    <td class="">
+                                        <a href="@Url.Action("Update", "BoxLink", new { @Id = @m.Id })">@m.BoxName</a>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input name="switch-field-1" class="ace input-lg" type="checkbox" checked="@m.Display" onclick="return false;" />
+                                            <span class="lbl bigger-120"> </span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>@m.Order</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.Position</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.Color</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.FromTable</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.Condition</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.Count</label>
+                                    </td>
+                                    <td>
+                                        <label>@m.OrderBy</label>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        @Html.Partial("_PagingPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

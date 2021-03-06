@@ -1,0 +1,162 @@
+﻿@model Application2016.Models.ProductConditions
+@using Application2016.Helpers;
+<div class="category-products">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+
+        <div class="toolbar">
+            <div class="sorter">
+                <div class="view-mode">
+                    <span class="button button-active button-grid" title="Grid">Grid</span> <a class="button button-list"
+                        title="List" href="#" onclick="ChangeDisplayType()">List</a>
+                </div>
+            </div>
+            
+            <div class="find-dropdown">
+                <button type="submit" id="btnSearch" title="Search" class="btnDefine btn-primary" value="Search">
+                    Search</button>
+            </div>
+            <div class="find-dropdown">
+                @*@Html.DropDownListFor(m => m.Limit, Model.ListLimit, new { @class = "right-arrow" })*@
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.WardId, new SelectList(Model.ListWard, "Id", "Text"), new { @class = "right-arrow" })
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.DistrictId, new SelectList(Model.ListDistrict, "Id", "Text"), new { @class = "right-arrow" })
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.CityId, new SelectList(Model.ListCity, "Id", "Text"), new { @class = "right-arrow" })
+            </div>
+            <div class="find-dropdown">
+                @Html.DropDownListFor(m => m.ProductType, new SelectList(Model.ListProductType, "Id", "Text"))
+            </div>
+            <div class="find-dropdown">
+                @Html.TextBoxFor(m => m.Text, new { @placeholder = "Tìm kiếm ...", @class = "" })
+            </div>
+            <div class="find-dropdown">
+                @Html.Partial("_PagingPartial")
+            </div>
+        </div>
+    }
+    <ul class="products-grid">
+        @foreach (var item in ViewBag.ListProduct as IList<Entities.Product>)
+        {
+            string image = "no avatar";
+            if (item.Avatar != null && item.Avatar != "" && item.Avatar_Url != null)
+            {
+                image = item.Avatar_Url + item.Avatar;
+            }
+            else
+            {
+                image = Url.Content("~/Assets/Images/home-default.png");
+            }
+
+            <li class="item col-md-2">
+                <div class="col-item">
+                    <!-- Check sản phẩm giảm giá -->
+                    @if (item.UpdateCost > 0)
+                    {
+                    <div class="sale-label sale-top-right">
+                        &#8595Sale
+                    </div>
+                    }
+                    <!-- Check sản phẩm mới -->
+                    @if (item.UpdateTime > DateTime.Today.AddDays(-2))
+                    {
+                        <div class="new-label">
+                        New
+                        </div>
+                    }
+                    <div class="item-inner">                    
+                        <div class="item-img">
+                            <div class="item-img-info">
+                                <a href="@Url.Action("Detail", "Product")/@item.Id" title="@item.Text" class="product-image">
+                                    <img src="@Url.Content(@image)" alt="@item.Text" />
+                                </a>
+                                @*<div class="item-box-hover">
+                                    <div class="box-inner">
+                                        <div class="product-detail-bnt">
+                                            <a href="@Url.Action("Detail", "Product")/@item.Id" class="button detail-bnt"><span>Chi
+                                                tiết</span></a></div>
+                                    </div>
+                                </div>*@
+                            </div>
+                        </div>
+                        <div class="item-info">
+                            <div class="info-inner">
+                                <div class="item-title">
+                                    <a href="@Url.Action("Detail", "Product")/@item.Id" title="Sample Product">@item.Text
+                                    </a>
+                                </div>
+                                <div class="item-content">
+                                    @*<div class="rating">
+                                        <div class="ratings">
+                                            <div class="rating-box">
+                                                <div class="rating" style="width: 60%">
+                                                </div>
+                                            </div>
+                                            <p class="rating-links">
+                                                <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a>
+                                            </p>
+                                        </div>
+                                    </div>*@
+                                    <div class="item-price">
+                                        <div class="price-box">
+                                            <span class="regular-price"><span class="price">
+                                                @(item.UpdateCost > 0 ? item.UpdateCost.Value.MoneyFormat() : item.StandardCost.MoneyFormat())
+                                            </span> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <span class="add-to-links">
+                                    <a href="@Url.Action("Detail", "Product", new { Id = @item.Id })" class="button btn-cart">Đặt mua</a>
+                                    <a href="#" id="btnFollow_@item.Id" class="button btn-cart btnFollow" onclick="updateFollow(this.id)">Theo dõi</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<script type="text/javascript">
+    function ChangeDisplayType() {
+        // View function in _Layout.cshtml
+        window.location.href = updateURLParameter(window.location.href, 'displayType', 'list');
+    };
+
+    $('#myModal').on('show.bs.modal', function (e) {
+
+        var $modal = $(this),
+                esseyId = e.relatedTarget.id;
+
+        //            $.ajax({
+        //                cache: false,
+        //                type: 'POST',
+        //                url: 'backend.php',
+        //                data: 'EID='+essay_id,
+        //                success: function(data) 
+        //                {
+        $modal.find('#txtPrice').val(esseyId);
+        //                }
+        //            });
+
+    });
+
+    $("#ProductType").on("change", function () {
+        $("#btnSearch").click();
+    });
+    $("#CityId").on("change", function () {
+        $("#btnSearch").click();
+    });
+    $("#DistrictId").on("change", function () {
+        $("#btnSearch").click();
+    });
+    $("#WardId").on("change", function () {
+        $("#btnSearch").click();
+    });
+</script>

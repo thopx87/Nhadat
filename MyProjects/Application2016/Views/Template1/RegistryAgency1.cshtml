@@ -1,0 +1,314 @@
+﻿@model Application2016.Areas.Admin.Models.RegistryAgencyModel1
+@using CaptchaMvc.HtmlHelpers;
+@using CaptchaMvc;
+
+<script type="text/javascript">
+    $(function () {
+        $('.fetched-date input').datepicker({
+            dateFormat: 'dd-mm-yy',
+            minDate: '+5d',
+            changeMonth: true,
+            changeYear: true,
+            altFormat: "yy-mm-dd",
+            autoclose: true
+        });
+    });
+</script>
+
+<div class="modal-dialog" style="width: 1200px;">
+	<div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="orange center lighter bigger"><i class="ace-icon fa fa-users blue"></i>ĐĂNG KÝ MÔI GIỚI</h4>
+        </div>
+        @using (Ajax.BeginForm("RegisterAgency1", "Template1", FormMethod.Post,
+                            new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "POST"
+                            }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="container-fluid">
+					<div class="row">
+                        <div class="col-md-5">
+							<div class="col-md-12">
+                                <div class="row center">
+                                    <label class="block clearfix red">
+                                        Thông tin cá nhân
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="block clearfix">
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+                                            @Html.ValidationMessageFor(m => m.Email)
+                                            <i class="ace-icon add-on fa fa-envelope red"></i>
+					                    </span>
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="block clearfix">
+					                    <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Tên đăng nhập" })
+						                    @Html.ValidationMessageFor(m => m.UserName)
+						                    <i class="ace-icon fa fa-user red"></i>
+					                    </span>
+				                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="clearfix" style="display:flex;">
+					                    <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder = "Mật khẩu", @type = "password" })						                    
+                                            <i class="ace-icon fa fa-lock red"></i>
+                                            @Html.ValidationMessageFor(m => m.Password)
+					                    </span>
+                                        <span class="col-sm-1"></span>
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Xác nhận Mật khẩu", @type = "password" })						                    
+                                            <i class="ace-icon fa fa-retweet red"></i>
+                                            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+					                    </span>
+				                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="block clearfix">
+					                    <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "Số điện thoại" })						                    
+                                            @Html.ValidationMessageFor(m => m.PhoneNumber)
+						                    <i class="ace-icon fa fa-phone red"></i>
+					                    </span>
+				                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="clearfix" style="display: flex;">
+                                        <span class="block input-icon input-icon-right">
+						                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "Họ & tên đệm" })
+                                        </span>
+                                        <span class="col-sm-1"></span>
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder = "Tên" })
+					                    </span>
+				                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="clearfix" style="display: flex;">
+                                        <span class="block input-icon input-icon-right fetched-date">
+						                        @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control", @placeholder = "Ngày sinh (dd/mm/yyyyy)", @data_date_format = "dd/mm/yyyy" })
+                                                <i class="ace-icon fa fa-calendar bigger-110"></i>
+                                            </span>
+                                            <span class="col-sm-1"></span>
+                                            <span class="block">
+                                                <label>
+                                                    @Html.RadioButtonFor(m => m.Gender, "1", new { @class = "ace input-lg", id = "Male", @checked = "checked" }) 
+                                                    <span class="lbl bigger-120"> Nam</span>
+                                                </label>
+                                                <label>
+                                                    @Html.RadioButtonFor(m => m.Gender, "2", new { @class = "ace input-lg", id = "Female" })
+                                                    <span class="lbl bigger-120"> Nữ</span>
+                                                </label>
+                                            </span>		                    
+				                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="block clearfix">                                        
+					                    <span class="block">
+                                            <span class="editable">@Html.DropDownListFor(m => m.Regis_CityId, new SelectList(Model.ListCity, "Id", "Text", Model.Regis_CityId), "Chọn tỉnh/ thành phố", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#Regis_DistrictId','#Regis_WardId')") })</span>
+                                            <span class="editable">@Html.DropDownListFor(m => m.Regis_DistrictId, new SelectList(Model.ListDistrict, "Id", "Text", Model.Regis_DistrictId), "Quận/huyện", new { onchange = string.Format("javascript:ListPlaceJson(this.value,'#Regis_WardId')") })</span>
+                                            <span class="editable">@Html.DropDownListFor(m => m.Regis_WardId, new SelectList(Model.ListWard, "Id", "Text", Model.Regis_WardId), "Xã/phường")</span>
+                                        </span>
+                                        
+				                    </label>
+                                </div>
+                                
+                            </div>
+						</div>
+						<div class="col-md-7">
+							<div class="col-md-12">
+                                <div class="row center">
+                                        <label class="block clearfix red">
+                                            Thông tin vùng hoạt động
+                                        </label>
+                                    </div>
+                                <div class="row">
+                                    <div class="profile-info-row">
+                                        <div class="regis-agency-name">
+                                            Vùng nhận bán <span class="required"></span>
+                                        </div>
+                                        @for (int i = 1; i <= Model.ListUserInRegionReceive.ListUserInRegion.Count; i++)
+                                        {
+                                            var item = Model.ListUserInRegionReceive.ListUserInRegion[i - 1];
+                                            <div class="col-xs-12 col-sm-12">
+                                                <label>
+                                                    Vùng @i</label>
+                                                <span class="editable">@Html.DropDownListFor(m => m.ListUserInRegionReceive.region_city[i - 1], new SelectList(item.ListCity, "Id", "Text", item.CityId), "Tỉnh/ Thành phố", new { id = "region_receive_city_" + i, onchange = string.Format("javascript:ListPlaceJson(this.value,'#region_receive_district_{0}','#region_receive_ward_{0}')", @i) })</span>
+                                                <span class="editable">@Html.DropDownListFor(m => m.ListUserInRegionReceive.region_district[i - 1], new SelectList(item.ListDistrict, "Id", "Text", item.DistrictId), "Quận / Huyện", new { id = "region_receive_district_" + i, onchange = string.Format("javascript:ListPlaceJson(this.value,'#region_receive_ward_{0}')", @i) })</span>
+                                                <span class="editable">@Html.DropDownListFor(m => m.ListUserInRegionReceive.region_ward[i - 1], new SelectList(item.ListWard, "Id", "Text", item.WardId), "Xã/ Phường", new { id = "region_receive_ward_" + i, onchange = string.Format("javascript:GetRegionByWard(this.value,'#regionText_receive_{0}','#regionIds_receive_{0}')", @i) })</span>
+                                                <span class="editable">
+                                                    <label id="regionText_receive_@i">@item.RegionText</label></span>
+                                                @Html.HiddenFor(m => m.ListUserInRegionReceive.regionIds, new { id = "regionIds_receive_" + @i })
+                                                <br />
+                                                @Html.ValidationMessageFor(m => m.ListUserInRegionReceive.region_ward[i - 1])
+                                                <br />
+                                            </div>
+                                            <br />
+                                            <br />
+                                        }
+                                    </div>
+                                    <div class="hr"></div>
+                                    <div class="profile-info-row">
+                                        <div class="regis-agency-name">
+                                            Vùng gửi <span class="required"></span>
+                                        </div>
+                                        @for (int i = 1; i <= Model.ListUserInRegionSend.ListUserInRegion.Count; i++)
+                                        {
+                                            var item = Model.ListUserInRegionSend.ListUserInRegion[i - 1];
+                                            <div class="col-xs-12 col-sm-12">
+                                                <label>
+                                                    Vùng @i</label>
+                                                <span class="editable">@Html.DropDownListFor(m => m.ListUserInRegionSend.region_city[i - 1], new SelectList(item.ListCity, "Id", "Text", item.CityId), "Tỉnh/ Thành phố", new { id = "region_send_city_" + i, onchange = string.Format("javascript:ListPlaceJson(this.value,'#region_send_district_{0}','#region_send_ward_{0}')", @i) })</span>
+                                                <span class="editable">@Html.DropDownListFor(m => m.ListUserInRegionSend.region_district[i - 1], new SelectList(item.ListDistrict, "Id", "Text", item.DistrictId), "Quận / Huyện", new { id = "region_send_district_" + i, onchange = string.Format("javascript:ListPlaceJson(this.value,'#region_send_ward_{0}')", @i) })</span>
+                                                <span class="editable">@Html.DropDownListFor(m => m.ListUserInRegionSend.region_ward[i - 1], new SelectList(item.ListWard, "Id", "Text", item.WardId), "Xã/ Phường", new { id = "region_send_ward_" + i, onchange = string.Format("javascript:GetRegionByWard(this.value,'#regionText_send_{0}','#regionIds_send_{0}')", @i) })</span>
+                                                <span class="editable">
+                                                    <label id="regionText_send_@i">@item.RegionText</label></span>
+                                                @Html.HiddenFor(m => m.ListUserInRegionSend.regionIds, new { id = "regionIds_send_" + @i })
+                                                <br />
+                                                @Html.ValidationMessageFor(m => m.ListUserInRegionSend.region_ward[i - 1])
+                                                <br />
+                                            </div>
+                                            <br />
+                                            <br />
+                                        }
+                                    </div>
+                                    <div class="row">
+                                    <label class="block clearfix">
+                                        <label class="left">Captcha </label>
+                                        @Html.MathCaptcha()                        
+                                    </label>
+                                    <p class="field-validation-error">  @ViewBag.ErrMessage </p>
+                                </div>
+                                </div>
+                            </div>
+						</div>
+                    </div>
+                    <div class="row">
+                        <div class="clearfix">
+					        <button type="button" id="btnRegister" class="width-100 btn btn-sm btn-success">
+						        <span class="orange bigger-150">Đăng ký</span>
+						        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+					        </button>
+				        </div>
+                    </div>
+                    <div class="row">
+                        <label class="block">
+					        <strong class="blue">Chú ý:</strong>Thông tin: Tên đăng nhập, Email, Số điện thoại không thể thay đổi sau khi đăng ký. Chỉ Có Admin mới thay đổi được. Để thay đổi vui lòng liên hệ tổng đài 0973292194 hoặc land4p.com@gmail.com
+				        </label>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    var message = '@Html.Raw(Model.Message)';
+    var result = '@Model.Result';
+    if (result == '1') {
+        if (message.length > 0) {
+            alert(message);
+        }
+        $('#register_model').modal('hide');
+        location.reload(false)
+    } else if (result < 0) {
+        alert(message);
+        //$('#register_model').html(data);
+    }
+    $('#btnRegister').on('click', function () {
+        var self = $(this);
+        $.ajax({
+            url: '@Url.Action("RegisterAgency1", "Template1")',
+            type: 'POST',
+            async: false,
+            data: self.closest('form').serialize(),
+            success: function (data) {
+                var message = '@Html.Raw(Model.Message)';
+                var result = '@Model.Result';
+                if (result == '1') {
+                    if (message.length > 0) {
+                        alert(message);
+                    }
+                    $('#register_model').modal('hide');
+                    location.reload(false)
+                } else {
+                    if (message.length > 0) {
+                        alert(message);
+                    }
+                    $('#register_model').html(data);
+                }
+            }
+        });
+    });
+
+    function ListPlaceJson(parentId, toControlId1, toControlId2) {
+        if (parentId != null && parentId != "") {
+            $.ajax({
+                url: '/Admin/Base/ListPlaceJson/',
+                data: JSON.stringify({ parentId: parentId }),
+                contentType: 'application/json; charset=UTF-8',
+                type: 'POST',
+                dataType: 'json'
+            })
+            .success(function (result) {
+                $(toControlId1).empty();
+                if (result.length > 0) {
+                    // Thêm vào Control 1
+                    for (var i = 0; i < result.length; i++) {
+                        $(toControlId1).append("<option value=" + result[i].Id + ">" + result[i].Text + "</option>");
+                    }
+
+                    // Thêm vào control 2 theo ID đầu tiên của trontrol 1
+                    if (toControlId2 != null && toControlId2 != "") {
+                        $(toControlId2).empty();
+                        ListPlaceJson(result[0].Id, toControlId2, "");
+                    }
+                }
+            })
+            .error(function (xhr, status) {
+                alert(status);
+            });
+        } else {
+            $(toControlId1).empty();
+        }
+    }
+
+    function ListRegionJson(cityId, districtId, regionId, wardId) {
+        // Get city value
+        var cityVal = $('#' + cityId).val();
+        // Get district value
+        var districtVal = $('#' + districtId).val()
+        if (cityVal != null && cityVal != "") {
+            $.ajax({
+                url: '/Admin/Base/ListRegionJson/',
+                data: JSON.stringify({ cityId: cityVal, districtId: districtVal }),
+                contentType: 'application/json; charset=UTF-8',
+                type: 'POST',
+                dataType: 'json'
+            })
+        .success(function (result) {
+            $(regionId).empty();
+            for (var i = 0; i < result.length; i++) {
+                $(regionId).append("<option value=" + result[i].Id + ">" + result[i].Text + "</option>");
+            }
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        });
+
+            if (wardId != null) {
+                ListPlaceJson(districtVal, wardId, null);
+            }
+        } else {
+            $(regionId).empty();
+        }
+    }
+</script>
